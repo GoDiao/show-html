@@ -1,0 +1,345 @@
+<!-- Copyright 2026 Anthropic PBC · SPDX-License-Identifier: Apache-2.0 -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Acme — Q2 2026 Project Timeline</title>
+<style>
+  :root {
+    --ivory:   #FAF9F5;
+    --slate:   #141413;
+    --clay:    #D97757;
+    --oat:     #E3DACC;
+    --olive:   #788C5D;
+    --rust:    #B04A3F;
+    --sky:     #5B8FB9;
+    --plum:    #8B6AAE;
+    --white:   #FFFFFF;
+    --gray-100:#F0EEE6;
+    --gray-300:#D1CFC5;
+    --gray-500:#87867F;
+    --gray-700:#3D3D3A;
+    --serif: ui-serif, Georgia, "Times New Roman", serif;
+    --sans:  system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --mono:  ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--ivory); color: var(--slate);
+    font-family: var(--sans); font-size: 15px; line-height: 1.6;
+    padding: 56px 24px 120px; -webkit-font-smoothing: antialiased;
+  }
+  .page { max-width: 1120px; margin: 0 auto; }
+
+  /* ── header ── */
+  header { margin-bottom: 40px; max-width: 640px; }
+  .eyebrow {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--gray-500); margin-bottom: 10px;
+  }
+  h1 {
+    font-family: var(--serif); font-weight: 500;
+    font-size: 38px; letter-spacing: -0.01em; margin-bottom: 12px;
+  }
+  .lead { color: var(--gray-700); max-width: 560px; }
+
+  /* ── stats ── */
+  .stats {
+    display: flex; gap: 24px; flex-wrap: wrap;
+    margin-bottom: 36px; padding: 20px 24px;
+    background: var(--white); border: 1.5px solid var(--gray-300);
+    border-radius: 12px;
+  }
+  .stat { text-align: center; min-width: 100px; }
+  .stat-num {
+    font-family: var(--serif); font-size: 28px; font-weight: 500; color: var(--slate);
+  }
+  .stat-label {
+    font-family: var(--mono); font-size: 11px; text-transform: uppercase;
+    letter-spacing: 0.06em; color: var(--gray-500); margin-top: 4px;
+  }
+  .stat-divider {
+    width: 1.5px; background: var(--gray-300); align-self: stretch;
+  }
+
+  /* ── gantt chart ── */
+  .gantt-panel {
+    background: var(--white); border: 1.5px solid var(--gray-300);
+    border-radius: 12px; overflow: hidden;
+  }
+
+  /* timeline header */
+  .gantt-header {
+    display: grid; border-bottom: 1.5px solid var(--gray-300);
+    background: var(--gray-100); position: sticky; top: 0;
+  }
+  .gantt-header-label {
+    padding: 14px 16px; font-family: var(--mono); font-size: 11px;
+    text-transform: uppercase; letter-spacing: 0.06em;
+    color: var(--gray-500); border-right: 1px solid var(--gray-300);
+  }
+  .gantt-weeks {
+    display: grid; grid-template-columns: repeat(12, 1fr);
+  }
+  .gantt-week {
+    padding: 14px 8px; text-align: center;
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.04em;
+    color: var(--gray-500); border-right: 1px solid var(--gray-100);
+    text-transform: uppercase;
+  }
+  .gantt-week.today { color: var(--clay); font-weight: 600; background: rgba(217,119,87,0.06); }
+
+  /* rows */
+  .gantt-row {
+    display: grid; border-bottom: 1px solid var(--gray-100);
+    align-items: center;
+  }
+  .gantt-row:last-child { border-bottom: none; }
+  .gantt-row:hover .gantt-bar-area { background: var(--gray-100); }
+
+  .gantt-task {
+    padding: 16px; display: flex; align-items: center; gap: 10px;
+    border-right: 1px solid var(--gray-300); min-width: 200px;
+  }
+  .task-dot {
+    width: 8px; height: 8px; border-radius: 3px; flex-shrink: 0;
+  }
+  .task-name { font-size: 14px; font-weight: 500; color: var(--slate); }
+  .task-owner {
+    font-family: var(--mono); font-size: 11px; color: var(--gray-500); margin-top: 2px;
+  }
+
+  .gantt-bar-area {
+    display: grid; grid-template-columns: repeat(12, 1fr);
+    padding: 12px 0; position: relative;
+    transition: background 80ms;
+  }
+
+  .gantt-bar {
+    border-radius: 6px; height: 28px; position: relative;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--mono); font-size: 10px; color: var(--white);
+    letter-spacing: 0.02em; cursor: default;
+    transition: opacity 120ms;
+  }
+  .gantt-bar:hover { opacity: 0.85; }
+  .gantt-bar.progress-100 { opacity: 0.6; }
+  .gantt-bar.progress-100::after {
+    content: "✓"; position: absolute; right: 8px; font-size: 12px;
+  }
+
+  /* milestone marker */
+  .milestone {
+    width: 14px; height: 14px; background: var(--slate);
+    transform: rotate(45deg); border-radius: 2px;
+    position: absolute; top: 50%; margin-top: -7px;
+    z-index: 2;
+  }
+
+  /* ── groups ── */
+  .group-header {
+    display: grid; background: var(--gray-100);
+    border-bottom: 1.5px solid var(--gray-300);
+  }
+  .group-label {
+    padding: 10px 16px; font-family: var(--mono); font-size: 11px;
+    text-transform: uppercase; letter-spacing: 0.08em; color: var(--gray-500);
+    border-right: 1px solid var(--gray-300);
+  }
+
+  /* ── today line ── */
+  .today-line {
+    position: absolute; width: 2px; top: 0; bottom: 0;
+    background: var(--clay); opacity: 0.4; z-index: 1;
+  }
+
+  /* ── detail cards below ── */
+  .milestone-cards {
+    margin-top: 36px; display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  @media (max-width: 768px) { .milestone-cards { grid-template-columns: 1fr; } }
+  .ms-card {
+    background: var(--white); border: 1.5px solid var(--gray-300);
+    border-radius: 12px; padding: 20px 22px;
+  }
+  .ms-date {
+    font-family: var(--mono); font-size: 11px; text-transform: uppercase;
+    letter-spacing: 0.06em; color: var(--clay); margin-bottom: 8px;
+  }
+  .ms-title {
+    font-family: var(--serif); font-size: 16px; font-weight: 500;
+    color: var(--slate); margin-bottom: 6px;
+  }
+  .ms-desc { font-size: 13px; color: var(--gray-500); }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header>
+    <p class="eyebrow">Project Timeline</p>
+    <h1>Q2 2026 Roadmap</h1>
+    <p class="lead">Planned features and milestones for April – June 2026. Bars show planned duration; diamonds mark key milestones.</p>
+  </header>
+
+  <!-- stats -->
+  <div class="stats">
+    <div class="stat"><div class="stat-num">8</div><div class="stat-label">Tasks</div></div>
+    <div class="stat-divider"></div>
+    <div class="stat"><div class="stat-num">3</div><div class="stat-label">Milestones</div></div>
+    <div class="stat-divider"></div>
+    <div class="stat"><div class="stat-num">5</div><div class="stat-label">People</div></div>
+    <div class="stat-divider"></div>
+    <div class="stat"><div class="stat-num">37%</div><div class="stat-label">Complete</div></div>
+  </div>
+
+  <!-- gantt -->
+  <div class="gantt-panel">
+
+    <!-- header -->
+    <div class="gantt-header" style="grid-template-columns: 200px 1fr">
+      <div class="gantt-header-label">Task</div>
+      <div class="gantt-weeks">
+        <div class="gantt-week">W1<br><small>Apr 7</small></div>
+        <div class="gantt-week">W2<br><small>Apr 14</small></div>
+        <div class="gantt-week">W3<br><small>Apr 21</small></div>
+        <div class="gantt-week">W4<br><small>Apr 28</small></div>
+        <div class="gantt-week">W5<br><small>May 5</small></div>
+        <div class="gantt-week">W6<br><small>May 12</small></div>
+        <div class="gantt-week today">W7<br><small>May 19</small></div>
+        <div class="gantt-week">W8<br><small>May 26</small></div>
+        <div class="gantt-week">W9<br><small>Jun 2</small></div>
+        <div class="gantt-week">W10<br><small>Jun 9</small></div>
+        <div class="gantt-week">W11<br><small>Jun 16</small></div>
+        <div class="gantt-week">W12<br><small>Jun 23</small></div>
+      </div>
+    </div>
+
+    <!-- Group: Auth -->
+    <div class="group-header" style="grid-template-columns: 200px 1fr">
+      <div class="group-label">Authentication</div>
+    </div>
+
+    <div class="gantt-row" style="grid-template-columns: 200px 1fr">
+      <div class="gantt-task">
+        <span class="task-dot" style="background:var(--clay)"></span>
+        <div><div class="task-name">OAuth2 migration</div><div class="task-owner">Alice</div></div>
+      </div>
+      <div class="gantt-bar-area">
+        <div class="gantt-bar progress-100" style="grid-column:1/4; background:var(--clay)">Done</div>
+      </div>
+    </div>
+
+    <div class="gantt-row" style="grid-template-columns: 200px 1fr">
+      <div class="gantt-task">
+        <span class="task-dot" style="background:var(--clay)"></span>
+        <div><div class="task-name">SSO integration</div><div class="task-owner">Alice · Carol</div></div>
+      </div>
+      <div class="gantt-bar-area">
+        <div class="gantt-bar" style="grid-column:3/6; background:var(--clay)">SSO</div>
+        <div class="milestone" style="left:calc((6 - 0.5) / 12 * 100%)"></div>
+      </div>
+    </div>
+
+    <!-- Group: Payments -->
+    <div class="group-header" style="grid-template-columns: 200px 1fr">
+      <div class="group-label">Payments</div>
+    </div>
+
+    <div class="gantt-row" style="grid-template-columns: 200px 1fr">
+      <div class="gantt-task">
+        <span class="task-dot" style="background:var(--olive)"></span>
+        <div><div class="task-name">Stripe v3 upgrade</div><div class="task-owner">Bob</div></div>
+      </div>
+      <div class="gantt-bar-area">
+        <div class="gantt-bar" style="grid-column:1/5; background:var(--olive)">80%</div>
+      </div>
+    </div>
+
+    <div class="gantt-row" style="grid-template-columns: 200px 1fr">
+      <div class="gantt-task">
+        <span class="task-dot" style="background:var(--olive)"></span>
+        <div><div class="task-name">Subscription billing</div><div class="task-owner">Bob · Dan</div></div>
+      </div>
+      <div class="gantt-bar-area">
+        <div class="gantt-bar" style="grid-column:5/9; background:var(--olive)">Planned</div>
+      </div>
+    </div>
+
+    <!-- Group: Search -->
+    <div class="group-header" style="grid-template-columns: 200px 1fr">
+      <div class="group-label">Search & Discovery</div>
+    </div>
+
+    <div class="gantt-row" style="grid-template-columns: 200px 1fr">
+      <div class="gantt-task">
+        <span class="task-dot" style="background:var(--sky)"></span>
+        <div><div class="task-name">Elasticsearch reindex</div><div class="task-owner">Hassan</div></div>
+      </div>
+      <div class="gantt-bar-area">
+        <div class="gantt-bar" style="grid-column:2/4; background:var(--sky)">60%</div>
+      </div>
+    </div>
+
+    <div class="gantt-row" style="grid-template-columns: 200px 1fr">
+      <div class="gantt-task">
+        <span class="task-dot" style="background:var(--sky)"></span>
+        <div><div class="task-name">Faceted filters UI</div><div class="task-owner">Eva</div></div>
+      </div>
+      <div class="gantt-bar-area">
+        <div class="gantt-bar" style="grid-column:5/8; background:var(--sky)">Planned</div>
+      </div>
+    </div>
+
+    <div class="gantt-row" style="grid-template-columns: 200px 1fr">
+      <div class="gantt-task">
+        <span class="task-dot" style="background:var(--sky)"></span>
+        <div><div class="task-name">Autocomplete</div><div class="task-owner">Eva · Hassan</div></div>
+      </div>
+      <div class="gantt-bar-area">
+        <div class="gantt-bar" style="grid-column:8/11; background:var(--sky)">Planned</div>
+        <div class="milestone" style="left:calc((11 - 0.5) / 12 * 100%)"></div>
+      </div>
+    </div>
+
+    <!-- Group: Infra -->
+    <div class="group-header" style="grid-template-columns: 200px 1fr">
+      <div class="group-label">Infrastructure</div>
+    </div>
+
+    <div class="gantt-row" style="grid-template-columns: 200px 1fr">
+      <div class="gantt-task">
+        <span class="task-dot" style="background:var(--plum)"></span>
+        <div><div class="task-name">K8s cluster upgrade</div><div class="task-owner">Leo</div></div>
+      </div>
+      <div class="gantt-bar-area">
+        <div class="gantt-bar" style="grid-column:7/10; background:var(--plum)">Planned</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- milestones -->
+  <div class="milestone-cards">
+    <div class="ms-card">
+      <div class="ms-date">May 2 · Week 5</div>
+      <div class="ms-title">Auth Milestone</div>
+      <div class="ms-desc">SSO live for internal teams. OAuth2 migration complete.</div>
+    </div>
+    <div class="ms-card">
+      <div class="ms-date">Jun 5 · Week 9</div>
+      <div class="ms-title">Payments GA</div>
+      <div class="ms-desc">Subscription billing in production. Stripe v3 fully rolled out.</div>
+    </div>
+    <div class="ms-card">
+      <div class="ms-date">Jun 19 · Week 11</div>
+      <div class="ms-title">Search v2 Launch</div>
+      <div class="ms-desc">Faceted filters + autocomplete shipped. New ES cluster live.</div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

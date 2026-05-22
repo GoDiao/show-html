@@ -1,0 +1,262 @@
+<!-- Copyright 2026 Anthropic PBC · SPDX-License-Identifier: Apache-2.0 -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Acme — User Directory</title>
+<style>
+  :root {
+    --ivory:   #FAF9F5;
+    --slate:   #141413;
+    --clay:    #D97757;
+    --oat:     #E3DACC;
+    --olive:   #788C5D;
+    --rust:    #B04A3F;
+    --sky:     #5B8FB9;
+    --white:   #FFFFFF;
+    --gray-100:#F0EEE6;
+    --gray-300:#D1CFC5;
+    --gray-500:#87867F;
+    --gray-700:#3D3D3A;
+    --serif: ui-serif, Georgia, "Times New Roman", serif;
+    --sans:  system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --mono:  ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--ivory); color: var(--slate);
+    font-family: var(--sans); font-size: 15px; line-height: 1.6;
+    padding: 56px 24px 120px; -webkit-font-smoothing: antialiased;
+  }
+  .page { max-width: 1080px; margin: 0 auto; }
+
+  /* ── header ── */
+  header { margin-bottom: 32px; }
+  .header-top {
+    display: flex; align-items: baseline; justify-content: space-between;
+    flex-wrap: wrap; gap: 12px; margin-bottom: 8px;
+  }
+  h1 {
+    font-family: var(--serif); font-weight: 500;
+    font-size: 38px; letter-spacing: -0.01em; margin: 0;
+  }
+  .sub { color: var(--gray-500); max-width: 640px; }
+
+  /* ── toolbar ── */
+  .toolbar {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 20px; flex-wrap: wrap;
+  }
+  .search-box {
+    flex: 1; min-width: 200px; max-width: 360px;
+    padding: 10px 16px; font-size: 14px;
+    font-family: var(--sans); color: var(--slate);
+    background: var(--white); border: 1.5px solid var(--gray-300);
+    border-radius: 10px; outline: none;
+    transition: border-color 120ms;
+  }
+  .search-box::placeholder { color: var(--gray-500); }
+  .search-box:focus { border-color: var(--slate); }
+  .filter-btn {
+    font-family: var(--mono); font-size: 12px;
+    padding: 8px 16px; border: 1.5px solid var(--gray-300);
+    border-radius: 999px; background: var(--white);
+    color: var(--gray-700); cursor: pointer;
+    transition: border-color 120ms, color 120ms;
+  }
+  .filter-btn:hover { border-color: var(--slate); color: var(--slate); }
+  .filter-btn.active { background: var(--slate); color: var(--white); border-color: var(--slate); }
+  .count {
+    margin-left: auto; font-family: var(--mono);
+    font-size: 12px; color: var(--gray-500);
+  }
+
+  /* ── table ── */
+  .table-wrap {
+    background: var(--white); border: 1.5px solid var(--gray-300);
+    border-radius: 12px; overflow: hidden;
+  }
+  .table-scroll { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th {
+    text-align: left; font-family: var(--mono); font-size: 11px;
+    text-transform: uppercase; letter-spacing: 0.06em;
+    color: var(--gray-500); padding: 14px 16px;
+    border-bottom: 1.5px solid var(--gray-300);
+    background: var(--gray-100); white-space: nowrap;
+    cursor: pointer; user-select: none;
+    transition: color 120ms;
+  }
+  th:hover { color: var(--clay); }
+  th .sort-arrow { font-size: 10px; margin-left: 4px; opacity: 0.4; }
+  th.sorted .sort-arrow { opacity: 1; color: var(--clay); }
+  td {
+    padding: 14px 16px; border-bottom: 1px solid var(--gray-100);
+    color: var(--gray-700); vertical-align: middle;
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: var(--gray-100); }
+
+  /* avatar */
+  .avatar {
+    width: 32px; height: 32px; border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-family: var(--mono); font-size: 12px; font-weight: 600;
+    color: var(--white); flex-shrink: 0;
+  }
+  .user-cell { display: flex; align-items: center; gap: 10px; }
+  .user-name { font-weight: 500; color: var(--slate); }
+  .user-email { font-family: var(--mono); font-size: 12px; color: var(--gray-500); }
+
+  /* badges */
+  .badge {
+    display: inline-block; font-family: var(--mono); font-size: 11px;
+    padding: 3px 10px; border-radius: 999px; letter-spacing: 0.03em;
+  }
+  .badge-admin  { background: #FDE8E0; color: var(--clay); }
+  .badge-editor { background: #E8F0E4; color: var(--olive); }
+  .badge-viewer { background: var(--gray-100); color: var(--gray-500); }
+
+  .mono { font-family: var(--mono); font-size: 13px; }
+
+  /* pagination */
+  .pagination {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px; border-top: 1.5px solid var(--gray-300);
+    font-size: 13px; color: var(--gray-500);
+  }
+  .page-btns { display: flex; gap: 6px; }
+  .page-btn {
+    width: 32px; height: 32px; border-radius: 8px;
+    border: 1.5px solid var(--gray-300); background: var(--white);
+    font-family: var(--mono); font-size: 12px;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    color: var(--gray-700); transition: border-color 120ms;
+  }
+  .page-btn:hover { border-color: var(--slate); }
+  .page-btn.active { background: var(--slate); color: var(--white); border-color: var(--slate); }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header>
+    <div class="header-top">
+      <h1>User Directory</h1>
+    </div>
+    <p class="sub">Team members and their access levels across the Acme platform. Click column headers to sort.</p>
+  </header>
+
+  <!-- toolbar -->
+  <div class="toolbar">
+    <input class="search-box" type="text" placeholder="Search by name or email..." id="search" />
+    <button class="filter-btn active" data-role="all">All</button>
+    <button class="filter-btn" data-role="admin">Admin</button>
+    <button class="filter-btn" data-role="editor">Editor</button>
+    <button class="filter-btn" data-role="viewer">Viewer</button>
+    <span class="count" id="count">12 members</span>
+  </div>
+
+  <!-- table -->
+  <div class="table-wrap">
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th data-key="name">Name <span class="sort-arrow">&#9650;</span></th>
+            <th data-key="role">Role <span class="sort-arrow">&#9650;</span></th>
+            <th data-key="team">Team <span class="sort-arrow">&#9650;</span></th>
+            <th data-key="joined">Joined <span class="sort-arrow">&#9650;</span></th>
+            <th data-key="lastActive">Last Active <span class="sort-arrow">&#9650;</span></th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+    <div class="pagination">
+      <span>Showing 1-12 of 12</span>
+      <div class="page-btns">
+        <button class="page-btn active">1</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const DATA = [
+  { name:"Alice Chen",     email:"alice@acme.dev",    role:"admin",  team:"Platform",  joined:"2024-01-15", lastActive:"2026-03-21", color:"#D97757" },
+  { name:"Bob Martinez",   email:"bob@acme.dev",      role:"editor", team:"Frontend",   joined:"2024-03-08", lastActive:"2026-03-20", color:"#788C5D" },
+  { name:"Carol Wu",       email:"carol@acme.dev",    role:"admin",  team:"Backend",    joined:"2024-02-22", lastActive:"2026-03-21", color:"#5B8FB9" },
+  { name:"Dan Park",       email:"dan@acme.dev",      role:"viewer", team:"Design",     joined:"2025-06-10", lastActive:"2026-03-18", color:"#B04A3F" },
+  { name:"Eva Lindström",  email:"eva@acme.dev",      role:"editor", team:"Frontend",   joined:"2024-09-01", lastActive:"2026-03-19", color:"#D97757" },
+  { name:"Frank Obi",      email:"frank@acme.dev",    role:"viewer", team:"Marketing",  joined:"2025-11-20", lastActive:"2026-03-15", color:"#788C5D" },
+  { name:"Grace Liu",      email:"grace@acme.dev",    role:"admin",  team:"Platform",   joined:"2024-01-15", lastActive:"2026-03-21", color:"#5B8FB9" },
+  { name:"Hassan Ali",     email:"hassan@acme.dev",   role:"editor", team:"Backend",    joined:"2024-07-14", lastActive:"2026-03-21", color:"#B04A3F" },
+  { name:"Ines Rivera",    email:"ines@acme.dev",     role:"viewer", team:"Design",     joined:"2025-08-03", lastActive:"2026-03-14", color:"#D97757" },
+  { name:"Jake Thompson",  email:"jake@acme.dev",     role:"editor", team:"Platform",   joined:"2024-05-19", lastActive:"2026-03-20", color:"#788C5D" },
+  { name:"Kira Novak",     email:"kira@acme.dev",     role:"viewer", team:"Marketing",  joined:"2025-12-01", lastActive:"2026-03-17", color:"#5B8FB9" },
+  { name:"Leo Sato",       email:"leo@acme.dev",      role:"admin",  team:"Backend",    joined:"2024-04-11", lastActive:"2026-03-21", color:"#B04A3F" },
+];
+
+const badges = { admin: "badge-admin", editor: "badge-editor", viewer: "badge-viewer" };
+
+let sortKey = null, sortDir = 1, filterRole = "all", searchQ = "";
+
+function render() {
+  let rows = DATA.filter(r => {
+    if (filterRole !== "all" && r.role !== filterRole) return false;
+    if (searchQ && !(r.name.toLowerCase().includes(searchQ) || r.email.toLowerCase().includes(searchQ))) return false;
+    return true;
+  });
+  if (sortKey) rows.sort((a,b) => (a[sortKey] < b[sortKey] ? -1 : a[sortKey] > b[sortKey] ? 1 : 0) * sortDir);
+
+  document.getElementById("tbody").innerHTML = rows.map(r => `
+    <tr>
+      <td>
+        <div class="user-cell">
+          <div class="avatar" style="background:${r.color}">${r.name.split(' ').map(w=>w[0]).join('')}</div>
+          <div>
+            <div class="user-name">${r.name}</div>
+            <div class="user-email">${r.email}</div>
+          </div>
+        </div>
+      </td>
+      <td><span class="badge ${badges[r.role]}">${r.role}</span></td>
+      <td>${r.team}</td>
+      <td class="mono">${r.joined}</td>
+      <td class="mono">${r.lastActive}</td>
+    </tr>`).join("");
+  document.getElementById("count").textContent = rows.length + " member" + (rows.length !== 1 ? "s" : "");
+}
+
+// search
+document.getElementById("search").addEventListener("input", e => { searchQ = e.target.value.toLowerCase(); render(); });
+
+// filter buttons
+document.querySelectorAll(".filter-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    filterRole = btn.dataset.role;
+    render();
+  });
+});
+
+// sort
+document.querySelectorAll("th").forEach(th => {
+  th.addEventListener("click", () => {
+    const key = th.dataset.key;
+    if (sortKey === key) sortDir *= -1; else { sortKey = key; sortDir = 1; }
+    document.querySelectorAll("th").forEach(t => t.classList.remove("sorted"));
+    th.classList.add("sorted");
+    th.querySelector(".sort-arrow").innerHTML = sortDir === 1 ? "&#9650;" : "&#9660;";
+    render();
+  });
+});
+
+render();
+</script>
+</body>
+</html>

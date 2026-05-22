@@ -9,7 +9,9 @@ description: >
   flowchart, diagram, implementation plan, feature/concept explainer, PR writeup,
   triage board, kanban, feature flags, prompt tuner, interactive editor,
   animation prototype, interaction prototype, visual design exploration,
-  code approach comparison, SVG illustrations. Also triggers on explicit
+  code approach comparison, SVG illustrations, dashboard, data visualization,
+  interactive table, sortable table, system architecture diagram, service topology,
+  gantt chart, timeline, project timeline, milestone tracker. Also triggers on explicit
   "/show-html" invocation or when user asks to "show as HTML", "generate HTML",
   "visualize as page", or "make a page for".
 ---
@@ -139,6 +141,15 @@ Every page follows: **header** (eyebrow + h1 + subtitle) → **content sections*
 | 18 | Triage board | `assets/18-editor-triage-board.html` | Kanban-style columns (drag-drop). Card components with priority badges. Filter toolbar. Sticky column headers. JavaScript for drag interaction. |
 | 19 | Feature flags | `assets/19-editor-feature-flags.html` | Toggle switches. Flag list with metadata (environment, rollout %). Search/filter. Edit-in-place controls. |
 | 20 | Prompt tuner | `assets/20-editor-prompt-tuner.html` | Split panel: editor + preview. Parameter sliders. System/user message sections. Run button. Output display area. |
+
+### Data & Visualization
+
+| # | Use Case | File | Pattern Summary |
+|---|----------|------|-----------------|
+| 21 | Dashboard | `assets/21-dashboard.html` | Metric cards (4-col grid) with change indicators. CSS bar chart + SVG donut chart. SVG sparklines with gradient fill. Service health table with status badges. Multi-section layout: metrics → charts → sparklines → table. |
+| 22 | Interactive table | `assets/22-interactive-table.html` | Search box + filter buttons (pill style). Sortable columns (click header). Avatar + name/email cell layout. Role badges with color coding. Row hover highlight. Vanilla JS for search, filter, sort. |
+| 23 | System architecture | `assets/23-system-architecture.html` | Layered node diagram (clients → gateway → services → data → external). Color-coded node cards with top border accent. SVG connector arrows between layers. Legend bar. Detail cards below for infrastructure/observability. |
+| 24 | Timeline / Gantt chart | `assets/24-timeline-gantt.html` | CSS Grid gantt with 12-week columns. Group headers by category. Task bars with progress labels. Milestone diamond markers. Stats bar. Milestone detail cards at bottom. "Today" week highlight. |
 
 ## Generation Workflow
 
