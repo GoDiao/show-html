@@ -347,7 +347,7 @@
         <div class="eyebrow">Companion to the blog post</div>
         <h1>The unreasonable <em>effectiveness</em> of HTML</h1>
         <p class="intro">
-          Twenty self-contained <code>.html</code> files an agent produced instead of a wall of markdown.
+          Twenty-four self-contained <code>.html</code> files an agent produced instead of a wall of markdown.
           Each one trades a document you'd skim for one you'd actually read — open any of them directly in
           a browser. Grouped by the kind of work they replace.
         </p>
@@ -361,6 +361,7 @@
           <a href="#research">Research <span class="n">2</span></a>
           <a href="#reports">Reports <span class="n">2</span></a>
           <a href="#editors">Custom Editors <span class="n">3</span></a>
+          <a href="#data">Data &amp; Visualization <span class="n">4</span></a>
         </nav>
       </div>
       <div class="hero-fig" aria-hidden="true">
@@ -813,9 +814,113 @@
     </div>
   </section>
 
+  <!-- ============================== Data & Visualization ============================== -->
+  <section id="data">
+    <div class="sec-head"><span class="idx">10</span><h2>Data &amp; Visualization</h2><span class="count">4 demos</span></div>
+    <p class="sec-intro">
+      Numbers tell a story when they have shape and color. A dashboard of metric cards, a sortable table,
+      a service topology, or a gantt chart — all possible with nothing more than CSS Grid, inline SVG,
+      and a few lines of vanilla JavaScript.
+    </p>
+    <div class="grid">
+      <a class="card" href="21-dashboard.html">
+        <div class="thumb"><svg viewBox="0 0 120 80">
+          <rect class="wh" x="6" y="6" width="26" height="30" rx="4"/>
+          <rect class="wh" x="36" y="6" width="26" height="30" rx="4"/>
+          <rect class="wh" x="66" y="6" width="26" height="30" rx="4"/>
+          <rect class="wh" x="96" y="6" width="18" height="30" rx="4"/>
+          <rect class="fl" x="10" y="14" width="18" height="4" rx="2"/>
+          <rect class="cl" x="10" y="22" width="12" height="8" rx="2"/>
+          <rect class="fl" x="40" y="14" width="18" height="4" rx="2"/>
+          <rect class="ol" x="40" y="22" width="14" height="8" rx="2"/>
+          <rect class="fl" x="70" y="14" width="18" height="4" rx="2"/>
+          <rect class="oa" x="70" y="22" width="10" height="8" rx="2"/>
+          <rect class="wh" x="6" y="42" width="62" height="32" rx="5"/>
+          <rect class="wh" x="74" y="42" width="40" height="32" rx="5"/>
+          <rect class="cl" x="12" y="62" width="6" height="8" rx="1"/>
+          <rect class="ol" x="22" y="56" width="6" height="14" rx="1"/>
+          <rect class="oa" x="32" y="52" width="6" height="18" rx="1"/>
+          <rect class="cl" x="42" y="48" width="6" height="22" rx="1"/>
+          <rect class="ol" x="52" y="44" width="6" height="26" rx="1"/>
+          <circle class="cl" cx="94" cy="58" r="12" fill="none" stroke-width="6"/>
+          <circle class="ol" cx="94" cy="58" r="12" fill="none" stroke-width="6" stroke-dasharray="28 48" stroke-dashoffset="14"/>
+        </svg></div>
+        <div class="body">
+          <div class="title">Metrics dashboard</div>
+          <div class="desc">KPI cards, bar chart, donut chart, sparklines, and a service health table — one page, zero dependencies.</div>
+          <div class="file"><span>21-dashboard.html</span><span class="arrow">→</span></div>
+        </div>
+      </a>
+      <a class="card" href="22-interactive-table.html">
+        <div class="thumb"><svg viewBox="0 0 120 80">
+          <rect class="wh" x="6" y="6" width="108" height="12" rx="4"/>
+          <rect class="fl" x="10" y="10" width="30" height="4" rx="2"/>
+          <rect class="oa" x="78" y="9" width="32" height="6" rx="3"/>
+          <rect class="wh" x="6" y="22" width="108" height="52" rx="5"/>
+          <line class="ln" x1="6" y1="34" x2="114" y2="34"/>
+          <line class="ln" x1="6" y1="46" x2="114" y2="46"/>
+          <line class="ln" x1="6" y1="58" x2="114" y2="58"/>
+          <rect class="fl" x="12" y="26" width="24" height="4" rx="2"/>
+          <rect class="fl" x="42" y="26" width="16" height="4" rx="2"/>
+          <rect class="fl" x="12" y="38" width="28" height="4" rx="2"/>
+          <rect class="cl" x="42" y="37" width="20" height="6" rx="3"/>
+          <rect class="fl" x="12" y="50" width="20" height="4" rx="2"/>
+          <rect class="ol" x="42" y="49" width="18" height="6" rx="3"/>
+          <rect class="fl" x="12" y="62" width="26" height="4" rx="2"/>
+          <rect class="oa" x="42" y="61" width="22" height="6" rx="3"/>
+        </svg></div>
+        <div class="body">
+          <div class="title">Sortable, filterable table</div>
+          <div class="desc">Search box, role filters, clickable column headers for sort — all in vanilla JS with avatar initials and role badges.</div>
+          <div class="file"><span>22-interactive-table.html</span><span class="arrow">→</span></div>
+        </div>
+      </a>
+      <a class="card" href="23-system-architecture.html">
+        <div class="thumb"><svg viewBox="0 0 120 80">
+          <rect class="cl" x="30" y="4" width="22" height="14" rx="3"/>
+          <rect class="cl" x="58" y="4" width="22" height="14" rx="3"/>
+          <rect class="wh" x="44" y="28" width="22" height="14" rx="3"/>
+          <rect class="ol" x="16" y="52" width="22" height="14" rx="3"/>
+          <rect class="ol" x="44" y="52" width="22" height="14" rx="3"/>
+          <rect class="ol" x="72" y="52" width="22" height="14" rx="3"/>
+          <line class="ln" x1="41" y1="18" x2="55" y2="28"/>
+          <line class="ln" x1="69" y1="18" x2="55" y2="28"/>
+          <line class="ln" x1="55" y1="42" x2="27" y2="52"/>
+          <line class="ln" x1="55" y1="42" x2="55" y2="52"/>
+          <line class="ln" x1="55" y1="42" x2="83" y2="52"/>
+        </svg></div>
+        <div class="body">
+          <div class="title">System architecture</div>
+          <div class="desc">Layered service topology — clients, gateway, core services, data stores, external dependencies — with SVG connector arrows and a legend.</div>
+          <div class="file"><span>23-system-architecture.html</span><span class="arrow">→</span></div>
+        </div>
+      </a>
+      <a class="card" href="24-timeline-gantt.html">
+        <div class="thumb"><svg viewBox="0 0 120 80">
+          <rect class="fl" x="6" y="10" width="108" height="10" rx="2"/>
+          <rect class="fl" x="6" y="24" width="108" height="10" rx="2"/>
+          <rect class="fl" x="6" y="38" width="108" height="10" rx="2"/>
+          <rect class="fl" x="6" y="52" width="108" height="10" rx="2"/>
+          <rect class="cl" x="10" y="12" width="28" height="6" rx="2"/>
+          <rect class="ol" x="42" y="26" width="36" height="6" rx="2"/>
+          <rect class="oa" x="30" y="40" width="24" height="6" rx="2"/>
+          <rect class="oa" x="60" y="40" width="30" height="6" rx="2"/>
+          <rect class="oa" x="20" y="54" width="44" height="6" rx="2"/>
+          <rect class="st" x="52" y="52" width="8" height="8" rx="1" transform="rotate(45 56 56)"/>
+          <line class="lc" x1="72" y1="6" x2="72" y2="66"/>
+        </svg></div>
+        <div class="body">
+          <div class="title">Project timeline / Gantt</div>
+          <div class="desc">CSS Grid gantt chart with grouped tasks, progress bars, milestone diamonds, and a "today" marker — no chart library needed.</div>
+          <div class="file"><span>24-timeline-gantt.html</span><span class="arrow">→</span></div>
+        </div>
+      </a>
+    </div>
+  </section>
+
   <footer>
     <span class="k">Everything on this page is itself a single <code>.html</code> file.</span>
-    <span>View the repo · <a href="https://thariqs.github.io/html-effectiveness/">thariqs.github.io/html-effectiveness</a></span>
+    <span>Inspired by <a href="https://thariqs.github.io/html-effectiveness/">thariqs.github.io/html-effectiveness</a> · Examples 21–24 are original additions</span>
   </footer>
 
 </div>
