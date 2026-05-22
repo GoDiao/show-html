@@ -12,6 +12,9 @@
       --clay:     #D97757;
       --oat:      #E3DACC;
       --olive:    #788C5D;
+      --sky:      #6A8CAF;
+      --rust:     #B04A3F;
+      --gray-100: #F5F4EE;
       --gray-150: #F0EEE6;
       --gray-300: #D1CFC5;
       --gray-500: #87867F;
@@ -24,24 +27,42 @@
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
 
     body {
       font-family: var(--sans);
       background: var(--ivory);
       color: var(--gray-700);
       line-height: 1.55;
-      padding: 56px 32px 120px;
       -webkit-font-smoothing: antialiased;
+      padding: 0;
     }
 
-    .page { max-width: 1120px; margin: 0 auto; }
+    .page { max-width: 1080px; margin: 0 auto; }
 
-    /* ---------- header ---------- */
+    /* ── progress bar ── */
+    .progress-bar {
+      position: fixed;
+      top: 0; left: 0;
+      width: 0%;
+      height: 3px;
+      background: var(--clay);
+      z-index: 100;
+      transition: width 120ms linear;
+    }
 
-    header.page-head { margin-bottom: 48px; max-width: 820px; }
+    /* ── header ─────────────────── */
+
+    header.page-head {
+      padding: 56px 32px 40px;
+      border-bottom: 1px solid var(--gray-300);
+      margin-bottom: 0;
+      max-width: 820px;
+    }
 
     .eyebrow {
-      font-size: 12px;
+      font-family: var(--mono);
+      font-size: 11px;
       letter-spacing: 0.08em;
       text-transform: uppercase;
       color: var(--gray-500);
@@ -51,53 +72,103 @@
     h1 {
       font-family: var(--serif);
       font-weight: 500;
-      font-size: 38px;
-      line-height: 1.15;
+      font-size: 40px;
+      line-height: 1.12;
       color: var(--slate);
-      margin-bottom: 18px;
-      letter-spacing: -0.01em;
+      margin-bottom: 20px;
+      letter-spacing: -0.02em;
     }
 
     .prompt-box {
-      background: var(--gray-150);
+      background: var(--gray-100);
       border: 1.5px solid var(--gray-300);
-      border-radius: 12px;
+      border-radius: 10px;
       padding: 16px 20px;
-      font-size: 14.5px;
+      font-size: 14px;
       color: var(--gray-700);
+      line-height: 1.6;
     }
     .prompt-box .label {
       font-family: var(--mono);
-      font-size: 11px;
+      font-size: 10px;
       text-transform: uppercase;
-      letter-spacing: 0.06em;
+      letter-spacing: 0.08em;
       color: var(--gray-500);
       display: block;
-      margin-bottom: 6px;
+      margin-bottom: 8px;
     }
 
-    /* ---------- section chrome ---------- */
+    .content-area {
+      padding: 0 32px 120px;
+    }
+
+    /* ── summary strip ──────────────────── */
+
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin: 40px 0 56px;
+      padding-top: 40px;
+    }
+    @media (max-width: 900px) { .summary { grid-template-columns: repeat(2, 1fr); } }
+    .summary .cell {
+      background: var(--white);
+      border: 1.5px solid var(--gray-300);
+      border-radius: 10px;
+      padding: 18px 20px;
+      position: relative;
+      overflow: hidden;
+    }
+    .summary .cell::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--gray-300);
+    }
+    .summary .cell:first-child::before { background: var(--clay); }
+    .summary .k {
+      font-family: var(--mono);
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--gray-500);
+      margin-bottom: 8px;
+    }
+    .summary .v {
+      font-family: var(--serif);
+      font-size: 18px;
+      color: var(--slate);
+      font-weight: 500;
+    }
+    .summary .v.accent { color: var(--clay); }
+
+    /* ── section chrome ─────────────────── */
 
     section { margin-bottom: 64px; }
 
     .sec-head {
       display: flex;
-      align-items: baseline;
+      align-items: center;
       gap: 14px;
       margin-bottom: 8px;
     }
     .sec-head .num {
       font-family: var(--mono);
-      font-size: 12px;
-      background: var(--oat);
-      color: var(--slate);
-      padding: 3px 9px;
-      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 600;
+      background: var(--slate);
+      color: var(--ivory);
+      width: 28px; height: 28px;
+      border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
     }
     .sec-head h2 {
       font-family: var(--serif);
       font-weight: 500;
-      font-size: 26px;
+      font-size: 28px;
       color: var(--slate);
       letter-spacing: -0.01em;
     }
@@ -105,139 +176,171 @@
       font-size: 14.5px;
       color: var(--gray-500);
       max-width: 720px;
-      margin-bottom: 28px;
+      margin-bottom: 32px;
+      padding-left: 42px;
+      line-height: 1.6;
     }
 
-    /* ---------- summary strip ---------- */
+    /* ── milestone timeline ─────────────── */
 
-    .summary {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 16px;
-      margin-bottom: 64px;
+    .milestones { display: flex; flex-direction: column; gap: 0; position: relative; }
+    .milestones::before {
+      content: "";
+      position: absolute;
+      left: 107px;
+      top: 0; bottom: 0;
+      width: 2px;
+      background: var(--gray-300);
     }
-    @media (max-width: 900px) { .summary { grid-template-columns: repeat(2, 1fr); } }
-    .summary .cell {
-      background: var(--white);
-      border: 1.5px solid var(--gray-300);
-      border-radius: 12px;
-      padding: 18px 20px;
-    }
-    .summary .k {
-      font-family: var(--mono);
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      color: var(--gray-500);
-      margin-bottom: 6px;
-    }
-    .summary .v {
-      font-size: 17px;
-      color: var(--slate);
-      font-weight: 600;
-    }
-    .summary .v.accent { color: var(--clay); }
-
-    /* ---------- milestone timeline ---------- */
-
-    .milestones { display: flex; flex-direction: column; gap: 0; }
     .milestone {
       display: grid;
-      grid-template-columns: 120px 28px 1fr;
-      gap: 0 18px;
+      grid-template-columns: 100px 30px 1fr;
+      gap: 0 16px;
       position: relative;
     }
     .milestone .when {
       text-align: right;
       font-family: var(--mono);
-      font-size: 12px;
+      font-size: 11px;
       color: var(--gray-500);
-      padding-top: 4px;
+      padding-top: 6px;
+      letter-spacing: 0.01em;
     }
     .milestone .dot-col {
       display: flex;
       flex-direction: column;
       align-items: center;
+      position: relative;
+      z-index: 1;
     }
     .milestone .dot {
-      width: 14px; height: 14px;
+      width: 16px; height: 16px;
       border-radius: 50%;
       background: var(--white);
       border: 3px solid var(--clay);
-      margin-top: 4px;
+      margin-top: 5px;
       flex-shrink: 0;
+      transition: all 200ms ease;
+    }
+    .milestone:hover .dot {
+      transform: scale(1.2);
+      box-shadow: 0 0 0 4px rgba(217,119,87,0.15);
     }
     .milestone .dot.done { background: var(--olive); border-color: var(--olive); }
-    .milestone .line {
-      width: 2px;
-      flex: 1;
-      background: var(--gray-300);
-      margin: 4px 0;
+    .milestone .dot.done::after {
+      content: "\2713";
+      color: var(--white);
+      font-size: 8px;
+      font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      width: 100%; height: 100%;
     }
-    .milestone:last-child .line { display: none; }
-    .milestone .body { padding-bottom: 36px; }
+    .milestone .body { padding-bottom: 40px; }
     .milestone .body h3 {
       font-family: var(--serif);
       font-weight: 500;
-      font-size: 19px;
+      font-size: 20px;
       color: var(--slate);
-      margin-bottom: 4px;
+      margin-bottom: 6px;
     }
-    .milestone .body p { font-size: 14px; color: var(--gray-500); margin-bottom: 10px; max-width: 620px; }
-    .milestone .tags { display: flex; gap: 8px; flex-wrap: wrap; }
+    .milestone .body p { font-size: 14px; color: var(--gray-500); margin-bottom: 12px; max-width: 620px; line-height: 1.6; }
+    .milestone .tags { display: flex; gap: 6px; flex-wrap: wrap; }
     .milestone .tag {
       font-family: var(--mono);
-      font-size: 11.5px;
-      background: var(--gray-150);
+      font-size: 11px;
+      background: var(--gray-100);
       border: 1px solid var(--gray-300);
-      border-radius: 6px;
+      border-radius: 5px;
       padding: 3px 8px;
       color: var(--gray-700);
     }
+    /* effort badges */
+    .milestone .effort {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin-right: 4px;
+    }
+    .effort.s { background: #E4E9DC; color: #4B5C39; }
+    .effort.m { background: var(--oat); color: #5A4A2E; }
+    .effort.l { background: #F3D9CC; color: #8A3B1E; }
+    .effort-bar {
+      display: inline-block;
+      width: 32px;
+      height: 4px;
+      border-radius: 2px;
+      background: var(--gray-300);
+      position: relative;
+      overflow: hidden;
+      margin-left: 4px;
+    }
+    .effort-bar .fill { position: absolute; top: 0; left: 0; height: 100%; border-radius: 2px; }
+    .effort.s .effort-bar .fill { width: 33%; background: var(--olive); }
+    .effort.m .effort-bar .fill { width: 66%; background: var(--clay); }
+    .effort.l .effort-bar .fill { width: 100%; background: var(--rust); }
 
-    /* ---------- data flow diagram ---------- */
+    /* ── data flow diagram ──────────────── */
 
     .diagram {
       background: var(--white);
       border: 1.5px solid var(--gray-300);
-      border-radius: 12px;
+      border-radius: 10px;
       padding: 28px;
       overflow-x: auto;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.03);
     }
     .diagram svg { display: block; min-width: 760px; }
     .diagram text { font-family: var(--mono); }
-    .caption { font-size: 13px; color: var(--gray-500); margin-top: 12px; }
+    .caption { font-size: 13px; color: var(--gray-500); margin-top: 14px; line-height: 1.5; }
 
-    /* ---------- mockups ---------- */
+    /* ── mockups ────────────────────────── */
 
     .mocks {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 28px;
+      gap: 24px;
     }
     @media (max-width: 900px) { .mocks { grid-template-columns: 1fr; } }
     .mock {
       background: var(--white);
       border: 1.5px solid var(--gray-300);
-      border-radius: 12px;
+      border-radius: 10px;
       overflow: hidden;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.03);
     }
     .mock .mock-label {
-      padding: 12px 18px;
+      padding: 10px 16px;
       border-bottom: 1.5px solid var(--gray-300);
       font-family: var(--mono);
-      font-size: 11.5px;
+      font-size: 11px;
       text-transform: uppercase;
       letter-spacing: 0.06em;
       color: var(--gray-500);
-      background: var(--gray-150);
+      background: var(--gray-100);
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
-    .mock .mock-body { padding: 22px; }
+    .mock .mock-label .mock-tag {
+      font-size: 9px;
+      background: var(--oat);
+      color: var(--slate);
+      padding: 2px 6px;
+      border-radius: 3px;
+      text-transform: none;
+      letter-spacing: 0;
+    }
+    .mock .mock-body { padding: 20px; }
 
     /* task card mock */
     .card-mock {
       border: 1.5px solid var(--gray-300);
-      border-radius: 10px;
+      border-radius: 8px;
       padding: 16px;
       background: var(--ivory);
     }
@@ -247,27 +350,29 @@
     .thread { display: flex; flex-direction: column; gap: 12px; }
     .comment { display: flex; gap: 10px; }
     .comment .avatar {
-      width: 26px; height: 26px; border-radius: 50%;
+      width: 28px; height: 28px; border-radius: 50%;
       background: var(--oat);
       flex-shrink: 0;
       display: flex; align-items: center; justify-content: center;
-      font-size: 11px; font-weight: 600; color: var(--slate);
+      font-size: 10px; font-weight: 700; color: var(--slate);
+      font-family: var(--mono);
     }
     .comment .avatar.alt { background: var(--olive); color: var(--white); }
     .comment .bubble { flex: 1; }
     .comment .author { font-size: 12px; font-weight: 600; color: var(--slate); }
     .comment .author .time { font-weight: 400; color: var(--gray-500); margin-left: 6px; }
-    .comment .text { font-size: 13px; color: var(--gray-700); margin-top: 2px; }
-    .comment .reply-link { font-size: 11.5px; color: var(--clay); margin-top: 4px; cursor: default; }
-    .comment.nested { margin-left: 36px; }
+    .comment .text { font-size: 13px; color: var(--gray-700); margin-top: 2px; line-height: 1.5; }
+    .comment .text code { font-family: var(--mono); font-size: 12px; background: rgba(217,119,87,0.08); padding: 0px 4px; border-radius: 3px; }
+    .comment .reply-link { font-size: 11px; color: var(--clay); margin-top: 4px; cursor: default; }
+    .comment.nested { margin-left: 38px; }
     .composer {
-      display: flex; gap: 10px; align-items: center;
+      display: flex; gap: 8px; align-items: center;
       margin-top: 6px;
     }
     .composer .field {
       flex: 1;
       border: 1.5px solid var(--gray-300);
-      border-radius: 8px;
+      border-radius: 7px;
       padding: 8px 12px;
       font-size: 13px;
       color: var(--gray-500);
@@ -276,54 +381,67 @@
     .composer .send {
       background: var(--clay);
       color: var(--white);
-      border-radius: 8px;
+      border-radius: 7px;
       padding: 8px 14px;
       font-size: 13px;
       font-weight: 600;
     }
 
     /* sidebar digest mock */
-    .digest { display: flex; flex-direction: column; gap: 10px; }
+    .digest { display: flex; flex-direction: column; gap: 8px; }
     .digest .row {
       display: flex; gap: 10px; align-items: flex-start;
       padding: 10px 12px;
       background: var(--ivory);
       border: 1.5px solid var(--gray-300);
-      border-radius: 8px;
+      border-radius: 7px;
+      transition: border-color 100ms ease;
     }
-    .digest .row.unread { border-left: 3px solid var(--clay); }
+    .digest .row.unread { border-left: 3px solid var(--clay); background: rgba(217,119,87,0.03); }
     .digest .mini-av {
-      width: 22px; height: 22px; border-radius: 50%;
+      width: 24px; height: 24px; border-radius: 50%;
       background: var(--oat);
       flex-shrink: 0;
-      font-size: 10px; font-weight: 600; color: var(--slate);
+      font-size: 9px; font-weight: 700; color: var(--slate);
+      font-family: var(--mono);
       display: flex; align-items: center; justify-content: center;
     }
-    .digest .txt { font-size: 12.5px; color: var(--gray-700); line-height: 1.45; }
+    .digest .txt { font-size: 12px; color: var(--gray-700); line-height: 1.5; }
     .digest .txt strong { color: var(--slate); }
     .digest .txt .on { color: var(--gray-500); }
 
-    /* ---------- code panel ---------- */
+    /* ── code panel ─────────────────────── */
 
-    .code-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+    .code-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
     @media (max-width: 980px) { .code-grid { grid-template-columns: 1fr; } }
-    .code-block { display: flex; flex-direction: column; gap: 10px; }
+    .code-block { display: flex; flex-direction: column; gap: 8px; }
     .code-block .file-label {
       font-family: var(--mono);
-      font-size: 12px;
+      font-size: 11.5px;
       color: var(--gray-500);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .code-block .file-label::before {
+      content: "";
+      display: inline-block;
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--olive);
     }
     .code {
       background: var(--slate);
-      border-radius: 12px;
-      padding: 18px 20px;
+      border-radius: 10px;
+      padding: 20px;
       overflow-x: auto;
       flex: 1;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
     }
     .code pre {
       font-family: var(--mono);
       font-size: 12.5px;
-      line-height: 1.65;
+      line-height: 1.7;
       color: #E8E6DE;
       white-space: pre;
     }
@@ -332,71 +450,126 @@
     .code .cm  { color: var(--gray-500); }
     .code .fn  { color: #C9B98A; }
 
-    /* ---------- risk table ---------- */
+    /* ── risk table ─────────────────────── */
 
     .risks {
       border: 1.5px solid var(--gray-300);
-      border-radius: 12px;
+      border-radius: 10px;
       overflow: hidden;
       background: var(--white);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.03);
     }
     .risks .row {
       display: grid;
-      grid-template-columns: 1.6fr 90px 1.6fr;
+      grid-template-columns: 1.6fr 80px 1.6fr;
       gap: 0;
     }
     @media (max-width: 780px) { .risks .row { grid-template-columns: 1fr; } }
     .risks .row + .row { border-top: 1.5px solid var(--gray-300); }
-    .risks .cell { padding: 14px 18px; font-size: 13.5px; }
+    .risks .cell { padding: 16px 18px; font-size: 13.5px; line-height: 1.55; }
     .risks .cell + .cell { border-left: 1.5px solid var(--gray-300); }
     @media (max-width: 780px) { .risks .cell + .cell { border-left: none; border-top: 1px dashed var(--gray-300); } }
-    .risks .head { background: var(--gray-150); font-weight: 600; color: var(--slate); font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; }
+    .risks .head {
+      background: var(--gray-100);
+      font-weight: 600;
+      color: var(--slate);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .risks .cell code {
+      font-family: var(--mono);
+      font-size: 12px;
+      background: rgba(217,119,87,0.08);
+      padding: 1px 4px;
+      border-radius: 3px;
+      color: var(--clay);
+    }
     .sev {
       display: inline-block;
       font-family: var(--mono);
-      font-size: 11px;
-      padding: 2px 8px;
-      border-radius: 6px;
-      font-weight: 600;
+      font-size: 10px;
+      padding: 3px 9px;
+      border-radius: 5px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
     }
     .sev.high { background: #F3D9CC; color: #8A3B1E; }
-    .sev.med  { background: var(--oat); color: var(--slate); }
+    .sev.med  { background: var(--oat); color: #5A4A2E; }
     .sev.low  { background: #E4E9DC; color: #4B5C39; }
 
-    /* ---------- open questions ---------- */
+    /* ── open questions ─────────────────── */
 
-    .open-q { display: flex; flex-direction: column; gap: 14px; max-width: 820px; }
+    .open-q { display: flex; flex-direction: column; gap: 12px; max-width: 820px; }
     .q {
       background: var(--white);
       border: 1.5px solid var(--gray-300);
       border-left: 4px solid var(--clay);
-      border-radius: 10px;
-      padding: 16px 20px;
+      border-radius: 8px;
+      padding: 18px 20px;
+      transition: box-shadow 200ms ease;
     }
-    .q .qt { font-weight: 600; font-size: 15px; color: var(--slate); margin-bottom: 4px; }
-    .q .qd { font-size: 13.5px; color: var(--gray-500); }
+    .q:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+    .q .qt { font-weight: 600; font-size: 15px; color: var(--slate); margin-bottom: 6px; }
+    .q .qd { font-size: 14px; color: var(--gray-500); line-height: 1.55; }
+    .q .qd code {
+      font-family: var(--mono);
+      font-size: 12.5px;
+      background: rgba(217,119,87,0.08);
+      padding: 1px 4px;
+      border-radius: 3px;
+      color: var(--clay);
+    }
     .q .owner {
       font-family: var(--mono);
-      font-size: 11.5px;
+      font-size: 11px;
       color: var(--gray-500);
-      margin-top: 8px;
+      margin-top: 10px;
+      padding-top: 8px;
+      border-top: 1px dashed var(--gray-300);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .q .owner::before {
+      content: "\25B6";
+      font-size: 8px;
+      color: var(--clay);
+    }
+
+    /* ── dependency indicators ── */
+    .dep-line {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--gray-500);
+      margin-bottom: 6px;
+    }
+    .dep-line .dep-arrow {
+      color: var(--clay);
+      font-size: 12px;
     }
   </style>
 </head>
 <body>
-  <div class="page">
+<div class="progress-bar" id="progressBar"></div>
+<div class="page">
 
-    <header class="page-head">
-      <div class="eyebrow">Implementation plan · Acme web client</div>
-      <h1>Comment threads on task cards</h1>
-      <div class="prompt-box">
-        <span class="label">Prompt</span>
-        Create a thorough implementation plan for adding threaded comments to
-        task cards. Include mockups, the data flow from client to persistence,
-        the key code I'll need to write, and a risk table. Make it easy to
-        skim on a phone — I'm going to pass this to the implementer as-is.
-      </div>
-    </header>
+  <header class="page-head">
+    <div class="eyebrow">Implementation plan &middot; Acme web client</div>
+    <h1>Comment threads on task cards</h1>
+    <div class="prompt-box">
+      <span class="label">Prompt</span>
+      Create a thorough implementation plan for adding threaded comments to
+      task cards. Include mockups, the data flow from client to persistence,
+      the key code I'll need to write, and a risk table. Make it easy to
+      skim on a phone &#8212; I'm going to pass this to the implementer as-is.
+    </div>
+  </header>
+
+  <div class="content-area">
 
     <!-- ============================================================= -->
 
@@ -415,41 +588,57 @@
 
       <div class="milestones">
         <div class="milestone">
-          <div class="when">Week&nbsp;1 · Mon–Tue</div>
-          <div class="dot-col"><span class="dot done"></span><span class="line"></span></div>
+          <div class="when">Week&nbsp;1<br>Mon &#8211; Tue</div>
+          <div class="dot-col"><span class="dot done"></span></div>
           <div class="body">
             <h3>Schema &amp; API contract</h3>
+            <div style="margin-bottom:8px;">
+              <span class="effort s">S <span class="effort-bar"><span class="fill"></span></span></span>
+            </div>
             <p>New <code>comments</code> and <code>comment_reads</code> tables, migrations, and the tRPC router stubs. No UI. Contract reviewed before anything else lands.</p>
+            <div class="dep-line"><span class="dep-arrow">&#8594;</span> gates slice 2, 3, 4</div>
             <div class="tags"><span class="tag">packages/db</span><span class="tag">packages/api</span><span class="tag">migration 0042</span></div>
           </div>
         </div>
 
         <div class="milestone">
-          <div class="when">Week&nbsp;1 · Wed–Fri</div>
-          <div class="dot-col"><span class="dot"></span><span class="line"></span></div>
+          <div class="when">Week&nbsp;1<br>Wed &#8211; Fri</div>
+          <div class="dot-col"><span class="dot"></span></div>
           <div class="body">
             <h3>Thread component &amp; composer</h3>
+            <div style="margin-bottom:8px;">
+              <span class="effort m">M <span class="effort-bar"><span class="fill"></span></span></span>
+            </div>
             <p>Static <code>&lt;CommentThread&gt;</code> rendered from fixtures. Optimistic insert on submit, rollback on failure, one level of nesting only.</p>
+            <div class="dep-line"><span class="dep-arrow">&#8594;</span> depends on slice 1</div>
             <div class="tags"><span class="tag">apps/web</span><span class="tag">storybook</span></div>
           </div>
         </div>
 
         <div class="milestone">
-          <div class="when">Week&nbsp;2 · Mon–Wed</div>
-          <div class="dot-col"><span class="dot"></span><span class="line"></span></div>
+          <div class="when">Week&nbsp;2<br>Mon &#8211; Wed</div>
+          <div class="dot-col"><span class="dot"></span></div>
           <div class="body">
             <h3>Realtime fan-out &amp; unread state</h3>
+            <div style="margin-bottom:8px;">
+              <span class="effort l">L <span class="effort-bar"><span class="fill"></span></span></span>
+            </div>
             <p>Subscribe the open card to its comment channel. Track per-user read cursors so the sidebar can show an unread count without a second query.</p>
+            <div class="dep-line"><span class="dep-arrow">&#8594;</span> depends on slice 1, 2</div>
             <div class="tags"><span class="tag">packages/realtime</span><span class="tag">apps/web</span></div>
           </div>
         </div>
 
         <div class="milestone">
-          <div class="when">Week&nbsp;2 · Thu–Fri</div>
-          <div class="dot-col"><span class="dot"></span><span class="line"></span></div>
+          <div class="when">Week&nbsp;2<br>Thu &#8211; Fri</div>
+          <div class="dot-col"><span class="dot"></span></div>
           <div class="body">
             <h3>Notifications, flag ramp, docs</h3>
-            <p>Mention detection → notification row, email digest fallback, ramp <code>task_comments_v1</code> to internal, then 10% → 100% over three days.</p>
+            <div style="margin-bottom:8px;">
+              <span class="effort m">M <span class="effort-bar"><span class="fill"></span></span></span>
+            </div>
+            <p>Mention detection &#8594; notification row, email digest fallback, ramp <code>task_comments_v1</code> to internal, then 10% &#8594; 100% over three days.</p>
+            <div class="dep-line"><span class="dep-arrow">&#8594;</span> depends on slice 2, 3</div>
             <div class="tags"><span class="tag">packages/notify</span><span class="tag">growthbook</span></div>
           </div>
         </div>
@@ -460,7 +649,7 @@
 
     <section>
       <div class="sec-head"><span class="num">02</span><h2>Data flow</h2></div>
-      <p class="sec-intro">Optimistic write path on the left, fan-out on the right. The read cursor update is fire-and-forget — we never block the thread render on it.</p>
+      <p class="sec-intro">Optimistic write path on the left, fan-out on the right. The read cursor update is fire-and-forget &#8212; we never block the thread render on it.</p>
 
       <div class="diagram">
         <svg viewBox="0 0 860 340" xmlns="http://www.w3.org/2000/svg">
@@ -536,22 +725,22 @@
 
     <section>
       <div class="sec-head"><span class="num">03</span><h2>Mockups</h2></div>
-      <p class="sec-intro">Not pixel-final — just enough that the reviewer and I agree on nesting depth, composer placement, and what the sidebar digest looks like.</p>
+      <p class="sec-intro">Not pixel-final &#8212; just enough that the reviewer and I agree on nesting depth, composer placement, and what the sidebar digest looks like.</p>
 
       <div class="mocks">
         <div class="mock">
-          <div class="mock-label">A · Thread inside an open task card</div>
+          <div class="mock-label">A &middot; Thread inside an open task card <span class="mock-tag">primary</span></div>
           <div class="mock-body">
             <div class="card-mock">
               <div class="cm-title">Ship onboarding empty-state rewrite</div>
-              <div class="cm-meta">BIR-1142 · Assigned to Priya · Due Fri</div>
+              <div class="cm-meta">BIR-1142 &middot; Assigned to Priya &middot; Due Fri</div>
               <div class="cm-divider"></div>
               <div class="thread">
                 <div class="comment">
                   <div class="avatar">JM</div>
                   <div class="bubble">
                     <div class="author">Jonah M. <span class="time">2h ago</span></div>
-                    <div class="text">Should the illustration swap when the workspace already has one project? Feels odd to show the "start here" art twice.</div>
+                    <div class="text">Should the illustration swap when the workspace already has one project? Feels odd to show the &#8220;start here&#8221; art twice.</div>
                     <div class="reply-link">Reply</div>
                   </div>
                 </div>
@@ -559,11 +748,11 @@
                   <div class="avatar alt">PS</div>
                   <div class="bubble">
                     <div class="author">Priya S. <span class="time">40m ago</span></div>
-                    <div class="text">Good catch — I'll gate it on <code>projects.count &gt; 0</code> and fall back to the minimal variant.</div>
+                    <div class="text">Good catch &#8212; I'll gate it on <code>projects.count &gt; 0</code> and fall back to the minimal variant.</div>
                   </div>
                 </div>
                 <div class="composer">
-                  <div class="field">Add a comment…</div>
+                  <div class="field">Add a comment&#8230;</div>
                   <div class="send">Post</div>
                 </div>
               </div>
@@ -572,20 +761,20 @@
         </div>
 
         <div class="mock">
-          <div class="mock-label">B · Sidebar unread digest</div>
+          <div class="mock-label">B &middot; Sidebar unread digest <span class="mock-tag">secondary</span></div>
           <div class="mock-body">
             <div class="digest">
               <div class="row unread">
                 <div class="mini-av">JM</div>
-                <div class="txt"><strong>Jonah</strong> commented <span class="on">on BIR-1142</span> — "Should the illustration swap when…"</div>
+                <div class="txt"><strong>Jonah</strong> commented <span class="on">on BIR-1142</span> &#8212; &#8220;Should the illustration swap when&#8230;&#8221;</div>
               </div>
               <div class="row unread">
                 <div class="mini-av">AK</div>
-                <div class="txt"><strong>Aiko</strong> mentioned you <span class="on">on BIR-1098</span> — "@priya can you confirm the copy here?"</div>
+                <div class="txt"><strong>Aiko</strong> mentioned you <span class="on">on BIR-1098</span> &#8212; &#8220;@priya can you confirm the copy here?&#8221;</div>
               </div>
               <div class="row">
                 <div class="mini-av">RW</div>
-                <div class="txt"><strong>Rowan</strong> replied <span class="on">on BIR-0971</span> — "Merged, thanks for the quick turnaround."</div>
+                <div class="txt"><strong>Rowan</strong> replied <span class="on">on BIR-0971</span> &#8212; &#8220;Merged, thanks for the quick turnaround.&#8221;</div>
               </div>
             </div>
           </div>
@@ -675,7 +864,7 @@
         <div class="row">
           <div class="cell">Mention detection false-positives on pasted markdown (<code>@media</code>, <code>@2x</code>).</div>
           <div class="cell"><span class="sev low">LOW</span></div>
-          <div class="cell">Resolve mentions against workspace members only, at write time, and store the resolved user ids — never re-parse on read.</div>
+          <div class="cell">Resolve mentions against workspace members only, at write time, and store the resolved user ids &#8212; never re-parse on read.</div>
         </div>
       </div>
     </section>
@@ -687,17 +876,27 @@
       <div class="open-q">
         <div class="q">
           <div class="qt">Do we allow editing, or only delete-and-repost?</div>
-          <div class="qd">Editing needs an <code>edited_at</code> column and an "edited" affordance. Delete-and-repost is simpler but loses the reply anchor. Leaning toward delete-only for v1.</div>
-          <div class="owner">Decide with · design, before slice 2</div>
+          <div class="qd">Editing needs an <code>edited_at</code> column and an &#8220;edited&#8221; affordance. Delete-and-repost is simpler but loses the reply anchor. Leaning toward delete-only for v1.</div>
+          <div class="owner">Decide with &middot; design, before slice 2</div>
         </div>
         <div class="q">
           <div class="qt">Email digest cadence when a user has the app closed</div>
           <div class="qd">Immediate-per-mention will be noisy. Proposal: batch on a 15-minute window, collapse to one email per task, and respect quiet hours from the existing settings table.</div>
-          <div class="owner">Decide with · platform, before slice 4</div>
+          <div class="owner">Decide with &middot; platform, before slice 4</div>
         </div>
       </div>
     </section>
 
   </div>
+</div>
+
+<script>
+/* Reading progress */
+window.addEventListener("scroll", () => {
+  const h = document.documentElement;
+  const pct = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100;
+  document.getElementById("progressBar").style.width = pct + "%";
+}, { passive: true });
+</script>
 </body>
 </html>

@@ -6,6 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Acme — Platform Architecture</title>
 <style>
+  @import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,500&family=JetBrains+Mono:wght@400;500&family=Source+Sans+3:wght@400;500;600&display=swap');
   :root {
     --ivory:   #FAF9F5;
     --slate:   #141413;
@@ -19,296 +20,240 @@
     --gray-300:#D1CFC5;
     --gray-500:#87867F;
     --gray-700:#3D3D3A;
-    --serif: ui-serif, Georgia, "Times New Roman", serif;
-    --sans:  system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-    --mono:  ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+    --blueprint-bg: #F6F8FA;
+    --blueprint-surface: #FFFFFF;
+    --blueprint-border: #D8DCE2;
+    --blueprint-accent: #3B6B9C;
+    --blueprint-muted: #6B7B8D;
+    --blueprint-label: #8A95A3;
+
+    --serif: 'Source Serif 4', ui-serif, Georgia, serif;
+    --sans:  'Source Sans 3', system-ui, -apple-system, sans-serif;
+    --mono:  'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
-    background: var(--ivory); color: var(--slate);
+    background: var(--blueprint-bg); color: var(--slate);
     font-family: var(--sans); font-size: 15px; line-height: 1.6;
-    padding: 56px 24px 120px; -webkit-font-smoothing: antialiased;
+    padding: 48px 24px 120px; -webkit-font-smoothing: antialiased;
   }
-  .page { max-width: 1120px; margin: 0 auto; }
+  .page { max-width: 1140px; margin: 0 auto; }
 
   /* ── header ── */
-  header { margin-bottom: 48px; max-width: 640px; }
+  header { margin-bottom: 36px; display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 20px; }
+  .header-left { max-width: 600px; }
   .eyebrow {
-    font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em;
-    text-transform: uppercase; color: var(--gray-500); margin-bottom: 10px;
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--blueprint-accent); margin-bottom: 10px;
+    display: flex; align-items: center; gap: 8px;
   }
+  .eyebrow-line { width: 24px; height: 1.5px; background: var(--blueprint-accent); border-radius: 1px; }
   h1 {
-    font-family: var(--serif); font-weight: 500;
-    font-size: 38px; letter-spacing: -0.01em; margin-bottom: 12px;
+    font-family: var(--serif); font-weight: 400;
+    font-size: 36px; letter-spacing: -0.01em; margin-bottom: 10px;
+    color: var(--slate);
   }
-  .lead { color: var(--gray-700); max-width: 560px; font-size: 15px; }
+  .lead { color: var(--gray-700); max-width: 520px; font-size: 14px; line-height: 1.6; }
+  .header-badge {
+    font-family: var(--mono); font-size: 10px; text-transform: uppercase;
+    letter-spacing: 0.06em; color: var(--blueprint-muted);
+    background: var(--blueprint-surface); border: 1px solid var(--blueprint-border);
+    border-radius: 6px; padding: 6px 12px; white-space: nowrap;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .badge-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--olive); }
 
   /* ── legend ── */
-  .legend {
-    display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 40px;
-    padding: 16px 20px; background: var(--white);
-    border: 1.5px solid var(--gray-300); border-radius: 10px;
+  .legend-bar {
+    display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 20px;
   }
-  .legend-item { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--gray-700); }
-  .legend-dot { width: 12px; height: 12px; border-radius: 4px; flex-shrink: 0; }
+  .legend-chip {
+    display: flex; align-items: center; gap: 7px; font-size: 12px;
+    font-family: var(--mono); color: var(--blueprint-muted);
+    background: var(--blueprint-surface); border: 1px solid var(--blueprint-border);
+    border-radius: 8px; padding: 6px 12px; letter-spacing: 0.02em;
+    font-size: 11px;
+  }
+  .legend-dot { width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; }
 
-  /* ── architecture diagram ── */
-  .arch {
-    background: var(--white); border: 1.5px solid var(--gray-300);
-    border-radius: 12px; padding: 48px 32px; overflow-x: auto;
+  /* ── diagram panel ── */
+  .diagram-section { margin-bottom: 20px; }
+  .diagram-label {
+    font-family: var(--mono); font-size: 10px; text-transform: uppercase;
+    letter-spacing: 0.08em; color: var(--blueprint-label);
+    margin-bottom: 8px; padding-left: 2px;
+    display: flex; align-items: center; gap: 6px;
   }
-  .arch-inner {
-    min-width: 740px; display: flex; flex-direction: column; gap: 0;
-    position: relative;
+  .diagram-label-num {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 18px; height: 18px; border-radius: 5px;
+    background: var(--blueprint-accent); color: var(--white);
+    font-size: 10px; font-weight: 500;
   }
-
-  /* layer */
-  .layer {
-    display: flex; flex-direction: column; align-items: center; gap: 16px;
-    padding: 24px 0; position: relative;
+  .diagram-wrap {
+    background: var(--blueprint-surface); border: 1px solid var(--blueprint-border);
+    border-radius: 12px; padding: 28px 24px; overflow-x: auto;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.03);
   }
-  .layer-label {
-    font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em;
-    text-transform: uppercase; color: var(--gray-500);
-    position: absolute; left: 0; top: 24px;
+  .diagram-wrap .mermaid {
+    display: flex; justify-content: center;
   }
-  .nodes { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
-
-  /* node card */
-  .node {
-    border: 1.5px solid var(--gray-300); border-radius: 10px;
-    padding: 16px 20px; min-width: 160px; text-align: center;
-    background: var(--white); position: relative;
-    transition: box-shadow 120ms, border-color 120ms;
-  }
-  .node:hover { box-shadow: 0 4px 16px rgba(20,20,19,0.08); border-color: var(--slate); }
-  .node-icon { font-size: 22px; margin-bottom: 6px; }
-  .node-name { font-weight: 600; font-size: 14px; color: var(--slate); margin-bottom: 4px; }
-  .node-desc { font-size: 12px; color: var(--gray-500); line-height: 1.4; }
-
-  /* node color accents */
-  .node.client   { border-top: 3px solid var(--clay); }
-  .node.gateway  { border-top: 3px solid var(--sky); }
-  .node.service  { border-top: 3px solid var(--olive); }
-  .node.data     { border-top: 3px solid var(--oat); }
-  .node.external { border-top: 3px solid var(--rust); }
-
-  /* connector arrows between layers */
-  .connector {
-    display: flex; justify-content: center; padding: 8px 0; position: relative;
-  }
-  .connector svg { width: 100%; height: 40px; }
 
   /* ── detail panel ── */
   .details {
-    margin-top: 40px; display: grid; grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
+    margin-top: 36px; display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
   }
   @media (max-width: 768px) { .details { grid-template-columns: 1fr; } }
   .detail-card {
-    background: var(--white); border: 1.5px solid var(--gray-300);
-    border-radius: 12px; padding: 20px 22px;
+    background: var(--blueprint-surface); border: 1px solid var(--blueprint-border);
+    border-radius: 12px; padding: 22px 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+    transition: border-color 150ms;
   }
+  .detail-card:hover { border-color: var(--gray-300); }
+  .detail-icon-row {
+    display: flex; align-items: center; gap: 10px; margin-bottom: 14px;
+  }
+  .detail-icon {
+    width: 32px; height: 32px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+  }
+  .detail-icon.comm { background: rgba(91,143,185,0.12); color: var(--sky); }
+  .detail-icon.infra { background: rgba(120,140,93,0.12); color: var(--olive); }
+  .detail-icon.obs { background: rgba(217,119,87,0.12); color: var(--clay); }
   .detail-title {
-    font-family: var(--serif); font-size: 16px; font-weight: 500;
-    color: var(--slate); margin-bottom: 10px;
+    font-family: var(--serif); font-size: 16px; font-weight: 400;
+    color: var(--slate);
   }
   .detail-list { list-style: none; font-size: 13px; color: var(--gray-700); }
-  .detail-list li { padding: 4px 0; display: flex; align-items: center; gap: 8px; }
+  .detail-list li {
+    padding: 5px 0; display: flex; align-items: center; gap: 8px;
+    border-bottom: 1px solid var(--blueprint-bg);
+  }
+  .detail-list li:last-child { border-bottom: none; }
   .detail-list li::before {
-    content: ""; width: 6px; height: 6px; border-radius: 50%;
-    background: var(--gray-300); flex-shrink: 0;
+    content: ""; width: 4px; height: 4px; border-radius: 50%;
+    background: var(--blueprint-border); flex-shrink: 0;
   }
 </style>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
 </head>
 <body>
 <div class="page">
 
   <header>
-    <p class="eyebrow">System Architecture</p>
-    <h1>Acme Platform</h1>
-    <p class="lead">High-level overview of service topology, data flows, and external dependencies. All inter-service communication uses gRPC; external APIs are REST over TLS.</p>
+    <div class="header-left">
+      <div class="eyebrow"><span class="eyebrow-line"></span> System Architecture</div>
+      <h1>Acme Platform</h1>
+      <p class="lead">High-level overview of service topology, data flows, and external dependencies. All inter-service communication uses gRPC; external APIs are REST over TLS.</p>
+    </div>
+    <div class="header-badge"><span class="badge-dot"></span> v2.4.1</div>
   </header>
 
   <!-- legend -->
-  <div class="legend">
-    <div class="legend-item"><span class="legend-dot" style="background:var(--clay)"></span>Client Layer</div>
-    <div class="legend-item"><span class="legend-dot" style="background:var(--sky)"></span>Gateway</div>
-    <div class="legend-item"><span class="legend-dot" style="background:var(--olive)"></span>Core Services</div>
-    <div class="legend-item"><span class="legend-dot" style="background:var(--oat)"></span>Data Stores</div>
-    <div class="legend-item"><span class="legend-dot" style="background:var(--rust)"></span>External</div>
+  <div class="legend-bar">
+    <div class="legend-chip"><span class="legend-dot" style="background:var(--clay)"></span>Client Layer</div>
+    <div class="legend-chip"><span class="legend-dot" style="background:var(--sky)"></span>Gateway</div>
+    <div class="legend-chip"><span class="legend-dot" style="background:var(--olive)"></span>Core Services</div>
+    <div class="legend-chip"><span class="legend-dot" style="background:var(--oat)"></span>Data Stores</div>
+    <div class="legend-chip"><span class="legend-dot" style="background:var(--rust)"></span>External</div>
   </div>
 
-  <!-- diagram -->
-  <div class="arch">
-    <div class="arch-inner">
+  <!-- topology diagram -->
+  <div class="diagram-section">
+    <div class="diagram-label"><span class="diagram-label-num">1</span> Service Topology</div>
+    <div class="diagram-wrap">
+      <pre class="mermaid">
+flowchart TB
+    subgraph clients["CLIENTS"]
+        direction LR
+        WEB["&#127760; Web App&lt;br&gt;React SPA"]
+        MOB["&#128241; Mobile App&lt;br&gt;React Native"]
+        CLI["&#128187; CLI&lt;br&gt;Developer tool"]
+    end
 
-      <!-- clients -->
-      <div class="layer">
-        <span class="layer-label">Clients</span>
-        <div class="nodes">
-          <div class="node client">
-            <div class="node-icon">&#127760;</div>
-            <div class="node-name">Web App</div>
-            <div class="node-desc">React SPA</div>
-          </div>
-          <div class="node client">
-            <div class="node-icon">&#128241;</div>
-            <div class="node-name">Mobile App</div>
-            <div class="node-desc">React Native</div>
-          </div>
-          <div class="node client">
-            <div class="node-icon">&#128187;</div>
-            <div class="node-name">CLI</div>
-            <div class="node-desc">Developer tool</div>
-          </div>
-        </div>
-      </div>
+    subgraph gateway["GATEWAY"]
+        direction LR
+        GW["&#128274; API Gateway&lt;br&gt;Auth, rate-limit, routing"]
+        LB["&#9889; Load Balancer&lt;br&gt;L7, health checks"]
+    end
 
-      <!-- arrow -->
-      <div class="connector">
-        <svg viewBox="0 0 740 40" preserveAspectRatio="none">
-          <line x1="170" y1="0" x2="370" y2="38" stroke="var(--gray-300)" stroke-width="1.5"/>
-          <line x1="370" y1="0" x2="370" y2="38" stroke="var(--gray-300)" stroke-width="1.5"/>
-          <line x1="570" y1="0" x2="370" y2="38" stroke="var(--gray-300)" stroke-width="1.5"/>
-          <polygon points="366,36 374,36 370,40" fill="var(--gray-300)"/>
-        </svg>
-      </div>
+    subgraph services["CORE SERVICES"]
+        direction LR
+        AUTH["&#128101; Auth Service&lt;br&gt;OAuth2, sessions"]
+        ORDER["&#128230; Order Service&lt;br&gt;Cart, checkout"]
+        SEARCH["&#128269; Search Service&lt;br&gt;Full-text, filters"]
+        NOTIFY["&#128172; Notification&lt;br&gt;Email, push, SMS"]
+    end
 
-      <!-- gateway -->
-      <div class="layer">
-        <span class="layer-label">Gateway</span>
-        <div class="nodes">
-          <div class="node gateway">
-            <div class="node-icon">&#128274;</div>
-            <div class="node-name">API Gateway</div>
-            <div class="node-desc">Auth, rate-limit, routing</div>
-          </div>
-          <div class="node gateway">
-            <div class="node-icon">&#9889;</div>
-            <div class="node-name">Load Balancer</div>
-            <div class="node-desc">L7, health checks</div>
-          </div>
-        </div>
-      </div>
+    subgraph data["DATA STORES"]
+        direction LR
+        PG["&#128451; PostgreSQL&lt;br&gt;Primary store"]
+        REDIS["&#9889; Redis&lt;br&gt;Cache, sessions"]
+        ES["&#128270; Elasticsearch&lt;br&gt;Search index"]
+    end
 
-      <!-- arrow -->
-      <div class="connector">
-        <svg viewBox="0 0 740 40" preserveAspectRatio="none">
-          <line x1="270" y1="0" x2="185" y2="38" stroke="var(--gray-300)" stroke-width="1.5"/>
-          <line x1="270" y1="0" x2="370" y2="38" stroke="var(--gray-300)" stroke-width="1.5"/>
-          <line x1="270" y1="0" x2="555" y2="38" stroke="var(--gray-300)" stroke-width="1.5"/>
-          <line x1="470" y1="0" x2="185" y2="38" stroke="var(--gray-300)" stroke-width="1.5"/>
-          <line x1="470" y1="0" x2="370" y2="38" stroke="var(--gray-300)" stroke-width="1.5"/>
-          <line x1="470" y1="0" x2="555" y2="38" stroke="var(--gray-300)" stroke-width="1.5"/>
-          <polygon points="181,36 189,36 185,40" fill="var(--gray-300)"/>
-          <polygon points="366,36 374,36 370,40" fill="var(--gray-300)"/>
-          <polygon points="551,36 559,36 555,40" fill="var(--gray-300)"/>
-        </svg>
-      </div>
+    subgraph external["EXTERNAL"]
+        direction LR
+        STRIPE["&#128179; Stripe&lt;br&gt;Payments"]
+        SG["&#128231; SendGrid&lt;br&gt;Email delivery"]
+        SENTRY["&#127758; Sentry&lt;br&gt;Error tracking"]
+    end
 
-      <!-- services -->
-      <div class="layer">
-        <span class="layer-label">Services</span>
-        <div class="nodes">
-          <div class="node service">
-            <div class="node-icon">&#128101;</div>
-            <div class="node-name">Auth Service</div>
-            <div class="node-desc">OAuth2, sessions</div>
-          </div>
-          <div class="node service">
-            <div class="node-icon">&#128230;</div>
-            <div class="node-name">Order Service</div>
-            <div class="node-desc">Cart, checkout</div>
-          </div>
-          <div class="node service">
-            <div class="node-icon">&#128269;</div>
-            <div class="node-name">Search Service</div>
-            <div class="node-desc">Full-text, filters</div>
-          </div>
-          <div class="node service">
-            <div class="node-icon">&#128172;</div>
-            <div class="node-name">Notification</div>
-            <div class="node-desc">Email, push, SMS</div>
-          </div>
-        </div>
-      </div>
+    clients --> gateway
+    gateway --> services
+    AUTH --> PG
+    AUTH --> REDIS
+    ORDER --> PG
+    ORDER --> REDIS
+    SEARCH --> ES
+    NOTIFY --> REDIS
+    ORDER -.->|REST/TLS| STRIPE
+    NOTIFY -.->|REST/TLS| SG
+    services -.->|metrics| SENTRY
+      </pre>
+    </div>
+  </div>
 
-      <!-- arrow -->
-      <div class="connector">
-        <svg viewBox="0 0 740 40" preserveAspectRatio="none">
-          <line x1="185" y1="0" x2="185" y2="38" stroke="var(--gray-300)" stroke-width="1.5"/>
-          <line x1="185" y1="0" x2="370" y2="38" stroke="var(--gray-300)" stroke-width="1.5"/>
-          <line x1="370" y1="0" x2="185" y2="38" stroke="var(--gray-300)" stroke-width="1.5"/>
-          <line x1="370" y1="0" x2="555" y2="38" stroke="var(--gray-300)" stroke-width="1.5"/>
-          <line x1="555" y1="0" x2="370" y2="38" stroke="var(--gray-300)" stroke-width="1.5"/>
-          <polygon points="181,36 189,36 185,40" fill="var(--gray-300)"/>
-          <polygon points="366,36 374,36 370,40" fill="var(--gray-300)"/>
-          <polygon points="551,36 559,36 555,40" fill="var(--gray-300)"/>
-        </svg>
-      </div>
+  <!-- request flow sequence -->
+  <div class="diagram-section">
+    <div class="diagram-label"><span class="diagram-label-num">2</span> Request Flow Sequence</div>
+    <div class="diagram-wrap">
+      <pre class="mermaid">
+sequenceDiagram
+    participant C as Client
+    participant GW as API Gateway
+    participant SVC as Service Layer
+    participant DB as Data Store
+    participant EXT as External API
 
-      <!-- data layer -->
-      <div class="layer">
-        <span class="layer-label">Data</span>
-        <div class="nodes">
-          <div class="node data">
-            <div class="node-icon">&#128451;</div>
-            <div class="node-name">PostgreSQL</div>
-            <div class="node-desc">Primary store</div>
-          </div>
-          <div class="node data">
-            <div class="node-icon">&#9889;</div>
-            <div class="node-name">Redis</div>
-            <div class="node-desc">Cache, sessions</div>
-          </div>
-          <div class="node data">
-            <div class="node-icon">&#128270;</div>
-            <div class="node-name">Elasticsearch</div>
-            <div class="node-desc">Search index</div>
-          </div>
-        </div>
-      </div>
+    C->>GW: HTTPS request
+    GW->>GW: Auth + rate-limit
+    GW->>SVC: gRPC call
+    SVC->>DB: Read/Write
+    DB-->>SVC: Result
+    SVC-->>GW: gRPC response
+    GW-->>C: JSON response
 
-      <!-- arrow -->
-      <div class="connector">
-        <svg viewBox="0 0 740 40" preserveAspectRatio="none">
-          <line x1="185" y1="0" x2="250" y2="38" stroke="var(--gray-300)" stroke-width="1.5"/>
-          <line x1="555" y1="0" x2="490" y2="38" stroke="var(--gray-300)" stroke-width="1.5"/>
-          <polygon points="246,36 254,36 250,40" fill="var(--gray-300)"/>
-          <polygon points="486,36 494,36 490,40" fill="var(--gray-300)"/>
-        </svg>
-      </div>
-
-      <!-- external -->
-      <div class="layer">
-        <span class="layer-label">External</span>
-        <div class="nodes">
-          <div class="node external">
-            <div class="node-icon">&#128179;</div>
-            <div class="node-name">Stripe</div>
-            <div class="node-desc">Payments</div>
-          </div>
-          <div class="node external">
-            <div class="node-icon">&#128231;</div>
-            <div class="node-name">SendGrid</div>
-            <div class="node-desc">Email delivery</div>
-          </div>
-          <div class="node external">
-            <div class="node-icon">&#127758;</div>
-            <div class="node-name">Sentry</div>
-            <div class="node-desc">Error tracking</div>
-          </div>
-        </div>
-      </div>
-
+    Note over SVC,EXT: Async side-effects
+    SVC-->>EXT: Webhook / notification
+    SVC-->>DB: Update cache
+      </pre>
     </div>
   </div>
 
   <!-- details -->
   <section class="details">
     <div class="detail-card">
-      <div class="detail-title">Communication</div>
+      <div class="detail-icon-row">
+        <div class="detail-icon comm">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 4h12v8H2V4z" stroke="currentColor" stroke-width="1.2"/><path d="M2 4l6 5 6-5" stroke="currentColor" stroke-width="1.2"/></svg>
+        </div>
+        <div class="detail-title">Communication</div>
+      </div>
       <ul class="detail-list">
         <li>Internal: gRPC with protobuf</li>
         <li>External: REST + JSON over TLS 1.3</li>
@@ -317,7 +262,12 @@
       </ul>
     </div>
     <div class="detail-card">
-      <div class="detail-title">Infrastructure</div>
+      <div class="detail-icon-row">
+        <div class="detail-icon infra">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="3" y="2" width="10" height="12" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M6 6h4M6 8h4M6 10h2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+        </div>
+        <div class="detail-title">Infrastructure</div>
+      </div>
       <ul class="detail-list">
         <li>Hosted on AWS (us-east-1, eu-west-1)</li>
         <li>Kubernetes EKS, auto-scaling</li>
@@ -326,10 +276,15 @@
       </ul>
     </div>
     <div class="detail-card">
-      <div class="detail-title">Observability</div>
+      <div class="detail-icon-row">
+        <div class="detail-icon obs">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.2"/><circle cx="8" cy="8" r="2" fill="currentColor"/><path d="M8 2v2M8 12v2M2 8h2M12 8h2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+        </div>
+        <div class="detail-title">Observability</div>
+      </div>
       <ul class="detail-list">
         <li>Metrics: Prometheus + Grafana</li>
-        <li>Logs: ELK stack ( Fluentd)</li>
+        <li>Logs: ELK stack (Fluentd)</li>
         <li>Traces: Jaeger (OpenTelemetry)</li>
         <li>Alerts: PagerDuty integration</li>
       </ul>
@@ -337,5 +292,40 @@
   </section>
 
 </div>
+
+<script>
+mermaid.initialize({
+  startOnLoad: true,
+  theme: 'base',
+  themeVariables: {
+    primaryColor: '#FFFFFF',
+    primaryTextColor: '#141413',
+    primaryBorderColor: '#D8DCE2',
+    lineColor: '#C4C9D2',
+    secondaryColor: '#F6F8FA',
+    tertiaryColor: '#FFFFFF',
+    mainBkg: '#FFFFFF',
+    nodeBorder: '#D8DCE2',
+    clusterBkg: 'rgba(246,248,250,0.6)',
+    clusterBorder: '#D8DCE2',
+    titleColor: '#3D3D3A',
+    edgeLabelBackground: '#FFFFFF',
+    textColor: '#3D3D3A',
+    fontSize: '13px',
+    fontFamily: '"JetBrains Mono", ui-monospace, monospace'
+  },
+  flowchart: {
+    htmlLabels: true,
+    curve: 'basis',
+    nodeSpacing: 30,
+    rankSpacing: 40,
+    padding: 16
+  },
+  sequence: {
+    actorMargin: 40,
+    boxMargin: 8
+  }
+});
+</script>
 </body>
 </html>

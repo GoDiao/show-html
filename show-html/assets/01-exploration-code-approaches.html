@@ -6,81 +6,112 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Debounced search — three approaches</title>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=IBM+Plex+Mono:wght@400;500;600&family=Source+Sans+3:wght@300;400;500;600;700&display=swap');
+
     :root {
       --ivory:    #FAF9F5;
       --slate:    #141413;
       --clay:     #D97757;
       --oat:      #E3DACC;
       --olive:    #788C5D;
+      --gray-100: #F5F3EC;
       --gray-150: #F0EEE6;
+      --gray-200: #E4E2D9;
       --gray-300: #D1CFC5;
       --gray-500: #87867F;
       --gray-700: #3D3D3A;
       --white:    #FFFFFF;
 
-      --serif: ui-serif, Georgia, 'Times New Roman', serif;
-      --sans:  system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-      --mono:  ui-monospace, 'SF Mono', Menlo, Monaco, monospace;
+      --serif: 'DM Serif Display', ui-serif, Georgia, serif;
+      --sans:  'Source Sans 3', system-ui, -apple-system, sans-serif;
+      --mono:  'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+
+      --winner-glow: rgba(120, 140, 93, 0.06);
+      --winner-border: var(--olive);
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
       font-family: var(--sans);
-      background: var(--ivory);
+      background: linear-gradient(180deg, #F8F6F0 0%, var(--ivory) 30%, #F5F3EC 100%);
       color: var(--gray-700);
       line-height: 1.55;
-      padding: 56px 32px 96px;
+      padding: 64px 40px 120px;
       -webkit-font-smoothing: antialiased;
     }
 
     .page {
-      max-width: 1360px;
+      max-width: 1400px;
       margin: 0 auto;
     }
 
     /* ---------- header ---------- */
 
     header.page-head {
-      margin-bottom: 48px;
-      max-width: 760px;
+      margin-bottom: 56px;
+      max-width: 780px;
+      position: relative;
+    }
+
+    header.page-head::after {
+      content: '';
+      position: absolute;
+      bottom: -28px;
+      left: 0;
+      width: 64px;
+      height: 3px;
+      background: var(--clay);
+      border-radius: 2px;
     }
 
     .eyebrow {
-      font-size: 12px;
-      letter-spacing: 0.08em;
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.12em;
       text-transform: uppercase;
-      color: var(--gray-500);
-      margin-bottom: 12px;
+      color: var(--clay);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .eyebrow::before {
+      content: '';
+      width: 20px;
+      height: 1.5px;
+      background: var(--clay);
     }
 
     h1 {
       font-family: var(--serif);
-      font-weight: 500;
-      font-size: 38px;
-      line-height: 1.15;
+      font-weight: 400;
+      font-size: 44px;
+      line-height: 1.12;
       color: var(--slate);
-      margin-bottom: 18px;
-      letter-spacing: -0.01em;
+      margin-bottom: 22px;
+      letter-spacing: -0.02em;
     }
 
     .prompt-box {
-      background: var(--gray-150);
-      border: 1.5px solid var(--gray-300);
-      border-radius: 12px;
-      padding: 16px 20px;
-      font-size: 14.5px;
+      background: var(--white);
+      border: 1px solid var(--gray-200);
+      border-radius: 10px;
+      padding: 18px 22px;
+      font-size: 15px;
       color: var(--gray-700);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.03);
     }
 
     .prompt-box .label {
       font-family: var(--mono);
-      font-size: 11px;
+      font-size: 10px;
       text-transform: uppercase;
-      letter-spacing: 0.06em;
+      letter-spacing: 0.1em;
       color: var(--gray-500);
       display: block;
-      margin-bottom: 6px;
+      margin-bottom: 8px;
     }
 
     /* ---------- approach grid ---------- */
@@ -88,76 +119,137 @@
     .approaches {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 28px;
-      margin-bottom: 56px;
+      gap: 24px;
+      margin-bottom: 64px;
+      align-items: start;
     }
 
     @media (max-width: 1100px) {
-      .approaches { grid-template-columns: 1fr; }
+      .approaches { grid-template-columns: 1fr; max-width: 640px; }
     }
 
     .approach {
       background: var(--white);
-      border: 1.5px solid var(--gray-300);
-      border-radius: 12px;
-      padding: 24px;
+      border: 1px solid var(--gray-200);
+      border-radius: 14px;
+      padding: 0;
       display: flex;
       flex-direction: column;
-      gap: 20px;
+      overflow: hidden;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.03), 0 4px 12px rgba(0,0,0,0.02);
+      transition: box-shadow 0.25s ease, transform 0.25s ease;
+    }
+
+    .approach:hover {
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06), 0 8px 24px rgba(0,0,0,0.04);
+      transform: translateY(-2px);
+    }
+
+    /* Winner card treatment */
+    .approach.winner {
+      border-color: var(--olive);
+      box-shadow: 0 0 0 1px var(--olive), 0 4px 16px rgba(120,140,93,0.1);
+    }
+
+    .approach.winner:hover {
+      box-shadow: 0 0 0 1px var(--olive), 0 6px 24px rgba(120,140,93,0.16);
+    }
+
+    .approach-inner {
+      padding: 28px 26px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+    }
+
+    .winner-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      background: var(--olive);
+      color: var(--white);
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
     }
 
     .approach-head h2 {
-      font-family: var(--serif);
-      font-weight: 500;
-      font-size: 21px;
+      font-family: var(--sans);
+      font-weight: 700;
+      font-size: 19px;
       color: var(--slate);
       margin-bottom: 6px;
+      letter-spacing: -0.01em;
     }
 
     .approach-head .num {
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       font-family: var(--mono);
-      font-size: 12px;
-      background: var(--oat);
-      color: var(--slate);
-      padding: 2px 8px;
+      font-size: 11px;
+      font-weight: 500;
+      background: var(--gray-150);
+      color: var(--gray-700);
+      width: 28px;
+      height: 28px;
       border-radius: 8px;
-      margin-right: 8px;
-      vertical-align: 3px;
+      margin-right: 10px;
+      vertical-align: middle;
+    }
+
+    .winner .approach-head .num {
+      background: rgba(120,140,93,0.15);
+      color: var(--olive);
     }
 
     .approach-head p {
       font-size: 14px;
       color: var(--gray-500);
+      padding-left: 38px;
     }
 
     /* ---------- code panel ---------- */
 
     .code {
-      background: var(--slate);
-      border-radius: 12px;
-      padding: 18px 20px;
+      background: #1A1A18;
+      border-radius: 10px;
+      padding: 20px 22px;
       overflow-x: auto;
+      position: relative;
+    }
+
+    .code::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(201,185,138,0.3), transparent);
     }
 
     .code pre {
       font-family: var(--mono);
-      font-size: 12.5px;
-      line-height: 1.65;
+      font-size: 12px;
+      line-height: 1.75;
       color: #E8E6DE;
       white-space: pre;
     }
 
-    .code .kw  { color: var(--clay); }     /* keywords */
-    .code .str { color: var(--olive); }    /* strings  */
-    .code .cm  { color: var(--gray-500); } /* comments */
-    .code .fn  { color: #C9B98A; }         /* identifiers, subtle warm */
+    .code .kw  { color: #D97757; }
+    .code .str { color: #A8BC8C; }
+    .code .cm  { color: #6B6A65; }
+    .code .fn  { color: #C9B98A; }
 
-    /* ---------- tradeoffs table ---------- */
+    /* ---------- tradeoffs ---------- */
 
     .tradeoffs {
-      border: 1.5px solid var(--gray-300);
-      border-radius: 8px;
+      border: 1px solid var(--gray-200);
+      border-radius: 10px;
       overflow: hidden;
       font-size: 13px;
     }
@@ -168,35 +260,42 @@
     }
 
     .tradeoffs .row + .row {
-      border-top: 1.5px solid var(--gray-300);
+      border-top: 1px solid var(--gray-200);
     }
 
     .tradeoffs .cell {
-      padding: 10px 14px;
+      padding: 11px 16px;
     }
 
     .tradeoffs .cell:first-child {
-      border-right: 1.5px solid var(--gray-300);
+      border-right: 1px solid var(--gray-200);
     }
 
     .tradeoffs .head {
-      background: var(--gray-150);
+      background: var(--gray-100);
       font-weight: 600;
       color: var(--slate);
-      font-size: 12px;
+      font-size: 10px;
       text-transform: uppercase;
-      letter-spacing: 0.04em;
+      letter-spacing: 0.08em;
+    }
+
+    .tradeoffs .pro,
+    .tradeoffs .con {
+      position: relative;
+      padding-left: 28px;
     }
 
     .tradeoffs .pro::before,
     .tradeoffs .con::before {
       content: '';
-      display: inline-block;
-      width: 6px;
-      height: 6px;
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 7px;
+      height: 7px;
       border-radius: 50%;
-      margin-right: 8px;
-      vertical-align: 2px;
     }
     .tradeoffs .pro::before { background: var(--olive); }
     .tradeoffs .con::before { background: var(--clay); }
@@ -211,46 +310,80 @@
 
     .chip {
       font-family: var(--mono);
-      font-size: 11.5px;
-      background: var(--gray-150);
-      border: 1.5px solid var(--gray-300);
-      color: var(--gray-700);
-      padding: 5px 10px;
-      border-radius: 8px;
+      font-size: 10.5px;
+      background: var(--gray-100);
+      border: 1px solid var(--gray-200);
+      color: var(--gray-500);
+      padding: 5px 12px;
+      border-radius: 6px;
       white-space: nowrap;
     }
 
     .chip strong { color: var(--slate); font-weight: 600; }
 
+    .winner .chip {
+      background: rgba(120,140,93,0.06);
+      border-color: rgba(120,140,93,0.2);
+    }
+
     /* ---------- recommendation ---------- */
 
     .reco {
-      border-left: 4px solid var(--clay);
-      background: var(--white);
-      border-radius: 0 12px 12px 0;
-      padding: 24px 28px;
-      max-width: 860px;
+      position: relative;
+      background: linear-gradient(135deg, rgba(120,140,93,0.05) 0%, rgba(120,140,93,0.02) 100%);
+      border: 1px solid rgba(120,140,93,0.25);
+      border-radius: 14px;
+      padding: 32px 36px;
+      max-width: 880px;
+      overflow: hidden;
+    }
+
+    .reco::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background: var(--olive);
+      border-radius: 14px 0 0 14px;
+    }
+
+    .reco-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--olive);
+      margin-bottom: 12px;
     }
 
     .reco h2 {
       font-family: var(--serif);
-      font-weight: 500;
-      font-size: 22px;
+      font-weight: 400;
+      font-size: 26px;
       color: var(--slate);
-      margin-bottom: 10px;
+      margin-bottom: 14px;
+      letter-spacing: -0.01em;
     }
 
     .reco p {
       font-size: 15px;
-      margin-bottom: 8px;
+      margin-bottom: 10px;
+      line-height: 1.65;
+      color: var(--gray-700);
     }
+
+    .reco p:last-child { margin-bottom: 0; }
 
     .reco code {
       font-family: var(--mono);
-      font-size: 0.92em;
-      background: var(--gray-150);
-      padding: 1px 6px;
+      font-size: 0.88em;
+      background: rgba(120,140,93,0.1);
+      padding: 2px 7px;
       border-radius: 4px;
+      color: var(--slate);
     }
   </style>
 </head>
@@ -273,12 +406,13 @@
 
       <!-- ---------- Approach 1 ---------- -->
       <article class="approach">
-        <header class="approach-head">
-          <h2><span class="num">01</span>Inline useEffect + setTimeout</h2>
-          <p>Debounce logic lives directly inside the component that owns the input.</p>
-        </header>
+        <div class="approach-inner">
+          <header class="approach-head">
+            <h2><span class="num">01</span>Inline useEffect + setTimeout</h2>
+            <p>Debounce logic lives directly inside the component that owns the input.</p>
+          </header>
 
-        <div class="code"><pre><span class="kw">export function</span> <span class="fn">TaskSearch</span>() {
+          <div class="code"><pre><span class="kw">export function</span> <span class="fn">TaskSearch</span>() {
   <span class="kw">const</span> [draft, setDraft] = <span class="fn">useState</span>(<span class="str">''</span>);
   <span class="kw">const</span> [query, setQuery] = <span class="fn">useState</span>(<span class="str">''</span>);
 
@@ -293,46 +427,49 @@
     &lt;<span class="fn">input</span>
       value={draft}
       onChange={(e) <span class="kw">=&gt;</span> setDraft(e.target.value)}
-      placeholder=<span class="str">"Filter tasks…"</span>
+      placeholder=<span class="str">"Filter tasks..."</span>
     /&gt;
   );
 }</pre></div>
 
-        <div class="tradeoffs">
-          <div class="row head">
-            <div class="cell">Pro</div>
-            <div class="cell">Con</div>
+          <div class="tradeoffs">
+            <div class="row head">
+              <div class="cell">Pro</div>
+              <div class="cell">Con</div>
+            </div>
+            <div class="row">
+              <div class="cell pro">Zero new abstractions to learn</div>
+              <div class="cell con">Logic duplicated everywhere search exists</div>
+            </div>
+            <div class="row">
+              <div class="cell pro">Easy to step through in devtools</div>
+              <div class="cell con">Two pieces of state for one conceptual value</div>
+            </div>
+            <div class="row">
+              <div class="cell pro">No dependency or bundle change</div>
+              <div class="cell con">Delay constant is buried in component body</div>
+            </div>
           </div>
-          <div class="row">
-            <div class="cell pro">Zero new abstractions to learn</div>
-            <div class="cell con">Logic duplicated everywhere search exists</div>
-          </div>
-          <div class="row">
-            <div class="cell pro">Easy to step through in devtools</div>
-            <div class="cell con">Two pieces of state for one conceptual value</div>
-          </div>
-          <div class="row">
-            <div class="cell pro">No dependency or bundle change</div>
-            <div class="cell con">Delay constant is buried in component body</div>
-          </div>
-        </div>
 
-        <div class="chips">
-          <span class="chip">Bundle impact: <strong>+0 kb</strong></span>
-          <span class="chip">Testability: <strong>medium</strong></span>
-          <span class="chip">Reuse: <strong>low</strong></span>
-          <span class="chip">SSR safe: <strong>yes</strong></span>
+          <div class="chips">
+            <span class="chip">Bundle impact: <strong>+0 kb</strong></span>
+            <span class="chip">Testability: <strong>medium</strong></span>
+            <span class="chip">Reuse: <strong>low</strong></span>
+            <span class="chip">SSR safe: <strong>yes</strong></span>
+          </div>
         </div>
       </article>
 
-      <!-- ---------- Approach 2 ---------- -->
-      <article class="approach">
-        <header class="approach-head">
-          <h2><span class="num">02</span>Custom useDebounce hook</h2>
-          <p>Extract the timer into a shared hook under <code style="font-family:var(--mono)">src/hooks/</code>.</p>
-        </header>
+      <!-- ---------- Approach 2 (winner) ---------- -->
+      <article class="approach winner">
+        <div class="winner-badge">Recommended</div>
+        <div class="approach-inner">
+          <header class="approach-head">
+            <h2><span class="num">02</span>Custom useDebounce hook</h2>
+            <p>Extract the timer into a shared hook under <code style="font-family:var(--mono);font-size:12px">src/hooks/</code>.</p>
+          </header>
 
-        <div class="code"><pre><span class="cm">// src/hooks/useDebounce.ts</span>
+          <div class="code"><pre><span class="cm">// src/hooks/useDebounce.ts</span>
 <span class="kw">export function</span> <span class="fn">useDebounce</span>&lt;T&gt;(value: T, ms = <span class="str">300</span>): T {
   <span class="kw">const</span> [debounced, setDebounced] = <span class="fn">useState</span>(value);
   <span class="fn">useEffect</span>(() <span class="kw">=&gt;</span> {
@@ -347,41 +484,43 @@
 <span class="kw">const</span> query = <span class="fn">useDebounce</span>(draft, <span class="str">300</span>);
 <span class="kw">const</span> { data } = <span class="fn">useTasks</span>({ search: query });</pre></div>
 
-        <div class="tradeoffs">
-          <div class="row head">
-            <div class="cell">Pro</div>
-            <div class="cell">Con</div>
+          <div class="tradeoffs">
+            <div class="row head">
+              <div class="cell">Pro</div>
+              <div class="cell">Con</div>
+            </div>
+            <div class="row">
+              <div class="cell pro">Single import reused across filter, command bar, board search</div>
+              <div class="cell con">One more file to maintain and document</div>
+            </div>
+            <div class="row">
+              <div class="cell pro">Trivial to unit test with fake timers</div>
+              <div class="cell con">Generic <code style="font-family:var(--mono);font-size:12px">T</code> hides intent slightly</div>
+            </div>
+            <div class="row">
+              <div class="cell pro">Delay is a visible, tunable argument</div>
+              <div class="cell con">Still re-renders on every keystroke</div>
+            </div>
           </div>
-          <div class="row">
-            <div class="cell pro">Single import reused across filter, command bar, board search</div>
-            <div class="cell con">One more file to maintain and document</div>
-          </div>
-          <div class="row">
-            <div class="cell pro">Trivial to unit test with fake timers</div>
-            <div class="cell con">Generic <code style="font-family:var(--mono)">T</code> hides intent slightly</div>
-          </div>
-          <div class="row">
-            <div class="cell pro">Delay is a visible, tunable argument</div>
-            <div class="cell con">Still re-renders on every keystroke</div>
-          </div>
-        </div>
 
-        <div class="chips">
-          <span class="chip">Bundle impact: <strong>+0.2 kb</strong></span>
-          <span class="chip">Testability: <strong>high</strong></span>
-          <span class="chip">Reuse: <strong>high</strong></span>
-          <span class="chip">SSR safe: <strong>yes</strong></span>
+          <div class="chips">
+            <span class="chip">Bundle impact: <strong>+0.2 kb</strong></span>
+            <span class="chip">Testability: <strong>high</strong></span>
+            <span class="chip">Reuse: <strong>high</strong></span>
+            <span class="chip">SSR safe: <strong>yes</strong></span>
+          </div>
         </div>
       </article>
 
       <!-- ---------- Approach 3 ---------- -->
       <article class="approach">
-        <header class="approach-head">
-          <h2><span class="num">03</span>Tiny external library</h2>
-          <p>Adopt <code style="font-family:var(--mono)">use-debounce</code> for both values and callbacks.</p>
-        </header>
+        <div class="approach-inner">
+          <header class="approach-head">
+            <h2><span class="num">03</span>Tiny external library</h2>
+            <p>Adopt <code style="font-family:var(--mono);font-size:12px">use-debounce</code> for both values and callbacks.</p>
+          </header>
 
-        <div class="code"><pre><span class="kw">import</span> { useDebouncedCallback }
+          <div class="code"><pre><span class="kw">import</span> { useDebouncedCallback }
   <span class="kw">from</span> <span class="str">'use-debounce'</span>;
 
 <span class="kw">export function</span> <span class="fn">TaskSearch</span>() {
@@ -403,30 +542,31 @@
   );
 }</pre></div>
 
-        <div class="tradeoffs">
-          <div class="row head">
-            <div class="cell">Pro</div>
-            <div class="cell">Con</div>
+          <div class="tradeoffs">
+            <div class="row head">
+              <div class="cell">Pro</div>
+              <div class="cell">Con</div>
+            </div>
+            <div class="row">
+              <div class="cell pro">leading / trailing / maxWait handled for us</div>
+              <div class="cell con">New runtime dependency to audit and update</div>
+            </div>
+            <div class="row">
+              <div class="cell pro">Callback form skips intermediate re-renders</div>
+              <div class="cell con">Uncontrolled input diverges from Acme form patterns</div>
+            </div>
+            <div class="row">
+              <div class="cell pro">Well-tested edge cases (unmount, flush, cancel)</div>
+              <div class="cell con">~1.4 kb gzipped for something we could own</div>
+            </div>
           </div>
-          <div class="row">
-            <div class="cell pro">leading / trailing / maxWait handled for us</div>
-            <div class="cell con">New runtime dependency to audit and update</div>
-          </div>
-          <div class="row">
-            <div class="cell pro">Callback form skips intermediate re-renders</div>
-            <div class="cell con">Uncontrolled input diverges from Acme form patterns</div>
-          </div>
-          <div class="row">
-            <div class="cell pro">Well-tested edge cases (unmount, flush, cancel)</div>
-            <div class="cell con">~1.4 kb gzipped for something we could own</div>
-          </div>
-        </div>
 
-        <div class="chips">
-          <span class="chip">Bundle impact: <strong>+1.4 kb</strong></span>
-          <span class="chip">Testability: <strong>high</strong></span>
-          <span class="chip">Reuse: <strong>high</strong></span>
-          <span class="chip">SSR safe: <strong>yes</strong></span>
+          <div class="chips">
+            <span class="chip">Bundle impact: <strong>+1.4 kb</strong></span>
+            <span class="chip">Testability: <strong>high</strong></span>
+            <span class="chip">Reuse: <strong>high</strong></span>
+            <span class="chip">SSR safe: <strong>yes</strong></span>
+          </div>
         </div>
       </article>
 
@@ -435,9 +575,9 @@
     <!-- ============================================================= -->
 
     <aside class="reco">
-      <h2>Recommendation</h2>
+      <div class="reco-label">Recommendation</div>
+      <h2>Go with the custom useDebounce hook</h2>
       <p>
-        Go with <strong>approach 02, the custom <code>useDebounce</code> hook</strong>.
         Acme already has three places that hand-roll the inline pattern
         (task filter, command palette, member picker), so extracting one
         shared hook removes duplication without taking on a new dependency.

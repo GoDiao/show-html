@@ -6,173 +6,271 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Background jobs — header illustrations</title>
 <style>
+  /* ------------------------------------------------------------------
+     Design tokens — gallery variant
+     ------------------------------------------------------------------ */
   :root {
     --ivory:   #FAF9F5;
     --slate:   #141413;
     --clay:    #D97757;
     --oat:     #E3DACC;
     --olive:   #788C5D;
-    --gray-150:#F0EEE6;
+    --rust:    #B04A3F;
+    --sky:     #6B9DAD;
+    --gray-100:#F0EEE6;
+    --gray-150:#EDEAE0;
     --gray-300:#D1CFC5;
     --gray-500:#87867F;
     --gray-700:#3D3D3A;
 
-    --serif: ui-serif, Georgia, "Times New Roman", serif;
-    --sans:  system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --gallery-bg:  #1C1B1A;
+    --gallery-surface: #242322;
+    --gallery-border: #333230;
+    --gallery-text: #C8C5BC;
+    --gallery-muted: #7A7770;
+
+    --serif: ui-serif, Georgia, "Noto Serif", "Times New Roman", serif;
+    --sans:  system-ui, -apple-system, "Segoe UI", sans-serif;
     --mono:  ui-monospace, "SF Mono", Menlo, Consolas, monospace;
   }
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
   body {
-    background: var(--ivory);
-    color: var(--slate);
+    background: var(--gallery-bg);
+    color: var(--gallery-text);
     font-family: var(--sans);
     -webkit-font-smoothing: antialiased;
-    padding: 64px 24px 96px;
+    padding: 0;
+    line-height: 1.6;
   }
 
   .sheet {
-    max-width: 760px;
+    max-width: 880px;
     margin: 0 auto;
+    padding: 80px 32px 120px;
   }
 
-  header { margin-bottom: 56px; }
+  /* ------------------------------------------------------------------
+     Header — exhibition intro
+     ------------------------------------------------------------------ */
+  header {
+    margin-bottom: 80px;
+    padding-bottom: 48px;
+    border-bottom: 1px solid var(--gallery-border);
+  }
+
+  .header-eyebrow {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--clay);
+    margin-bottom: 24px;
+  }
 
   h1 {
     font-family: var(--serif);
-    font-weight: 500;
-    font-size: 34px;
-    letter-spacing: -0.01em;
-    margin-bottom: 10px;
+    font-weight: 400;
+    font-size: clamp(32px, 5vw, 44px);
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    margin-bottom: 16px;
+    color: var(--ivory);
   }
 
   .lead {
-    font-size: 14px;
-    line-height: 1.6;
-    color: var(--gray-700);
-    max-width: 560px;
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--gallery-muted);
+    max-width: 540px;
   }
 
   .meta {
     font-family: var(--mono);
     font-size: 11px;
-    color: var(--gray-500);
-    margin-top: 18px;
+    color: var(--gallery-muted);
+    margin-top: 24px;
+    letter-spacing: 0.02em;
   }
 
-  /* ---------------------------------------------------------------- */
-
+  /* ------------------------------------------------------------------
+     Figure — gallery piece
+     ------------------------------------------------------------------ */
   figure {
-    margin: 0 0 72px 0;
+    margin: 0 0 96px 0;
+  }
+
+  .piece-number {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gallery-muted);
+    margin-bottom: 20px;
   }
 
   .canvas {
-    border: 1px solid var(--gray-300);
-    border-radius: 12px;
+    border: 1px solid var(--gallery-border);
+    border-radius: 14px;
     overflow: hidden;
-    background: var(--ivory);
+    background: #FAF9F5;
+    position: relative;
+    transition: border-color 0.3s ease;
+  }
+
+  .canvas:hover {
+    border-color: rgba(217, 119, 87, 0.4);
   }
 
   .canvas svg { display: block; width: 100%; height: auto; }
 
-  figcaption {
+  /* Caption plate below each piece */
+  .caption-plate {
     display: flex;
-    align-items: baseline;
+    align-items: flex-start;
     justify-content: space-between;
-    gap: 24px;
-    padding: 18px 4px 0;
+    gap: 32px;
+    padding: 28px 2px 0;
   }
 
   .cap-text { flex: 1; }
 
   .cap-title {
     font-family: var(--serif);
-    font-size: 19px;
-    font-weight: 500;
-    margin-bottom: 4px;
+    font-size: 21px;
+    font-weight: 400;
+    margin-bottom: 6px;
+    color: var(--ivory);
+    letter-spacing: -0.01em;
   }
 
   .cap-sub {
     font-size: 13px;
     line-height: 1.55;
-    color: var(--gray-500);
+    color: var(--gallery-muted);
+  }
+
+  .cap-tags {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+  }
+
+  .cap-tag {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    color: var(--gallery-muted);
+    background: var(--gallery-surface);
+    border: 1px solid var(--gallery-border);
+    border-radius: 4px;
+    padding: 4px 10px;
   }
 
   .dl {
     flex-shrink: 0;
     font-family: var(--mono);
     font-size: 11px;
-    color: var(--slate);
-    background: var(--gray-150);
-    border: 1px solid var(--gray-300);
-    border-radius: 6px;
-    padding: 7px 12px;
+    letter-spacing: 0.04em;
+    color: var(--gallery-text);
+    background: var(--gallery-surface);
+    border: 1px solid var(--gallery-border);
+    border-radius: 8px;
+    padding: 10px 18px;
     cursor: pointer;
+    transition: all 0.2s ease;
+    margin-top: 4px;
   }
-  .dl:hover { background: var(--oat); }
+  .dl:hover {
+    background: rgba(217, 119, 87, 0.1);
+    border-color: rgba(217, 119, 87, 0.4);
+    color: var(--clay);
+  }
   .dl:active { transform: translateY(1px); }
 
+  /* ------------------------------------------------------------------
+     Divider between pieces
+     ------------------------------------------------------------------ */
+  .piece-divider {
+    border: none;
+    border-top: 1px solid var(--gallery-border);
+    margin: 0 0 96px;
+  }
+
   /* ----------------------------------------------------------------
-     Palette reference strip
+     Palette reference — gallery style
      ---------------------------------------------------------------- */
   .palette {
-    border-top: 1px solid var(--gray-300);
-    padding-top: 36px;
-    margin-top: 8px;
+    border-top: 1px solid var(--gallery-border);
+    padding-top: 48px;
+    margin-top: 32px;
+  }
+
+  .palette-eyebrow {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--clay);
+    margin-bottom: 12px;
   }
 
   .palette h2 {
     font-family: var(--serif);
-    font-weight: 500;
-    font-size: 19px;
-    margin-bottom: 18px;
+    font-weight: 400;
+    font-size: 24px;
+    color: var(--ivory);
+    letter-spacing: -0.01em;
+    margin-bottom: 28px;
   }
 
   .swatches {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(112px, 1fr));
-    gap: 10px;
-    margin-bottom: 32px;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 12px;
+    margin-bottom: 40px;
   }
 
   .swatch {
-    border: 1px solid var(--gray-300);
-    border-radius: 8px;
+    border: 1px solid var(--gallery-border);
+    border-radius: 10px;
     overflow: hidden;
-    background: #fff;
+    background: var(--gallery-surface);
   }
 
   .swatch-chip {
-    height: 44px;
+    height: 48px;
   }
 
   .swatch-meta {
-    padding: 8px 10px 10px;
+    padding: 10px 12px 12px;
   }
 
   .swatch-name {
     font-size: 12px;
-    color: var(--gray-700);
+    color: var(--gallery-text);
   }
 
   .swatch-hex {
     font-family: var(--mono);
     font-size: 10px;
-    color: var(--gray-500);
+    color: var(--gallery-muted);
+    letter-spacing: 0.02em;
   }
 
   .notes {
     font-size: 13px;
-    line-height: 1.7;
-    color: var(--gray-700);
+    line-height: 1.75;
+    color: var(--gallery-muted);
     list-style: none;
   }
 
   .notes li {
-    padding-left: 18px;
+    padding-left: 20px;
     position: relative;
-    margin-bottom: 6px;
+    margin-bottom: 8px;
   }
 
   .notes li::before {
@@ -182,7 +280,28 @@
     top: 0.65em;
     width: 8px;
     height: 1px;
-    background: var(--gray-500);
+    background: var(--clay);
+  }
+
+  .notes li code {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--gallery-text);
+    background: var(--gallery-surface);
+    padding: 2px 6px;
+    border-radius: 3px;
+    border: 1px solid var(--gallery-border);
+  }
+
+  /* ------------------------------------------------------------------
+     Responsive
+     ------------------------------------------------------------------ */
+  @media (max-width: 640px) {
+    .sheet { padding: 48px 20px 80px; }
+    header { margin-bottom: 56px; padding-bottom: 36px; }
+    figure { margin-bottom: 64px; }
+    .caption-plate { flex-direction: column; gap: 16px; }
+    .swatches { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); }
   }
 </style>
 </head>
@@ -190,19 +309,21 @@
 <div class="sheet">
 
   <header>
-    <h1>Background jobs — header illustrations</h1>
+    <div class="header-eyebrow">Illustration set</div>
+    <h1>Background jobs<br>— header illustrations</h1>
     <p class="lead">
-      Three 720×320 hand-drawn SVGs for the Acme docs section on
-      background jobs. Flat fills, 1.5–2px strokes, palette-locked. Each
+      Three 720 x 320 hand-drawn SVGs for the Acme docs section on
+      background jobs. Flat fills, 1.5-2px strokes, palette-locked. Each
       exports standalone via the button below it.
     </p>
-    <div class="meta">720 × 320 · inline SVG · no external assets</div>
+    <div class="meta">720 x 320 &middot; inline SVG &middot; no external assets</div>
   </header>
 
   <!-- ============================================================
        A — Queue
        ============================================================ -->
   <figure>
+    <div class="piece-number">Piece A</div>
     <div class="canvas">
       <svg id="ill-queue" xmlns="http://www.w3.org/2000/svg" width="720" height="320" viewBox="0 0 720 320">
         <defs>
@@ -252,19 +373,26 @@
         <text x="60"  y="258" class="s" fill="#87867F">Jobs are pulled FIFO; the worker leases one at a time.</text>
       </svg>
     </div>
-    <figcaption>
+    <div class="caption-plate">
       <div class="cap-text">
         <div class="cap-title">Queue</div>
         <div class="cap-sub">For "How jobs are picked up" — intro page header.</div>
+        <div class="cap-tags">
+          <span class="cap-tag">FIFO</span>
+          <span class="cap-tag">single-worker</span>
+        </div>
       </div>
       <button class="dl" data-target="ill-queue" data-filename="acme-jobs-queue.svg">Download SVG</button>
-    </figcaption>
+    </div>
   </figure>
+
+  <hr class="piece-divider">
 
   <!-- ============================================================
        B — Retry with backoff
        ============================================================ -->
   <figure>
+    <div class="piece-number">Piece B</div>
     <div class="canvas">
       <svg id="ill-retry" xmlns="http://www.w3.org/2000/svg" width="720" height="320" viewBox="0 0 720 320">
         <defs>
@@ -319,19 +447,26 @@
         <text x="60" y="262" class="s" fill="#87867F">Each failure waits twice as long before re-queuing; jitter not pictured.</text>
       </svg>
     </div>
-    <figcaption>
+    <div class="caption-plate">
       <div class="cap-text">
         <div class="cap-title">Retry with backoff</div>
         <div class="cap-sub">For "Handling failures" — retry policy header.</div>
+        <div class="cap-tags">
+          <span class="cap-tag">exponential</span>
+          <span class="cap-tag">recovery</span>
+        </div>
       </div>
       <button class="dl" data-target="ill-retry" data-filename="acme-jobs-retry.svg">Download SVG</button>
-    </figcaption>
+    </div>
   </figure>
+
+  <hr class="piece-divider">
 
   <!-- ============================================================
        C — Fan-out
        ============================================================ -->
   <figure>
+    <div class="piece-number">Piece C</div>
     <div class="canvas">
       <svg id="ill-fanout" xmlns="http://www.w3.org/2000/svg" width="720" height="320" viewBox="0 0 720 320">
         <defs>
@@ -389,19 +524,25 @@
         <text x="60"  y="300" class="s" fill="#87867F">Parent job spawns N children, then blocks on a completion barrier.</text>
       </svg>
     </div>
-    <figcaption>
+    <div class="caption-plate">
       <div class="cap-text">
         <div class="cap-title">Fan-out / fan-in</div>
         <div class="cap-sub">For "Batch and parallel work" — fan-out pattern header.</div>
+        <div class="cap-tags">
+          <span class="cap-tag">parallel</span>
+          <span class="cap-tag">barrier</span>
+          <span class="cap-tag">merge</span>
+        </div>
       </div>
       <button class="dl" data-target="ill-fanout" data-filename="acme-jobs-fanout.svg">Download SVG</button>
-    </figcaption>
+    </div>
   </figure>
 
   <!-- ============================================================
        Palette + usage notes
        ============================================================ -->
   <section class="palette">
+    <div class="palette-eyebrow">Reference</div>
     <h2>Palette &amp; rules</h2>
 
     <div class="swatches">

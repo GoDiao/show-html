@@ -6,6 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Acme — User Directory</title>
 <style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap');
   :root {
     --ivory:   #FAF9F5;
     --slate:   #141413;
@@ -16,18 +17,27 @@
     --sky:     #5B8FB9;
     --white:   #FFFFFF;
     --gray-100:#F0EEE6;
+    --gray-200:#E4E2DA;
     --gray-300:#D1CFC5;
     --gray-500:#87867F;
     --gray-700:#3D3D3A;
-    --serif: ui-serif, Georgia, "Times New Roman", serif;
-    --sans:  system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-    --mono:  ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+    --surface-0: #FAFAF7;
+    --surface-1: #FFFFFF;
+    --surface-2: #F5F4F0;
+    --surface-hover: #F0EFEB;
+    --border: #E2E0D8;
+    --border-focus: #B8B5AA;
+
+    --serif: 'Fraunces', ui-serif, Georgia, serif;
+    --sans:  'IBM Plex Sans', system-ui, -apple-system, sans-serif;
+    --mono:  'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
-    background: var(--ivory); color: var(--slate);
+    background: var(--surface-0); color: var(--slate);
     font-family: var(--sans); font-size: 15px; line-height: 1.6;
-    padding: 56px 24px 120px; -webkit-font-smoothing: antialiased;
+    padding: 48px 24px 120px; -webkit-font-smoothing: antialiased;
   }
   .page { max-width: 1080px; margin: 0 auto; }
 
@@ -35,107 +45,155 @@
   header { margin-bottom: 32px; }
   .header-top {
     display: flex; align-items: baseline; justify-content: space-between;
-    flex-wrap: wrap; gap: 12px; margin-bottom: 8px;
+    flex-wrap: wrap; gap: 12px; margin-bottom: 6px;
   }
   h1 {
-    font-family: var(--serif); font-weight: 500;
-    font-size: 38px; letter-spacing: -0.01em; margin: 0;
+    font-family: var(--serif); font-weight: 400;
+    font-size: 34px; letter-spacing: -0.02em; margin: 0;
+    color: var(--slate); font-optical-sizing: auto;
   }
-  .sub { color: var(--gray-500); max-width: 640px; }
+  .header-count {
+    font-family: var(--mono); font-size: 12px; color: var(--gray-500);
+    background: var(--surface-1); border: 1px solid var(--border);
+    padding: 4px 12px; border-radius: 6px;
+  }
+  .sub { color: var(--gray-500); max-width: 560px; font-size: 14px; margin-top: 6px; }
 
   /* ── toolbar ── */
   .toolbar {
-    display: flex; align-items: center; gap: 12px;
-    margin-bottom: 20px; flex-wrap: wrap;
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 16px; flex-wrap: wrap;
+  }
+  .search-wrap {
+    flex: 1; min-width: 220px; max-width: 380px; position: relative;
+  }
+  .search-icon {
+    position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+    color: var(--gray-500); font-size: 14px; pointer-events: none;
+    display: flex; align-items: center;
   }
   .search-box {
-    flex: 1; min-width: 200px; max-width: 360px;
-    padding: 10px 16px; font-size: 14px;
+    width: 100%; padding: 10px 14px 10px 38px; font-size: 14px;
     font-family: var(--sans); color: var(--slate);
-    background: var(--white); border: 1.5px solid var(--gray-300);
+    background: var(--surface-1); border: 1px solid var(--border);
     border-radius: 10px; outline: none;
-    transition: border-color 120ms;
+    transition: border-color 150ms, box-shadow 150ms;
   }
   .search-box::placeholder { color: var(--gray-500); }
-  .search-box:focus { border-color: var(--slate); }
-  .filter-btn {
-    font-family: var(--mono); font-size: 12px;
-    padding: 8px 16px; border: 1.5px solid var(--gray-300);
-    border-radius: 999px; background: var(--white);
-    color: var(--gray-700); cursor: pointer;
-    transition: border-color 120ms, color 120ms;
+  .search-box:focus {
+    border-color: var(--border-focus);
+    box-shadow: 0 0 0 3px rgba(61,61,58,0.06);
   }
-  .filter-btn:hover { border-color: var(--slate); color: var(--slate); }
-  .filter-btn.active { background: var(--slate); color: var(--white); border-color: var(--slate); }
-  .count {
-    margin-left: auto; font-family: var(--mono);
-    font-size: 12px; color: var(--gray-500);
+  .filter-pills {
+    display: flex; gap: 4px; background: var(--surface-1);
+    border: 1px solid var(--border); border-radius: 10px;
+    padding: 3px; overflow: hidden;
+  }
+  .filter-btn {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.02em;
+    padding: 6px 14px; border: none;
+    border-radius: 7px; background: transparent;
+    color: var(--gray-500); cursor: pointer;
+    transition: all 150ms; white-space: nowrap;
+  }
+  .filter-btn:hover { color: var(--slate); background: var(--surface-hover); }
+  .filter-btn.active {
+    background: var(--slate); color: var(--white);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12);
   }
 
   /* ── table ── */
   .table-wrap {
-    background: var(--white); border: 1.5px solid var(--gray-300);
-    border-radius: 12px; overflow: hidden;
+    background: var(--surface-1); border: 1px solid var(--border);
+    border-radius: 14px; overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.02);
   }
   .table-scroll { overflow-x: auto; }
   table { width: 100%; border-collapse: collapse; font-size: 14px; }
   th {
-    text-align: left; font-family: var(--mono); font-size: 11px;
-    text-transform: uppercase; letter-spacing: 0.06em;
-    color: var(--gray-500); padding: 14px 16px;
-    border-bottom: 1.5px solid var(--gray-300);
-    background: var(--gray-100); white-space: nowrap;
+    text-align: left; font-family: var(--mono); font-size: 10px;
+    text-transform: uppercase; letter-spacing: 0.08em;
+    color: var(--gray-500); padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface-2); white-space: nowrap;
     cursor: pointer; user-select: none;
-    transition: color 120ms;
+    transition: color 150ms;
+    position: relative;
   }
   th:hover { color: var(--clay); }
-  th .sort-arrow { font-size: 10px; margin-left: 4px; opacity: 0.4; }
+  th .sort-arrow { font-size: 9px; margin-left: 4px; opacity: 0.3; transition: opacity 150ms; }
   th.sorted .sort-arrow { opacity: 1; color: var(--clay); }
   td {
-    padding: 14px 16px; border-bottom: 1px solid var(--gray-100);
+    padding: 14px 16px; border-bottom: 1px solid var(--surface-hover);
     color: var(--gray-700); vertical-align: middle;
+    transition: background 80ms;
   }
   tr:last-child td { border-bottom: none; }
-  tr:hover td { background: var(--gray-100); }
+  tbody tr {
+    transition: background 80ms;
+  }
+  tbody tr:hover td { background: var(--surface-hover); }
 
   /* avatar */
   .avatar {
-    width: 32px; height: 32px; border-radius: 50%;
+    width: 34px; height: 34px; border-radius: 10px;
     display: inline-flex; align-items: center; justify-content: center;
-    font-family: var(--mono); font-size: 12px; font-weight: 600;
+    font-family: var(--mono); font-size: 12px; font-weight: 500;
     color: var(--white); flex-shrink: 0;
+    position: relative;
   }
-  .user-cell { display: flex; align-items: center; gap: 10px; }
-  .user-name { font-weight: 500; color: var(--slate); }
-  .user-email { font-family: var(--mono); font-size: 12px; color: var(--gray-500); }
+  .avatar-status {
+    position: absolute; bottom: -1px; right: -1px;
+    width: 10px; height: 10px; border-radius: 50%;
+    border: 2px solid var(--surface-1);
+  }
+  .status-online { background: var(--olive); }
+  .status-away { background: var(--oat); }
+  .user-cell { display: flex; align-items: center; gap: 12px; }
+  .user-info {}
+  .user-name { font-weight: 500; color: var(--slate); font-size: 14px; }
+  .user-email { font-family: var(--mono); font-size: 11px; color: var(--gray-500); margin-top: 1px; }
 
   /* badges */
   .badge {
-    display: inline-block; font-family: var(--mono); font-size: 11px;
-    padding: 3px 10px; border-radius: 999px; letter-spacing: 0.03em;
+    display: inline-flex; align-items: center; gap: 4px;
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.04em;
+    padding: 4px 10px; border-radius: 6px; font-weight: 500;
   }
-  .badge-admin  { background: #FDE8E0; color: var(--clay); }
-  .badge-editor { background: #E8F0E4; color: var(--olive); }
-  .badge-viewer { background: var(--gray-100); color: var(--gray-500); }
+  .badge-dot { width: 5px; height: 5px; border-radius: 50%; }
+  .badge-admin  { background: #FDE8E0; color: #C0623E; }
+  .badge-admin .badge-dot { background: #C0623E; }
+  .badge-editor { background: #E8F0E4; color: #5A7A46; }
+  .badge-editor .badge-dot { background: #5A7A46; }
+  .badge-viewer { background: var(--surface-2); color: var(--gray-500); }
+  .badge-viewer .badge-dot { background: var(--gray-500); }
 
-  .mono { font-family: var(--mono); font-size: 13px; }
+  .mono { font-family: var(--mono); font-size: 12px; color: var(--gray-500); }
+  .team-badge {
+    font-size: 13px; color: var(--gray-700);
+  }
 
   /* pagination */
   .pagination {
     display: flex; align-items: center; justify-content: space-between;
-    padding: 16px; border-top: 1.5px solid var(--gray-300);
+    padding: 14px 16px; border-top: 1px solid var(--border);
     font-size: 13px; color: var(--gray-500);
+    background: var(--surface-2);
   }
-  .page-btns { display: flex; gap: 6px; }
+  .pagination-info { font-family: var(--mono); font-size: 11px; color: var(--gray-500); }
+  .page-btns { display: flex; gap: 4px; }
   .page-btn {
-    width: 32px; height: 32px; border-radius: 8px;
-    border: 1.5px solid var(--gray-300); background: var(--white);
-    font-family: var(--mono); font-size: 12px;
+    min-width: 32px; height: 32px; border-radius: 8px;
+    border: 1px solid var(--border); background: var(--surface-1);
+    font-family: var(--mono); font-size: 11px;
     cursor: pointer; display: flex; align-items: center; justify-content: center;
-    color: var(--gray-700); transition: border-color 120ms;
+    color: var(--gray-700); transition: all 150ms; padding: 0 8px;
   }
-  .page-btn:hover { border-color: var(--slate); }
-  .page-btn.active { background: var(--slate); color: var(--white); border-color: var(--slate); }
+  .page-btn:hover { border-color: var(--border-focus); background: var(--surface-hover); }
+  .page-btn.active {
+    background: var(--slate); color: var(--white);
+    border-color: var(--slate); box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+  }
 </style>
 </head>
 <body>
@@ -144,18 +202,25 @@
   <header>
     <div class="header-top">
       <h1>User Directory</h1>
+      <span class="header-count" id="count">12 members</span>
     </div>
     <p class="sub">Team members and their access levels across the Acme platform. Click column headers to sort.</p>
   </header>
 
   <!-- toolbar -->
   <div class="toolbar">
-    <input class="search-box" type="text" placeholder="Search by name or email..." id="search" />
-    <button class="filter-btn active" data-role="all">All</button>
-    <button class="filter-btn" data-role="admin">Admin</button>
-    <button class="filter-btn" data-role="editor">Editor</button>
-    <button class="filter-btn" data-role="viewer">Viewer</button>
-    <span class="count" id="count">12 members</span>
+    <div class="search-wrap">
+      <span class="search-icon">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.5"/><path d="M11 11l3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </span>
+      <input class="search-box" type="text" placeholder="Search by name or email..." id="search" />
+    </div>
+    <div class="filter-pills">
+      <button class="filter-btn active" data-role="all">All</button>
+      <button class="filter-btn" data-role="admin">Admin</button>
+      <button class="filter-btn" data-role="editor">Editor</button>
+      <button class="filter-btn" data-role="viewer">Viewer</button>
+    </div>
   </div>
 
   <!-- table -->
@@ -175,7 +240,7 @@
       </table>
     </div>
     <div class="pagination">
-      <span>Showing 1-12 of 12</span>
+      <span class="pagination-info">Showing 1-12 of 12</span>
       <div class="page-btns">
         <button class="page-btn active">1</button>
       </div>
@@ -186,18 +251,18 @@
 
 <script>
 const DATA = [
-  { name:"Alice Chen",     email:"alice@acme.dev",    role:"admin",  team:"Platform",  joined:"2024-01-15", lastActive:"2026-03-21", color:"#D97757" },
-  { name:"Bob Martinez",   email:"bob@acme.dev",      role:"editor", team:"Frontend",   joined:"2024-03-08", lastActive:"2026-03-20", color:"#788C5D" },
-  { name:"Carol Wu",       email:"carol@acme.dev",    role:"admin",  team:"Backend",    joined:"2024-02-22", lastActive:"2026-03-21", color:"#5B8FB9" },
-  { name:"Dan Park",       email:"dan@acme.dev",      role:"viewer", team:"Design",     joined:"2025-06-10", lastActive:"2026-03-18", color:"#B04A3F" },
-  { name:"Eva Lindström",  email:"eva@acme.dev",      role:"editor", team:"Frontend",   joined:"2024-09-01", lastActive:"2026-03-19", color:"#D97757" },
-  { name:"Frank Obi",      email:"frank@acme.dev",    role:"viewer", team:"Marketing",  joined:"2025-11-20", lastActive:"2026-03-15", color:"#788C5D" },
-  { name:"Grace Liu",      email:"grace@acme.dev",    role:"admin",  team:"Platform",   joined:"2024-01-15", lastActive:"2026-03-21", color:"#5B8FB9" },
-  { name:"Hassan Ali",     email:"hassan@acme.dev",   role:"editor", team:"Backend",    joined:"2024-07-14", lastActive:"2026-03-21", color:"#B04A3F" },
-  { name:"Ines Rivera",    email:"ines@acme.dev",     role:"viewer", team:"Design",     joined:"2025-08-03", lastActive:"2026-03-14", color:"#D97757" },
-  { name:"Jake Thompson",  email:"jake@acme.dev",     role:"editor", team:"Platform",   joined:"2024-05-19", lastActive:"2026-03-20", color:"#788C5D" },
-  { name:"Kira Novak",     email:"kira@acme.dev",     role:"viewer", team:"Marketing",  joined:"2025-12-01", lastActive:"2026-03-17", color:"#5B8FB9" },
-  { name:"Leo Sato",       email:"leo@acme.dev",      role:"admin",  team:"Backend",    joined:"2024-04-11", lastActive:"2026-03-21", color:"#B04A3F" },
+  { name:"Alice Chen",     email:"alice@acme.dev",    role:"admin",  team:"Platform",  joined:"2024-01-15", lastActive:"2026-03-21", color:"#D97757", status:"online" },
+  { name:"Bob Martinez",   email:"bob@acme.dev",      role:"editor", team:"Frontend",   joined:"2024-03-08", lastActive:"2026-03-20", color:"#788C5D", status:"online" },
+  { name:"Carol Wu",       email:"carol@acme.dev",    role:"admin",  team:"Backend",    joined:"2024-02-22", lastActive:"2026-03-21", color:"#5B8FB9", status:"online" },
+  { name:"Dan Park",       email:"dan@acme.dev",      role:"viewer", team:"Design",     joined:"2025-06-10", lastActive:"2026-03-18", color:"#B04A3F", status:"away" },
+  { name:"Eva Lindstrom",  email:"eva@acme.dev",      role:"editor", team:"Frontend",   joined:"2024-09-01", lastActive:"2026-03-19", color:"#D97757", status:"online" },
+  { name:"Frank Obi",      email:"frank@acme.dev",    role:"viewer", team:"Marketing",  joined:"2025-11-20", lastActive:"2026-03-15", color:"#788C5D", status:"away" },
+  { name:"Grace Liu",      email:"grace@acme.dev",    role:"admin",  team:"Platform",   joined:"2024-01-15", lastActive:"2026-03-21", color:"#5B8FB9", status:"online" },
+  { name:"Hassan Ali",     email:"hassan@acme.dev",   role:"editor", team:"Backend",    joined:"2024-07-14", lastActive:"2026-03-21", color:"#B04A3F", status:"online" },
+  { name:"Ines Rivera",    email:"ines@acme.dev",     role:"viewer", team:"Design",     joined:"2025-08-03", lastActive:"2026-03-14", color:"#D97757", status:"away" },
+  { name:"Jake Thompson",  email:"jake@acme.dev",     role:"editor", team:"Platform",   joined:"2024-05-19", lastActive:"2026-03-20", color:"#788C5D", status:"online" },
+  { name:"Kira Novak",     email:"kira@acme.dev",     role:"viewer", team:"Marketing",  joined:"2025-12-01", lastActive:"2026-03-17", color:"#5B8FB9", status:"away" },
+  { name:"Leo Sato",       email:"leo@acme.dev",      role:"admin",  team:"Backend",    joined:"2024-04-11", lastActive:"2026-03-21", color:"#B04A3F", status:"online" },
 ];
 
 const badges = { admin: "badge-admin", editor: "badge-editor", viewer: "badge-viewer" };
@@ -216,15 +281,18 @@ function render() {
     <tr>
       <td>
         <div class="user-cell">
-          <div class="avatar" style="background:${r.color}">${r.name.split(' ').map(w=>w[0]).join('')}</div>
-          <div>
+          <div class="avatar" style="background:${r.color}">
+            ${r.name.split(' ').map(w=>w[0]).join('')}
+            <span class="avatar-status status-${r.status}"></span>
+          </div>
+          <div class="user-info">
             <div class="user-name">${r.name}</div>
             <div class="user-email">${r.email}</div>
           </div>
         </div>
       </td>
-      <td><span class="badge ${badges[r.role]}">${r.role}</span></td>
-      <td>${r.team}</td>
+      <td><span class="badge ${badges[r.role]}"><span class="badge-dot"></span>${r.role}</span></td>
+      <td><span class="team-badge">${r.team}</span></td>
       <td class="mono">${r.joined}</td>
       <td class="mono">${r.lastActive}</td>
     </tr>`).join("");

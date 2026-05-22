@@ -6,6 +6,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PR #247 — Review Summary</title>
 <style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Newsreader:opsz,wght@6..72,400;6..72,500&family=Source+Sans+3:wght@300;400;500;600;700&display=swap');
+
   :root {
     --ivory: #FAF9F5;
     --slate: #141413;
@@ -13,13 +15,27 @@
     --oat: #E3DACC;
     --olive: #788C5D;
     --rust: #B04A3F;
+    --sky: #5B8BD4;
+    --gray-100: #F5F3EC;
     --gray-150: #F0EEE6;
+    --gray-200: #E4E2D9;
     --gray-300: #D1CFC5;
     --gray-500: #87867F;
     --gray-700: #3D3D3A;
-    --serif: ui-serif, Georgia, 'Times New Roman', serif;
-    --sans: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-    --mono: ui-monospace, 'SF Mono', Menlo, Monaco, monospace;
+    --serif: 'Newsreader', ui-serif, Georgia, serif;
+    --sans: 'Source Sans 3', system-ui, -apple-system, sans-serif;
+    --mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+
+    /* Severity colors */
+    --safe-bg: rgba(120,140,93,0.08);
+    --safe-border: rgba(120,140,93,0.30);
+    --safe-text: #5C7340;
+    --medium-bg: rgba(184,155,110,0.10);
+    --medium-border: rgba(184,155,110,0.40);
+    --medium-text: #7A6A4F;
+    --attention-bg: rgba(217,119,87,0.08);
+    --attention-border: rgba(217,119,87,0.35);
+    --attention-text: #B85A3A;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -27,43 +43,168 @@
   html { scroll-behavior: smooth; }
 
   body {
-    background: var(--ivory);
+    background: var(--gray-100);
     color: var(--gray-700);
     font-family: var(--sans);
     font-size: 15px;
     line-height: 1.6;
-    padding: 48px 24px 80px;
+    display: flex;
+    min-height: 100vh;
   }
 
-  .page {
-    max-width: 920px;
-    margin: 0 auto;
+  /* ---------- Sidebar ---------- */
+  .sidebar {
+    width: 272px;
+    flex-shrink: 0;
+    background: var(--slate);
+    color: #C8C6BC;
+    padding: 32px 0;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .sidebar-head {
+    padding: 0 24px;
+    margin-bottom: 32px;
+  }
+
+  .sidebar-head .repo {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    color: var(--gray-500);
+    margin-bottom: 8px;
+  }
+
+  .sidebar-head h2 {
+    font-family: var(--sans);
+    font-weight: 600;
+    font-size: 14px;
+    color: #F0EEE6;
+    letter-spacing: -0.01em;
+  }
+
+  .sidebar-section {
+    padding: 0 16px;
+    margin-bottom: 28px;
+  }
+
+  .sidebar-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #6B6A65;
+    padding: 0 8px;
+    margin-bottom: 10px;
+  }
+
+  .file-tree {
+    list-style: none;
+  }
+
+  .file-tree li {
+    margin-bottom: 2px;
+  }
+
+  .file-tree a {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 10px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-family: var(--mono);
+    font-size: 11.5px;
+    color: #B0AEA6;
+    transition: background 0.12s ease, color 0.12s ease;
+  }
+
+  .file-tree a:hover {
+    background: rgba(255,255,255,0.06);
+    color: #E8E6DC;
+  }
+
+  .file-tree .severity-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .file-tree .severity-dot.safe { background: var(--olive); }
+  .file-tree .severity-dot.medium { background: #B89B6E; }
+  .file-tree .severity-dot.attention { background: var(--clay); }
+
+  .sidebar-stats {
+    margin-top: auto;
+    padding: 16px 24px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .sidebar-stats .stat-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: var(--mono);
+    font-size: 12px;
+    margin-bottom: 6px;
+  }
+
+  .sidebar-stats .stat-row:last-child { margin-bottom: 0; }
+  .sidebar-stats .stat-label { color: #6B6A65; }
+  .sidebar-stats .stat-value { color: #E8E6DC; }
+  .sidebar-stats .add { color: var(--olive); font-weight: 600; }
+  .sidebar-stats .del { color: var(--rust); font-weight: 600; }
+
+  @media (max-width: 900px) {
+    .sidebar { display: none; }
+  }
+
+  /* ---------- Main content ---------- */
+  .main {
+    flex: 1;
+    min-width: 0;
+    padding: 48px 48px 80px;
+    max-width: 980px;
   }
 
   /* ---------- Header ---------- */
   header.pr-head {
-    border: 1.5px solid var(--gray-300);
-    border-radius: 12px;
-    padding: 28px 32px;
-    background: #fff;
-    margin-bottom: 36px;
+    margin-bottom: 40px;
   }
 
-  .repo-line {
+  .pr-number {
     font-family: var(--mono);
-    font-size: 12.5px;
-    color: var(--gray-500);
-    letter-spacing: 0.01em;
-    margin-bottom: 10px;
+    font-size: 12px;
+    color: var(--clay);
+    letter-spacing: 0.02em;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .pr-number::before {
+    content: '';
+    width: 16px;
+    height: 1.5px;
+    background: var(--clay);
   }
 
   h1 {
     font-family: var(--serif);
-    font-weight: 500;
-    font-size: 30px;
-    line-height: 1.25;
+    font-weight: 400;
+    font-size: 34px;
+    line-height: 1.2;
     color: var(--slate);
-    margin-bottom: 18px;
+    margin-bottom: 20px;
+    letter-spacing: -0.02em;
   }
 
   .meta-row {
@@ -91,20 +232,19 @@
     font-weight: 600;
     font-size: 13px;
     letter-spacing: 0.02em;
-    border: 1.5px solid var(--gray-300);
   }
 
-  .author-name { font-weight: 500; color: var(--slate); }
+  .author-name { font-weight: 600; color: var(--slate); }
   .author-sub { font-size: 12px; color: var(--gray-500); }
 
   .branch {
     font-family: var(--mono);
-    font-size: 12.5px;
+    font-size: 12px;
     color: var(--gray-700);
-    background: var(--gray-150);
-    border: 1.5px solid var(--gray-300);
-    border-radius: 8px;
-    padding: 6px 10px;
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: 6px;
+    padding: 6px 12px;
   }
   .branch .arrow { color: var(--gray-500); margin: 0 6px; }
 
@@ -120,11 +260,12 @@
   section { margin-bottom: 40px; }
 
   h2 {
-    font-family: var(--serif);
-    font-weight: 500;
-    font-size: 21px;
+    font-family: var(--sans);
+    font-weight: 700;
+    font-size: 16px;
     color: var(--slate);
-    margin-bottom: 14px;
+    margin-bottom: 16px;
+    letter-spacing: -0.01em;
   }
 
   .prose ul {
@@ -133,18 +274,18 @@
   }
   .prose li {
     position: relative;
-    padding-left: 22px;
+    padding-left: 20px;
     margin-bottom: 10px;
   }
   .prose li::before {
     content: "";
     position: absolute;
-    left: 4px;
+    left: 2px;
     top: 9px;
-    width: 6px;
-    height: 6px;
-    background: var(--gray-500);
-    border-radius: 2px;
+    width: 5px;
+    height: 5px;
+    background: var(--gray-300);
+    border-radius: 1.5px;
   }
 
   /* ---------- Risk map ---------- */
@@ -158,64 +299,71 @@
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    padding: 8px 12px;
+    padding: 8px 14px;
     border-radius: 8px;
-    border: 1.5px solid var(--gray-300);
     font-family: var(--mono);
-    font-size: 12.5px;
+    font-size: 12px;
     color: var(--slate);
     text-decoration: none;
-    background: #fff;
-    transition: transform 0.12s ease;
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    transition: transform 0.12s ease, box-shadow 0.12s ease;
   }
-  .chip:hover { transform: translateY(-1px); }
+  .chip:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
 
   .chip .dot {
-    width: 9px;
-    height: 9px;
+    width: 8px;
+    height: 8px;
     border-radius: 50%;
     flex-shrink: 0;
   }
-  .chip.safe { background: rgba(120,140,93,0.10); border-color: rgba(120,140,93,0.45); }
+  .chip.safe { background: var(--safe-bg); border-color: var(--safe-border); }
   .chip.safe .dot { background: var(--olive); }
-  .chip.medium { background: var(--oat); }
+  .chip.medium { background: var(--medium-bg); border-color: var(--medium-border); }
   .chip.medium .dot { background: #B89B6E; }
-  .chip.attention { background: rgba(217,119,87,0.12); border-color: rgba(217,119,87,0.55); }
+  .chip.attention { background: var(--attention-bg); border-color: var(--attention-border); }
   .chip.attention .dot { background: var(--clay); }
 
   .legend {
-    margin-top: 12px;
-    font-size: 12px;
+    margin-top: 14px;
+    font-size: 11px;
     color: var(--gray-500);
     display: flex;
     gap: 18px;
   }
   .legend span { display: inline-flex; align-items: center; gap: 6px; }
-  .legend .dot { width: 8px; height: 8px; border-radius: 50%; }
+  .legend .dot { width: 7px; height: 7px; border-radius: 50%; }
 
-  /* ---------- File sections ---------- */
+  /* ---------- File cards ---------- */
   .file-card {
-    border: 1.5px solid var(--gray-300);
+    background: var(--white);
+    border: 1px solid var(--gray-200);
     border-radius: 12px;
-    background: #fff;
-    margin-bottom: 24px;
+    margin-bottom: 20px;
     overflow: hidden;
-    scroll-margin-top: 20px;
+    scroll-margin-top: 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.03);
   }
 
   .file-head {
-    padding: 16px 20px;
-    border-bottom: 1.5px solid var(--gray-150);
+    padding: 16px 22px;
+    border-bottom: 1px solid var(--gray-100);
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 12px;
   }
+
   .file-path {
     font-family: var(--mono);
-    font-size: 13.5px;
+    font-size: 13px;
     color: var(--slate);
+    font-weight: 500;
   }
+
   .file-delta {
     font-family: var(--mono);
     font-size: 12px;
@@ -225,98 +373,89 @@
   .file-delta .del { color: var(--rust); }
 
   .risk-tag {
-    font-size: 11px;
+    font-family: var(--mono);
+    font-size: 10px;
     text-transform: uppercase;
     letter-spacing: 0.06em;
-    padding: 3px 8px;
+    padding: 4px 10px;
     border-radius: 6px;
     font-weight: 600;
+    border: 1px solid transparent;
   }
-  .risk-tag.safe { background: rgba(120,140,93,0.15); color: var(--olive); }
-  .risk-tag.medium { background: var(--oat); color: #7A6A4F; }
-  .risk-tag.attention { background: rgba(217,119,87,0.15); color: var(--clay); }
+  .risk-tag.safe { background: var(--safe-bg); border-color: var(--safe-border); color: var(--safe-text); }
+  .risk-tag.medium { background: var(--medium-bg); border-color: var(--medium-border); color: var(--medium-text); }
+  .risk-tag.attention { background: var(--attention-bg); border-color: var(--attention-border); color: var(--attention-text); }
 
   /* ---------- Diff block ---------- */
   .diff {
     background: var(--slate);
     font-family: var(--mono);
-    font-size: 12.5px;
-    line-height: 1.7;
+    font-size: 12px;
+    line-height: 1.75;
     overflow-x: auto;
   }
   .diff-row {
     display: grid;
-    grid-template-columns: 48px 18px 1fr;
+    grid-template-columns: 44px 16px 1fr;
     align-items: baseline;
-    padding: 0 14px 0 0;
+    padding: 0 16px 0 0;
     white-space: pre;
   }
   .diff-row .ln {
     text-align: right;
-    padding-right: 14px;
-    color: var(--gray-500);
+    padding-right: 12px;
+    color: #4A4A48;
     user-select: none;
+    font-size: 11px;
   }
   .diff-row .mark {
     text-align: center;
-    color: var(--gray-500);
+    color: #4A4A48;
   }
-  .diff-row .code { color: #E8E6DC; }
-  .diff-row.ctx .code { color: #B8B6AC; }
-  .diff-row.add { background: rgba(120,140,93,0.15); }
+  .diff-row .code { color: #D8D6CC; }
+  .diff-row.ctx .code { color: #8A887E; }
+  .diff-row.add { background: rgba(120,140,93,0.12); }
   .diff-row.add .mark { color: var(--olive); }
-  .diff-row.del { background: rgba(176,74,63,0.15); }
+  .diff-row.del { background: rgba(176,74,63,0.12); }
   .diff-row.del .mark { color: var(--rust); }
   .diff-row.hunk {
-    background: rgba(255,255,255,0.04);
-    color: var(--gray-500);
+    background: rgba(255,255,255,0.03);
+    color: #4A4A48;
   }
-  .diff-row.hunk .code { color: var(--gray-500); }
+  .diff-row.hunk .code { color: #4A4A48; }
 
   /* ---------- Review comments ---------- */
   .comments {
-    padding: 18px 20px 20px;
+    padding: 18px 22px 20px;
     display: flex;
     flex-direction: column;
     gap: 14px;
-    background: var(--gray-150);
+    background: var(--gray-100);
+    border-top: 1px solid var(--gray-200);
   }
 
   .bubble {
     position: relative;
-    background: #fff;
-    border: 1.5px solid var(--gray-300);
-    border-left-width: 4px;
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-left-width: 3px;
     border-radius: 8px;
-    padding: 12px 14px 12px 16px;
+    padding: 14px 16px;
     max-width: 680px;
   }
   .bubble.blocking { border-left-color: var(--clay); }
   .bubble.nit { border-left-color: var(--gray-300); }
 
-  .bubble::before {
-    content: "";
-    position: absolute;
-    left: -9px;
-    top: 16px;
-    width: 12px;
-    height: 12px;
-    background: #fff;
-    border-left: 1.5px solid var(--gray-300);
-    border-bottom: 1.5px solid var(--gray-300);
-    transform: rotate(45deg);
-  }
-  .bubble.blocking::before { border-left-color: var(--clay); border-bottom-color: var(--clay); }
-
   .bubble .anchor {
     font-family: var(--mono);
-    font-size: 11.5px;
+    font-size: 11px;
     color: var(--gray-500);
     margin-bottom: 4px;
   }
   .bubble .label {
     display: inline-block;
-    font-size: 10.5px;
+    font-family: var(--mono);
+    font-size: 10px;
     text-transform: uppercase;
     letter-spacing: 0.08em;
     font-weight: 700;
@@ -324,27 +463,28 @@
   }
   .bubble.blocking .label { color: var(--clay); }
   .bubble.nit .label { color: var(--gray-500); }
-  .bubble p { font-size: 13.5px; color: var(--gray-700); }
+  .bubble p { font-size: 13.5px; color: var(--gray-700); line-height: 1.55; }
   .bubble code {
     font-family: var(--mono);
-    font-size: 12.5px;
+    font-size: 12px;
     background: var(--gray-150);
-    padding: 1px 5px;
+    padding: 2px 5px;
     border-radius: 4px;
   }
 
   /* ---------- Collapsed files ---------- */
   details.file-collapsed {
-    border: 1.5px solid var(--gray-300);
+    background: var(--white);
+    border: 1px solid var(--gray-200);
     border-radius: 12px;
-    background: #fff;
     margin-bottom: 14px;
-    scroll-margin-top: 20px;
+    scroll-margin-top: 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.03);
   }
   details.file-collapsed summary {
     list-style: none;
     cursor: pointer;
-    padding: 14px 20px;
+    padding: 14px 22px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -355,29 +495,33 @@
     content: "+";
     font-family: var(--mono);
     color: var(--gray-500);
-    font-size: 16px;
+    font-size: 14px;
+    transition: transform 0.15s ease;
   }
-  details.file-collapsed[open] summary::after { content: "−"; }
+  details.file-collapsed[open] summary::after { content: "\2212"; }
   details.file-collapsed .body {
-    padding: 0 20px 16px;
+    padding: 0 22px 18px;
     font-size: 13.5px;
     color: var(--gray-700);
   }
 
   /* ---------- Footer ---------- */
   footer.next-steps {
-    border: 1.5px solid var(--gray-300);
+    background: var(--white);
+    border: 1px solid var(--gray-200);
     border-radius: 12px;
-    background: #fff;
-    padding: 24px 28px;
+    padding: 28px 32px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.03);
   }
   .checklist { list-style: none; padding: 0; }
   .checklist li {
     display: flex;
     align-items: flex-start;
     gap: 12px;
-    padding: 8px 0;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--gray-100);
   }
+  .checklist li:last-child { border-bottom: none; }
   .checklist input[type="checkbox"] {
     width: 17px;
     height: 17px;
@@ -388,252 +532,318 @@
   .checklist label { cursor: pointer; flex: 1; }
   .checklist code {
     font-family: var(--mono);
-    font-size: 12.5px;
+    font-size: 12px;
     background: var(--gray-150);
-    padding: 1px 5px;
+    padding: 2px 5px;
     border-radius: 4px;
   }
 </style>
 </head>
 <body>
-<div class="page">
 
-  <header class="pr-head">
-    <div class="repo-line">acme/web · Pull Request #247</div>
-    <h1>Add optimistic updates to task list mutations</h1>
-    <div class="meta-row">
-      <div class="author">
-        <div class="avatar">MO</div>
-        <div>
-          <div class="author-name">Mira Okafor</div>
-          <div class="author-sub">opened 2 days ago</div>
-        </div>
+  <!-- ========== Sidebar ========== -->
+  <nav class="sidebar" aria-label="File navigation">
+    <div class="sidebar-head">
+      <div class="repo">acme/web</div>
+      <h2>Pull Request #247</h2>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">Files changed</div>
+      <ul class="file-tree">
+        <li><a href="#file-hook"><span class="severity-dot attention"></span>useOptimisticTasks.ts</a></li>
+        <li><a href="#file-tasklist"><span class="severity-dot medium"></span>TaskList.tsx</a></li>
+        <li><a href="#file-api"><span class="severity-dot medium"></span>api/tasks.ts</a></li>
+        <li><a href="#file-toast"><span class="severity-dot safe"></span>Toast.tsx</a></li>
+        <li><a href="#file-types"><span class="severity-dot safe"></span>types/task.ts</a></li>
+        <li><a href="#file-test"><span class="severity-dot safe"></span>TaskList.test.tsx</a></li>
+      </ul>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">Severity</div>
+      <ul class="file-tree">
+        <li><a style="pointer-events:none"><span class="severity-dot attention"></span>2 blocking</a></li>
+        <li><a style="pointer-events:none"><span class="severity-dot medium"></span>2 nits</a></li>
+        <li><a style="pointer-events:none"><span class="severity-dot safe"></span>3 safe</a></li>
+      </ul>
+    </div>
+
+    <div class="sidebar-stats">
+      <div class="stat-row">
+        <span class="stat-label">Added</span>
+        <span class="stat-value"><span class="add">+142</span></span>
       </div>
-      <div class="branch">
-        mo/optimistic-tasks <span class="arrow">→</span> main
+      <div class="stat-row">
+        <span class="stat-label">Removed</span>
+        <span class="stat-value"><span class="del">-38</span></span>
       </div>
-      <div class="stat">
-        <span class="add">+142</span> / <span class="del">−38</span>
-        <span class="files">6 files changed</span>
+      <div class="stat-row">
+        <span class="stat-label">Branch</span>
+        <span class="stat-value" style="font-size:10px">mo/optimistic-tasks</span>
       </div>
     </div>
-  </header>
+  </nav>
 
-  <section class="prose">
-    <h2>What this PR does</h2>
-    <ul>
-      <li>Replaces the await-then-refetch pattern in <code style="font-family:var(--mono);font-size:12.5px;background:var(--gray-150);padding:1px 5px;border-radius:4px">TaskList</code> with optimistic cache writes, so toggling or reordering a task feels instant instead of waiting ~300ms for the round-trip.</li>
-      <li>Introduces a small <code style="font-family:var(--mono);font-size:12.5px;background:var(--gray-150);padding:1px 5px;border-radius:4px">useOptimisticTasks</code> hook that wraps the mutation, snapshots the previous list, and rolls back on error.</li>
-      <li>Extends the API client to accept an idempotency key per mutation and adds a toast when a rollback fires.</li>
-    </ul>
-  </section>
+  <!-- ========== Main ========== -->
+  <div class="main">
 
-  <section>
-    <h2>Risk map</h2>
-    <div class="risk-map">
-      <a class="chip attention" href="#file-hook"><span class="dot"></span>useOptimisticTasks.ts</a>
-      <a class="chip medium" href="#file-tasklist"><span class="dot"></span>TaskList.tsx</a>
-      <a class="chip medium" href="#file-api"><span class="dot"></span>api/tasks.ts</a>
-      <a class="chip safe" href="#file-toast"><span class="dot"></span>Toast.tsx</a>
-      <a class="chip safe" href="#file-types"><span class="dot"></span>types/task.ts</a>
-      <a class="chip safe" href="#file-test"><span class="dot"></span>TaskList.test.tsx</a>
-    </div>
-    <div class="legend">
-      <span><span class="dot" style="background:var(--olive)"></span> safe</span>
-      <span><span class="dot" style="background:#B89B6E"></span> worth a look</span>
-      <span><span class="dot" style="background:var(--clay)"></span> needs attention</span>
-    </div>
-  </section>
-
-  <section>
-    <h2>Files</h2>
-
-    <!-- File 1: hook (attention) -->
-    <article class="file-card" id="file-hook">
-      <div class="file-head">
-        <div>
-          <div class="file-path">src/hooks/useOptimisticTasks.ts</div>
+    <header class="pr-head">
+      <div class="pr-number">acme/web · Pull Request #247</div>
+      <h1>Add optimistic updates to task list mutations</h1>
+      <div class="meta-row">
+        <div class="author">
+          <div class="avatar">MO</div>
+          <div>
+            <div class="author-name">Mira Okafor</div>
+            <div class="author-sub">opened 2 days ago</div>
+          </div>
         </div>
-        <div style="display:flex;align-items:center;gap:12px">
-          <span class="risk-tag attention">needs attention</span>
-          <span class="file-delta"><span class="add">+58</span> <span class="del">−0</span></span>
+        <div class="branch">
+          mo/optimistic-tasks <span class="arrow">&rarr;</span> main
+        </div>
+        <div class="stat">
+          <span class="add">+142</span> / <span class="del">&minus;38</span>
+          <span class="files">6 files changed</span>
         </div>
       </div>
-      <div class="diff">
-        <div class="diff-row hunk"><span class="ln"></span><span class="mark"></span><span class="code">@@ -0,0 +1,58 @@</span></div>
-        <div class="diff-row add"><span class="ln">1</span><span class="mark">+</span><span class="code">import { useMutation, useQueryClient } from '@tanstack/react-query';</span></div>
-        <div class="diff-row add"><span class="ln">2</span><span class="mark">+</span><span class="code">import { updateTask, TaskPatch } from '../api/tasks';</span></div>
-        <div class="diff-row add"><span class="ln">3</span><span class="mark">+</span><span class="code">import type { Task } from '../types/task';</span></div>
-        <div class="diff-row add"><span class="ln">4</span><span class="mark">+</span><span class="code"> </span></div>
-        <div class="diff-row add"><span class="ln">5</span><span class="mark">+</span><span class="code">export function useOptimisticTasks(boardId: string) {</span></div>
-        <div class="diff-row add"><span class="ln">6</span><span class="mark">+</span><span class="code">  const qc = useQueryClient();</span></div>
-        <div class="diff-row add"><span class="ln">7</span><span class="mark">+</span><span class="code">  const key = ['tasks', boardId];</span></div>
-        <div class="diff-row add"><span class="ln">8</span><span class="mark">+</span><span class="code"> </span></div>
-        <div class="diff-row add"><span class="ln">9</span><span class="mark">+</span><span class="code">  return useMutation({</span></div>
-        <div class="diff-row add"><span class="ln">10</span><span class="mark">+</span><span class="code">    mutationFn: (patch: TaskPatch) =&gt; updateTask(patch),</span></div>
-        <div class="diff-row add"><span class="ln">11</span><span class="mark">+</span><span class="code">    onMutate: async (patch) =&gt; {</span></div>
-        <div class="diff-row add"><span class="ln">12</span><span class="mark">+</span><span class="code">      const prev = qc.getQueryData&lt;Task[]&gt;(key);</span></div>
-        <div class="diff-row add"><span class="ln">13</span><span class="mark">+</span><span class="code">      qc.setQueryData&lt;Task[]&gt;(key, (old = []) =&gt;</span></div>
-        <div class="diff-row add"><span class="ln">14</span><span class="mark">+</span><span class="code">        old.map(t =&gt; t.id === patch.id ? { ...t, ...patch } : t)</span></div>
-        <div class="diff-row add"><span class="ln">15</span><span class="mark">+</span><span class="code">      );</span></div>
-        <div class="diff-row add"><span class="ln">16</span><span class="mark">+</span><span class="code">      return { prev };</span></div>
-        <div class="diff-row add"><span class="ln">17</span><span class="mark">+</span><span class="code">    },</span></div>
-        <div class="diff-row add"><span class="ln">18</span><span class="mark">+</span><span class="code">    onError: (_e, _p, ctx) =&gt; qc.setQueryData(key, ctx?.prev),</span></div>
-        <div class="diff-row add"><span class="ln">19</span><span class="mark">+</span><span class="code">  });</span></div>
-        <div class="diff-row add"><span class="ln">20</span><span class="mark">+</span><span class="code">}</span></div>
-      </div>
-      <div class="comments">
-        <div class="bubble blocking">
-          <div class="anchor">line 11</div>
-          <p><span class="label">Blocking</span><code>onMutate</code> doesn't call <code>qc.cancelQueries(key)</code> first. If a background refetch lands between the optimistic write and the server response, it will clobber the optimistic state and the UI will flicker back to the old value.</p>
-        </div>
-        <div class="bubble nit">
-          <div class="anchor">line 18</div>
-          <p><span class="label">Nit</span>Rollback restores the list but never surfaces the error. Consider wiring the existing <code>pushToast</code> here so users know the toggle didn't stick.</p>
-        </div>
-      </div>
-    </article>
+    </header>
 
-    <!-- File 2: TaskList (medium) -->
-    <article class="file-card" id="file-tasklist">
-      <div class="file-head">
-        <div>
-          <div class="file-path">src/components/TaskList.tsx</div>
-        </div>
-        <div style="display:flex;align-items:center;gap:12px">
-          <span class="risk-tag medium">worth a look</span>
-          <span class="file-delta"><span class="add">+31</span> <span class="del">−24</span></span>
-        </div>
+    <section class="prose">
+      <h2>What this PR does</h2>
+      <ul>
+        <li>Replaces the await-then-refetch pattern in <code style="font-family:var(--mono);font-size:12px;background:var(--gray-150);padding:2px 5px;border-radius:4px">TaskList</code> with optimistic cache writes, so toggling or reordering a task feels instant instead of waiting ~300ms for the round-trip.</li>
+        <li>Introduces a small <code style="font-family:var(--mono);font-size:12px;background:var(--gray-150);padding:2px 5px;border-radius:4px">useOptimisticTasks</code> hook that wraps the mutation, snapshots the previous list, and rolls back on error.</li>
+        <li>Extends the API client to accept an idempotency key per mutation and adds a toast when a rollback fires.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Risk map</h2>
+      <div class="risk-map">
+        <a class="chip attention" href="#file-hook"><span class="dot"></span>useOptimisticTasks.ts</a>
+        <a class="chip medium" href="#file-tasklist"><span class="dot"></span>TaskList.tsx</a>
+        <a class="chip medium" href="#file-api"><span class="dot"></span>api/tasks.ts</a>
+        <a class="chip safe" href="#file-toast"><span class="dot"></span>Toast.tsx</a>
+        <a class="chip safe" href="#file-types"><span class="dot"></span>types/task.ts</a>
+        <a class="chip safe" href="#file-test"><span class="dot"></span>TaskList.test.tsx</a>
       </div>
-      <div class="diff">
-        <div class="diff-row hunk"><span class="ln"></span><span class="mark"></span><span class="code">@@ -42,14 +42,17 @@ export function TaskList({ boardId }: Props) {</span></div>
-        <div class="diff-row ctx"><span class="ln">42</span><span class="mark"> </span><span class="code">  const { data: tasks } = useTasks(boardId);</span></div>
-        <div class="diff-row del"><span class="ln">43</span><span class="mark">-</span><span class="code">  const [pending, setPending] = useState&lt;string | null&gt;(null);</span></div>
-        <div class="diff-row del"><span class="ln">44</span><span class="mark">-</span><span class="code"> </span></div>
-        <div class="diff-row del"><span class="ln">45</span><span class="mark">-</span><span class="code">  async function toggle(task: Task) {</span></div>
-        <div class="diff-row del"><span class="ln">46</span><span class="mark">-</span><span class="code">    setPending(task.id);</span></div>
-        <div class="diff-row del"><span class="ln">47</span><span class="mark">-</span><span class="code">    await updateTask({ id: task.id, done: !task.done });</span></div>
-        <div class="diff-row del"><span class="ln">48</span><span class="mark">-</span><span class="code">    await refetch();</span></div>
-        <div class="diff-row del"><span class="ln">49</span><span class="mark">-</span><span class="code">    setPending(null);</span></div>
-        <div class="diff-row del"><span class="ln">50</span><span class="mark">-</span><span class="code">  }</span></div>
-        <div class="diff-row add"><span class="ln">43</span><span class="mark">+</span><span class="code">  const { mutate, isPending } = useOptimisticTasks(boardId);</span></div>
-        <div class="diff-row add"><span class="ln">44</span><span class="mark">+</span><span class="code"> </span></div>
-        <div class="diff-row add"><span class="ln">45</span><span class="mark">+</span><span class="code">  const toggle = (task: Task) =&gt;</span></div>
-        <div class="diff-row add"><span class="ln">46</span><span class="mark">+</span><span class="code">    mutate({ id: task.id, done: !task.done });</span></div>
-        <div class="diff-row ctx"><span class="ln">47</span><span class="mark"> </span><span class="code"> </span></div>
-        <div class="diff-row ctx"><span class="ln">48</span><span class="mark"> </span><span class="code">  return (</span></div>
-        <div class="diff-row ctx"><span class="ln">49</span><span class="mark"> </span><span class="code">    &lt;ul className="tasks"&gt;</span></div>
-        <div class="diff-row del"><span class="ln">50</span><span class="mark">-</span><span class="code">      {tasks?.map(t =&gt; &lt;TaskRow key={t.id} task={t} busy={pending === t.id} /&gt;)}</span></div>
-        <div class="diff-row add"><span class="ln">50</span><span class="mark">+</span><span class="code">      {tasks?.map(t =&gt; &lt;TaskRow key={t.id} task={t} onToggle={toggle} /&gt;)}</span></div>
-        <div class="diff-row ctx"><span class="ln">51</span><span class="mark"> </span><span class="code">    &lt;/ul&gt;</span></div>
+      <div class="legend">
+        <span><span class="dot" style="background:var(--olive)"></span> safe</span>
+        <span><span class="dot" style="background:#B89B6E"></span> worth a look</span>
+        <span><span class="dot" style="background:var(--clay)"></span> needs attention</span>
       </div>
-      <div class="comments">
-        <div class="bubble nit">
-          <div class="anchor">line 43</div>
-          <p><span class="label">Nit</span><code>isPending</code> is destructured but never read. Either drop it or pass it to <code>TaskRow</code> so the checkbox can dim while the request is in flight.</p>
+    </section>
+
+    <section>
+      <h2>Files</h2>
+
+      <!-- File 1: hook (attention) -->
+      <article class="file-card" id="file-hook">
+        <div class="file-head">
+          <div>
+            <div class="file-path">src/hooks/useOptimisticTasks.ts</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px">
+            <span class="risk-tag attention">needs attention</span>
+            <span class="file-delta"><span class="add">+58</span> <span class="del">&minus;0</span></span>
+          </div>
         </div>
-      </div>
-    </article>
-
-    <!-- File 3: api/tasks (medium) -->
-    <article class="file-card" id="file-api">
-      <div class="file-head">
-        <div>
-          <div class="file-path">src/api/tasks.ts</div>
+        <div class="diff">
+          <div class="diff-row hunk"><span class="ln"></span><span class="mark"></span><span class="code">@@ -0,0 +1,58 @@</span></div>
+          <div class="diff-row add"><span class="ln">1</span><span class="mark">+</span><span class="code">import { useMutation, useQueryClient } from '@tanstack/react-query';</span></div>
+          <div class="diff-row add"><span class="ln">2</span><span class="mark">+</span><span class="code">import { updateTask, TaskPatch } from '../api/tasks';</span></div>
+          <div class="diff-row add"><span class="ln">3</span><span class="mark">+</span><span class="code">import type { Task } from '../types/task';</span></div>
+          <div class="diff-row add"><span class="ln">4</span><span class="mark">+</span><span class="code"> </span></div>
+          <div class="diff-row add"><span class="ln">5</span><span class="mark">+</span><span class="code">export function useOptimisticTasks(boardId: string) {</span></div>
+          <div class="diff-row add"><span class="ln">6</span><span class="mark">+</span><span class="code">  const qc = useQueryClient();</span></div>
+          <div class="diff-row add"><span class="ln">7</span><span class="mark">+</span><span class="code">  const key = ['tasks', boardId];</span></div>
+          <div class="diff-row add"><span class="ln">8</span><span class="mark">+</span><span class="code"> </span></div>
+          <div class="diff-row add"><span class="ln">9</span><span class="mark">+</span><span class="code">  return useMutation({</span></div>
+          <div class="diff-row add"><span class="ln">10</span><span class="mark">+</span><span class="code">    mutationFn: (patch: TaskPatch) =&gt; updateTask(patch),</span></div>
+          <div class="diff-row add"><span class="ln">11</span><span class="mark">+</span><span class="code">    onMutate: async (patch) =&gt; {</span></div>
+          <div class="diff-row add"><span class="ln">12</span><span class="mark">+</span><span class="code">      const prev = qc.getQueryData&lt;Task[]&gt;(key);</span></div>
+          <div class="diff-row add"><span class="ln">13</span><span class="mark">+</span><span class="code">      qc.setQueryData&lt;Task[]&gt;(key, (old = []) =&gt;</span></div>
+          <div class="diff-row add"><span class="ln">14</span><span class="mark">+</span><span class="code">        old.map(t =&gt; t.id === patch.id ? { ...t, ...patch } : t)</span></div>
+          <div class="diff-row add"><span class="ln">15</span><span class="mark">+</span><span class="code">      );</span></div>
+          <div class="diff-row add"><span class="ln">16</span><span class="mark">+</span><span class="code">      return { prev };</span></div>
+          <div class="diff-row add"><span class="ln">17</span><span class="mark">+</span><span class="code">    },</span></div>
+          <div class="diff-row add"><span class="ln">18</span><span class="mark">+</span><span class="code">    onError: (_e, _p, ctx) =&gt; qc.setQueryData(key, ctx?.prev),</span></div>
+          <div class="diff-row add"><span class="ln">19</span><span class="mark">+</span><span class="code">  });</span></div>
+          <div class="diff-row add"><span class="ln">20</span><span class="mark">+</span><span class="code">}</span></div>
         </div>
-        <div style="display:flex;align-items:center;gap:12px">
-          <span class="risk-tag medium">worth a look</span>
-          <span class="file-delta"><span class="add">+19</span> <span class="del">−6</span></span>
+        <div class="comments">
+          <div class="bubble blocking">
+            <div class="anchor">line 11</div>
+            <p><span class="label">Blocking</span><code>onMutate</code> doesn't call <code>qc.cancelQueries(key)</code> first. If a background refetch lands between the optimistic write and the server response, it will clobber the optimistic state and the UI will flicker back to the old value.</p>
+          </div>
+          <div class="bubble nit">
+            <div class="anchor">line 18</div>
+            <p><span class="label">Nit</span>Rollback restores the list but never surfaces the error. Consider wiring the existing <code>pushToast</code> here so users know the toggle didn't stick.</p>
+          </div>
         </div>
-      </div>
-      <div class="diff">
-        <div class="diff-row hunk"><span class="ln"></span><span class="mark"></span><span class="code">@@ -12,10 +12,15 @@ export type TaskPatch = Partial&lt;Task&gt; &amp; { id: string };</span></div>
-        <div class="diff-row ctx"><span class="ln">12</span><span class="mark"> </span><span class="code"> </span></div>
-        <div class="diff-row del"><span class="ln">13</span><span class="mark">-</span><span class="code">export async function updateTask(patch: TaskPatch) {</span></div>
-        <div class="diff-row del"><span class="ln">14</span><span class="mark">-</span><span class="code">  return http.patch(`/tasks/${patch.id}`, patch);</span></div>
-        <div class="diff-row add"><span class="ln">13</span><span class="mark">+</span><span class="code">export async function updateTask(</span></div>
-        <div class="diff-row add"><span class="ln">14</span><span class="mark">+</span><span class="code">  patch: TaskPatch,</span></div>
-        <div class="diff-row add"><span class="ln">15</span><span class="mark">+</span><span class="code">  key = crypto.randomUUID(),</span></div>
-        <div class="diff-row add"><span class="ln">16</span><span class="mark">+</span><span class="code">) {</span></div>
-        <div class="diff-row add"><span class="ln">17</span><span class="mark">+</span><span class="code">  return http.patch(`/tasks/${patch.id}`, patch, {</span></div>
-        <div class="diff-row add"><span class="ln">18</span><span class="mark">+</span><span class="code">    headers: { 'Idempotency-Key': key },</span></div>
-        <div class="diff-row add"><span class="ln">19</span><span class="mark">+</span><span class="code">  });</span></div>
-        <div class="diff-row ctx"><span class="ln">20</span><span class="mark"> </span><span class="code">}</span></div>
-      </div>
-      <div class="comments">
-        <div class="bubble blocking">
-          <div class="anchor">line 15</div>
-          <p><span class="label">Blocking</span>Generating the idempotency key as a default parameter means retries from the mutation layer get a <em>new</em> key each time, which defeats the purpose. The key should be minted once in <code>onMutate</code> and threaded through.</p>
+      </article>
+
+      <!-- File 2: TaskList (medium) -->
+      <article class="file-card" id="file-tasklist">
+        <div class="file-head">
+          <div>
+            <div class="file-path">src/components/TaskList.tsx</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px">
+            <span class="risk-tag medium">worth a look</span>
+            <span class="file-delta"><span class="add">+31</span> <span class="del">&minus;24</span></span>
+          </div>
         </div>
-      </div>
-    </article>
+        <div class="diff">
+          <div class="diff-row hunk"><span class="ln"></span><span class="mark"></span><span class="code">@@ -42,14 +42,17 @@ export function TaskList({ boardId }: Props) {</span></div>
+          <div class="diff-row ctx"><span class="ln">42</span><span class="mark"> </span><span class="code">  const { data: tasks } = useTasks(boardId);</span></div>
+          <div class="diff-row del"><span class="ln">43</span><span class="mark">-</span><span class="code">  const [pending, setPending] = useState&lt;string | null&gt;(null);</span></div>
+          <div class="diff-row del"><span class="ln">44</span><span class="mark">-</span><span class="code"> </span></div>
+          <div class="diff-row del"><span class="ln">45</span><span class="mark">-</span><span class="code">  async function toggle(task: Task) {</span></div>
+          <div class="diff-row del"><span class="ln">46</span><span class="mark">-</span><span class="code">    setPending(task.id);</span></div>
+          <div class="diff-row del"><span class="ln">47</span><span class="mark">-</span><span class="code">    await updateTask({ id: task.id, done: !task.done });</span></div>
+          <div class="diff-row del"><span class="ln">48</span><span class="mark">-</span><span class="code">    await refetch();</span></div>
+          <div class="diff-row del"><span class="ln">49</span><span class="mark">-</span><span class="code">    setPending(null);</span></div>
+          <div class="diff-row del"><span class="ln">50</span><span class="mark">-</span><span class="code">  }</span></div>
+          <div class="diff-row add"><span class="ln">43</span><span class="mark">+</span><span class="code">  const { mutate, isPending } = useOptimisticTasks(boardId);</span></div>
+          <div class="diff-row add"><span class="ln">44</span><span class="mark">+</span><span class="code"> </span></div>
+          <div class="diff-row add"><span class="ln">45</span><span class="mark">+</span><span class="code">  const toggle = (task: Task) =&gt;</span></div>
+          <div class="diff-row add"><span class="ln">46</span><span class="mark">+</span><span class="code">    mutate({ id: task.id, done: !task.done });</span></div>
+          <div class="diff-row ctx"><span class="ln">47</span><span class="mark"> </span><span class="code"> </span></div>
+          <div class="diff-row ctx"><span class="ln">48</span><span class="mark"> </span><span class="code">  return (</span></div>
+          <div class="diff-row ctx"><span class="ln">49</span><span class="mark"> </span><span class="code">    &lt;ul className="tasks"&gt;</span></div>
+          <div class="diff-row del"><span class="ln">50</span><span class="mark">-</span><span class="code">      {tasks?.map(t =&gt; &lt;TaskRow key={t.id} task={t} busy={pending === t.id} /&gt;)}</span></div>
+          <div class="diff-row add"><span class="ln">50</span><span class="mark">+</span><span class="code">      {tasks?.map(t =&gt; &lt;TaskRow key={t.id} task={t} onToggle={toggle} /&gt;)}</span></div>
+          <div class="diff-row ctx"><span class="ln">51</span><span class="mark"> </span><span class="code">    &lt;/ul&gt;</span></div>
+        </div>
+        <div class="comments">
+          <div class="bubble nit">
+            <div class="anchor">line 43</div>
+            <p><span class="label">Nit</span><code>isPending</code> is destructured but never read. Either drop it or pass it to <code>TaskRow</code> so the checkbox can dim while the request is in flight.</p>
+          </div>
+        </div>
+      </article>
 
-    <!-- Collapsed files -->
-    <details class="file-collapsed" id="file-toast">
-      <summary>
-        <span class="file-path">src/components/Toast.tsx</span>
-        <span style="display:flex;align-items:center;gap:12px">
-          <span class="risk-tag safe">safe</span>
-          <span class="file-delta"><span class="add">+14</span> <span class="del">−2</span></span>
-        </span>
-      </summary>
-      <div class="body">Adds a <code style="font-family:var(--mono)">variant="warning"</code> style and exports <code style="font-family:var(--mono)">pushToast</code>. Purely additive, no behaviour change for existing call sites.</div>
-    </details>
+      <!-- File 3: api/tasks (medium) -->
+      <article class="file-card" id="file-api">
+        <div class="file-head">
+          <div>
+            <div class="file-path">src/api/tasks.ts</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px">
+            <span class="risk-tag medium">worth a look</span>
+            <span class="file-delta"><span class="add">+19</span> <span class="del">&minus;6</span></span>
+          </div>
+        </div>
+        <div class="diff">
+          <div class="diff-row hunk"><span class="ln"></span><span class="mark"></span><span class="code">@@ -12,10 +12,15 @@ export type TaskPatch = Partial&lt;Task&gt; &amp; { id: string };</span></div>
+          <div class="diff-row ctx"><span class="ln">12</span><span class="mark"> </span><span class="code"> </span></div>
+          <div class="diff-row del"><span class="ln">13</span><span class="mark">-</span><span class="code">export async function updateTask(patch: TaskPatch) {</span></div>
+          <div class="diff-row del"><span class="ln">14</span><span class="mark">-</span><span class="code">  return http.patch(`/tasks/${patch.id}`, patch);</span></div>
+          <div class="diff-row add"><span class="ln">13</span><span class="mark">+</span><span class="code">export async function updateTask(</span></div>
+          <div class="diff-row add"><span class="ln">14</span><span class="mark">+</span><span class="code">  patch: TaskPatch,</span></div>
+          <div class="diff-row add"><span class="ln">15</span><span class="mark">+</span><span class="code">  key = crypto.randomUUID(),</span></div>
+          <div class="diff-row add"><span class="ln">16</span><span class="mark">+</span><span class="code">) {</span></div>
+          <div class="diff-row add"><span class="ln">17</span><span class="mark">+</span><span class="code">  return http.patch(`/tasks/${patch.id}`, patch, {</span></div>
+          <div class="diff-row add"><span class="ln">18</span><span class="mark">+</span><span class="code">    headers: { 'Idempotency-Key': key },</span></div>
+          <div class="diff-row add"><span class="ln">19</span><span class="mark">+</span><span class="code">  });</span></div>
+          <div class="diff-row ctx"><span class="ln">20</span><span class="mark"> </span><span class="code">}</span></div>
+        </div>
+        <div class="comments">
+          <div class="bubble blocking">
+            <div class="anchor">line 15</div>
+            <p><span class="label">Blocking</span>Generating the idempotency key as a default parameter means retries from the mutation layer get a <em>new</em> key each time, which defeats the purpose. The key should be minted once in <code>onMutate</code> and threaded through.</p>
+          </div>
+        </div>
+      </article>
 
-    <details class="file-collapsed" id="file-types">
-      <summary>
-        <span class="file-path">src/types/task.ts</span>
-        <span style="display:flex;align-items:center;gap:12px">
-          <span class="risk-tag safe">safe</span>
-          <span class="file-delta"><span class="add">+6</span> <span class="del">−2</span></span>
-        </span>
-      </summary>
-      <div class="body">Widens <code style="font-family:var(--mono)">Task.status</code> to include <code style="font-family:var(--mono)">"archived"</code> and adds an optional <code style="font-family:var(--mono)">updatedAt</code> timestamp. Type-only change.</div>
-    </details>
+      <!-- Collapsed files -->
+      <details class="file-collapsed" id="file-toast">
+        <summary>
+          <span class="file-path">src/components/Toast.tsx</span>
+          <span style="display:flex;align-items:center;gap:12px">
+            <span class="risk-tag safe">safe</span>
+            <span class="file-delta"><span class="add">+14</span> <span class="del">&minus;2</span></span>
+          </span>
+        </summary>
+        <div class="body">Adds a <code style="font-family:var(--mono)">variant="warning"</code> style and exports <code style="font-family:var(--mono)">pushToast</code>. Purely additive, no behaviour change for existing call sites.</div>
+      </details>
 
-    <details class="file-collapsed" id="file-test">
-      <summary>
-        <span class="file-path">src/components/__tests__/TaskList.test.tsx</span>
-        <span style="display:flex;align-items:center;gap:12px">
-          <span class="risk-tag safe">safe</span>
-          <span class="file-delta"><span class="add">+14</span> <span class="del">−4</span></span>
-        </span>
-      </summary>
-      <div class="body">Adds a test asserting the row updates synchronously after click, and one asserting rollback when the mocked request rejects. Both pass locally.</div>
-    </details>
-  </section>
+      <details class="file-collapsed" id="file-types">
+        <summary>
+          <span class="file-path">src/types/task.ts</span>
+          <span style="display:flex;align-items:center;gap:12px">
+            <span class="risk-tag safe">safe</span>
+            <span class="file-delta"><span class="add">+6</span> <span class="del">&minus;2</span></span>
+          </span>
+        </summary>
+        <div class="body">Widens <code style="font-family:var(--mono)">Task.status</code> to include <code style="font-family:var(--mono)">"archived"</code> and adds an optional <code style="font-family:var(--mono)">updatedAt</code> timestamp. Type-only change.</div>
+      </details>
 
-  <footer class="next-steps">
-    <h2>Suggested next steps</h2>
-    <ul class="checklist">
-      <li>
-        <input type="checkbox" id="step1">
-        <label for="step1">Add <code>await qc.cancelQueries(key)</code> at the top of <code>onMutate</code> in <code>useOptimisticTasks.ts</code>.</label>
-      </li>
-      <li>
-        <input type="checkbox" id="step2">
-        <label for="step2">Move idempotency-key generation into the mutation context so retries reuse the same key.</label>
-      </li>
-      <li>
-        <input type="checkbox" id="step3">
-        <label for="step3">Either consume <code>isPending</code> in <code>TaskRow</code> or remove it from the destructure to keep lint clean.</label>
-      </li>
-    </ul>
-  </footer>
+      <details class="file-collapsed" id="file-test">
+        <summary>
+          <span class="file-path">src/components/__tests__/TaskList.test.tsx</span>
+          <span style="display:flex;align-items:center;gap:12px">
+            <span class="risk-tag safe">safe</span>
+            <span class="file-delta"><span class="add">+14</span> <span class="del">&minus;4</span></span>
+          </span>
+        </summary>
+        <div class="body">Adds a test asserting the row updates synchronously after click, and one asserting rollback when the mocked request rejects. Both pass locally.</div>
+      </details>
+    </section>
 
-</div>
+    <footer class="next-steps">
+      <h2>Suggested next steps</h2>
+      <ul class="checklist">
+        <li>
+          <input type="checkbox" id="step1">
+          <label for="step1">Add <code>await qc.cancelQueries(key)</code> at the top of <code>onMutate</code> in <code>useOptimisticTasks.ts</code>.</label>
+        </li>
+        <li>
+          <input type="checkbox" id="step2">
+          <label for="step2">Move idempotency-key generation into the mutation context so retries reuse the same key.</label>
+        </li>
+        <li>
+          <input type="checkbox" id="step3">
+          <label for="step3">Either consume <code>isPending</code> in <code>TaskRow</code> or remove it from the destructure to keep lint clean.</label>
+        </li>
+      </ul>
+    </footer>
 
-<script>
-  // Briefly highlight a file card when reached via the risk-map anchors.
-  document.querySelectorAll('.risk-map a').forEach(function (a) {
-    a.addEventListener('click', function () {
-      var target = document.querySelector(a.getAttribute('href'));
-      if (!target) return;
-      target.style.transition = 'box-shadow 180ms ease';
-      target.style.boxShadow = '0 0 0 3px rgba(217,119,87,0.35)';
-      setTimeout(function () { target.style.boxShadow = 'none'; }, 1400);
+  </div>
+
+  <script>
+    // Highlight a file card when reached via the risk-map anchors.
+    document.querySelectorAll('.risk-map a').forEach(function (a) {
+      a.addEventListener('click', function () {
+        var target = document.querySelector(a.getAttribute('href'));
+        if (!target) return;
+        target.style.transition = 'box-shadow 180ms ease';
+        target.style.boxShadow = '0 0 0 2px rgba(217,119,87,0.35), 0 4px 12px rgba(217,119,87,0.1)';
+        setTimeout(function () { target.style.boxShadow = ''; }, 1400);
+      });
     });
-  });
-</script>
+
+    // Highlight corresponding sidebar link when a file card scrolls into view
+    var fileCards = document.querySelectorAll('.file-card, details.file-collapsed');
+    var sidebarLinks = document.querySelectorAll('.file-tree a[href]');
+    var observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          sidebarLinks.forEach(function(link) {
+            link.style.background = '';
+            link.style.color = '';
+          });
+          var activeLink = document.querySelector('.file-tree a[href="#' + entry.target.id + '"]');
+          if (activeLink) {
+            activeLink.style.background = 'rgba(217,119,87,0.12)';
+            activeLink.style.color = '#F0EEE6';
+          }
+        }
+      });
+    }, { threshold: 0.3 });
+    fileCards.forEach(function(card) { observer.observe(card); });
+  </script>
 </body>
 </html>

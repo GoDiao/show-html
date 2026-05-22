@@ -6,6 +6,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Acme — Support reply prompt tuner</title>
 <style>
+  @import url('https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
   :root {
     --ivory: #FAF9F5;
     --slate: #141413;
@@ -13,152 +15,204 @@
     --clay-d: #B85C3E;
     --oat: #E3DACC;
     --olive: #788C5D;
-    --gray-50: #F0EEE6;
+    --olive-d: #5C6F44;
+    --gray-50: #F8F7F3;
+    --gray-100: #F0EEE6;
     --gray-200: #D1CFC5;
+    --gray-300: #BBB9AF;
     --gray-500: #87867F;
-    --gray-800: #3D3D3A;
+    --gray-700: #3D3D3A;
+    --gray-800: #2A2A28;
     --white: #ffffff;
-    --serif: ui-serif, Georgia, "Times New Roman", serif;
-    --sans: system-ui, -apple-system, "Segoe UI", sans-serif;
-    --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    --sky: #6B8FA3;
+    --serif: 'Crimson Pro', ui-serif, Georgia, serif;
+    --sans: system-ui, -apple-system, 'Segoe UI', sans-serif;
+    --mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
   }
-  * { box-sizing: border-box; }
-  html, body {
-    margin: 0;
-    background: var(--ivory);
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    background: var(--gray-50);
     color: var(--slate);
     font-family: var(--sans);
     font-size: 14px;
     line-height: 1.5;
   }
+
   .wrap {
-    max-width: 1180px;
+    max-width: 1220px;
     margin: 0 auto;
-    padding: 48px 32px 64px;
+    padding: 44px 32px 80px;
   }
 
   /* ---------- header ---------- */
-  header { margin-bottom: 22px; }
+
+  header { margin-bottom: 24px; }
+
   .eyebrow {
     font-family: var(--mono);
-    font-size: 11px;
-    letter-spacing: 0.08em;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: var(--gray-500);
+    color: var(--clay);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
   }
+
+  .eyebrow::before {
+    content: '';
+    width: 16px;
+    height: 2px;
+    background: var(--clay);
+  }
+
   h1 {
     font-family: var(--serif);
     font-weight: 500;
-    font-size: 30px;
-    letter-spacing: -0.01em;
-    margin: 6px 0 4px;
+    font-size: 32px;
+    letter-spacing: -0.015em;
+    margin: 6px 0 8px;
+    color: var(--slate);
   }
+
   .sub {
     color: var(--gray-500);
-    max-width: 640px;
+    max-width: 680px;
+    font-size: 13.5px;
+    line-height: 1.6;
   }
 
   /* ---------- toolbar ---------- */
+
   .toolbar {
     position: sticky;
     top: 0;
     z-index: 10;
+    background: rgba(248, 247, 243, 0.92);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     display: flex;
     align-items: center;
     gap: 10px;
-    background: var(--ivory);
-    padding: 10px 0 14px;
-    margin-bottom: 6px;
+    padding: 14px 0 14px;
+    margin-bottom: 20px;
     border-bottom: 1px solid var(--gray-200);
   }
+
   .toolbar .spacer { flex: 1; }
+
   .toolbar .hint {
     font-family: var(--mono);
     font-size: 11px;
     color: var(--gray-500);
     letter-spacing: 0.02em;
   }
+
+  .toolbar .hint strong { color: var(--clay-d); font-weight: 600; }
+
   button {
     font-family: var(--mono);
     font-size: 12px;
     cursor: pointer;
     -webkit-appearance: none;
     appearance: none;
+    transition: all 0.15s ease;
   }
+
   .btn-primary {
     background: var(--slate);
     color: var(--ivory);
     border: 1.5px solid var(--slate);
-    border-radius: 999px;
-    padding: 9px 16px;
-    transition: background 140ms ease, transform 80ms ease;
+    border-radius: 10px;
+    padding: 10px 18px;
+    font-weight: 500;
   }
+
   .btn-primary:hover { background: var(--gray-800); }
   .btn-primary:active { transform: translateY(1px); }
   .btn-primary.copied { background: var(--olive); border-color: var(--olive); }
+
   .btn-ghost {
-    background: transparent;
-    color: var(--gray-800);
+    background: var(--white);
+    color: var(--gray-700);
     border: 1.5px solid var(--gray-200);
-    border-radius: 999px;
-    padding: 8px 15px;
-    transition: border-color 140ms ease, color 140ms ease;
+    border-radius: 10px;
+    padding: 10px 18px;
   }
+
   .btn-ghost:hover { border-color: var(--gray-500); color: var(--slate); }
 
   /* ---------- two-column layout ---------- */
+
   .cols {
     display: grid;
-    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
-    gap: 24px;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+    gap: 20px;
     align-items: start;
-    margin-top: 18px;
+    margin-top: 20px;
   }
-  @media (max-width: 880px) {
+
+  @media (max-width: 920px) {
     .cols { grid-template-columns: 1fr; }
   }
 
   .panel {
     background: var(--white);
-    border: 1.5px solid var(--gray-200);
-    border-radius: 12px;
+    border: 1px solid var(--gray-200);
+    border-radius: 14px;
     overflow: hidden;
   }
 
   /* ---------- left: editor ---------- */
+
   .ed-toolbar {
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 11px 16px;
-    border-bottom: 1.5px solid var(--gray-200);
-    background: var(--gray-50);
+    padding: 12px 18px;
+    border-bottom: 1px solid var(--gray-100);
+    background: var(--white);
   }
+
   .ed-label {
     font-family: var(--mono);
-    font-size: 11px;
+    font-size: 10px;
+    font-weight: 600;
     letter-spacing: 0.1em;
     color: var(--gray-500);
     text-transform: uppercase;
   }
+
   .ed-toolbar .spacer { flex: 1; }
+
   .counter {
     font-family: var(--mono);
     font-size: 11px;
-    color: var(--gray-800);
-    background: var(--white);
-    border: 1.5px solid var(--gray-200);
-    border-radius: 999px;
-    padding: 3px 10px;
+    font-weight: 500;
+    color: var(--gray-700);
+    background: var(--gray-50);
+    border: 1px solid var(--gray-200);
+    border-radius: 8px;
+    padding: 4px 12px;
     white-space: nowrap;
     font-variant-numeric: tabular-nums;
   }
+
   .editor {
     font-family: var(--mono);
     font-size: 13px;
-    line-height: 1.7;
-    padding: 18px;
-    min-height: 360px;
+    line-height: 1.75;
+    padding: 20px;
+    min-height: 380px;
     white-space: pre-wrap;
     word-break: break-word;
     background: var(--white);
@@ -166,125 +220,169 @@
     outline: none;
     caret-color: var(--clay);
     tab-size: 2;
+    border: none;
   }
+
   .editor:focus-visible { outline: none; }
+
   .slot {
     background: var(--oat);
     color: var(--clay-d);
     border-radius: 4px;
-    padding: 0 3px;
+    padding: 1px 4px;
     font-weight: 600;
+    border-bottom: 2px solid rgba(184, 92, 62, 0.3);
   }
+
   .slot.warn {
-    background: rgba(217, 119, 87, 0.14);
+    background: rgba(217, 119, 87, 0.12);
     color: var(--clay-d);
     text-decoration: underline dashed var(--clay) 1.5px;
     text-underline-offset: 3px;
+    border-bottom: none;
   }
 
   .legend {
-    border-top: 1.5px solid var(--gray-200);
-    padding: 12px 16px 14px;
-    background: var(--gray-50);
+    border-top: 1px solid var(--gray-100);
+    padding: 14px 18px 16px;
+    background: var(--white);
   }
+
   .legend-label {
     font-family: var(--mono);
-    font-size: 10px;
+    font-size: 9.5px;
     letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--gray-500);
     margin-bottom: 8px;
+    font-weight: 600;
   }
+
   .legend-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+
   .chip {
     font-family: var(--mono);
     font-size: 11px;
     background: var(--oat);
     color: var(--clay-d);
-    border-radius: 4px;
-    padding: 2px 7px;
+    border-radius: 5px;
+    padding: 3px 8px;
     font-weight: 600;
+    cursor: default;
+    transition: background 0.12s ease;
   }
 
+  .chip:hover { background: #D8CCBC; }
+
   /* ---------- right: preview ---------- */
-  .preview-panel { padding: 16px; display: flex; flex-direction: column; gap: 14px; }
+
+  .preview-panel {
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
   .preview-head {
     font-family: var(--mono);
-    font-size: 11px;
+    font-size: 10px;
+    font-weight: 600;
     letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--gray-500);
     padding: 0 2px 2px;
   }
+
   .sample {
-    border: 1.5px solid var(--gray-200);
-    border-radius: 10px;
+    border: 1px solid var(--gray-200);
+    border-radius: 12px;
     overflow: hidden;
+    transition: border-color 0.15s ease;
   }
+
+  .sample:hover { border-color: var(--gray-300); }
+
   .sample-head {
     display: flex;
     align-items: center;
-    gap: 9px;
-    padding: 9px 13px;
-    border-bottom: 1.5px solid var(--gray-200);
+    gap: 10px;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--gray-100);
     background: var(--gray-50);
   }
+
   .badge {
     font-family: var(--mono);
     font-size: 10px;
+    font-weight: 600;
     letter-spacing: 0.08em;
     color: var(--gray-500);
   }
+
   .cust {
     font-family: var(--serif);
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 500;
     letter-spacing: -0.005em;
+    color: var(--slate);
   }
+
   .sample-head .spacer { flex: 1; }
+
   .plan {
     font-family: var(--mono);
-    font-size: 10px;
-    letter-spacing: 0.05em;
+    font-size: 9.5px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
-    border-radius: 999px;
-    padding: 2px 8px;
-    border: 1.5px solid var(--gray-200);
-    color: var(--gray-800);
+    border-radius: 5px;
+    padding: 3px 9px;
+    border: 1px solid var(--gray-200);
+    color: var(--gray-700);
     background: var(--white);
   }
-  .plan.team   { background: var(--oat);   border-color: var(--oat);   color: var(--clay-d); }
-  .plan.studio { background: var(--olive); border-color: var(--olive); color: var(--ivory); }
+
+  .plan.team   { background: var(--oat);   border-color: #D0BC9E; color: var(--clay-d); }
+  .plan.studio { background: #D6E0CC; border-color: #BFD0AD; color: var(--olive-d); }
+
   .rendered {
     font-family: var(--mono);
-    font-size: 12.5px;
-    line-height: 1.6;
-    color: var(--gray-800);
+    font-size: 12px;
+    line-height: 1.7;
+    color: var(--gray-700);
     white-space: pre-wrap;
     word-break: break-word;
-    padding: 12px 13px 14px;
+    padding: 14px 14px 16px;
   }
+
   .filled {
-    background: var(--gray-50);
+    background: #E2E8D8;
     border-radius: 3px;
-    padding: 0 2px;
-    box-shadow: inset 0 0 0 1px var(--gray-200);
+    padding: 1px 3px;
+    color: var(--olive-d);
   }
+
   .missing {
     background: rgba(217, 119, 87, 0.12);
     color: var(--clay-d);
     border-radius: 3px;
-    padding: 0 2px;
+    padding: 1px 3px;
     font-weight: 600;
   }
 
   footer {
-    margin-top: 36px;
+    margin-top: 40px;
     font-family: var(--mono);
     font-size: 11px;
     color: var(--gray-500);
     letter-spacing: 0.02em;
+    padding-top: 20px;
+    border-top: 1px solid var(--gray-200);
+    max-width: 680px;
+    line-height: 1.7;
   }
+
+  footer strong { color: var(--clay-d); font-weight: 600; }
 </style>
 </head>
 <body>
@@ -327,7 +425,7 @@
 
   </div>
 
-  <footer>Highlighted slots fill from each sample's ticket fields. Anything underlined in dashed clay isn't a known field and will pass through unfilled.</footer>
+  <footer>Highlighted slots fill from each sample's ticket fields. Anything underlined in dashed clay isn't a known field and will pass through <strong>unfilled</strong>.</footer>
 
 </div>
 
@@ -413,9 +511,7 @@
       .replace(/"/g, '&quot;');
   }
 
-  // Read plain text out of the contenteditable. We rely on white-space:pre-wrap
-  // and only ever insert text + inline <span>s, so textContent is faithful as
-  // long as the browser hasn't injected block elements or <br>s. Normalize both.
+  // Read plain text out of the contenteditable.
   function getPlainText() {
     var out = '';
     var walker = document.createTreeWalker(editor, NodeFilter.SHOW_TEXT | NodeFilter.SHOW_ELEMENT, null);
@@ -426,8 +522,6 @@
       } else if (node.nodeType === Node.ELEMENT_NODE) {
         var tag = node.tagName;
         if (tag === 'BR') out += '\n';
-        // Some browsers wrap new lines in <div>; emit a newline before a div
-        // that isn't the first child and doesn't already start after one.
         if (tag === 'DIV' && node !== editor.firstChild && out.length && out[out.length - 1] !== '\n') {
           out += '\n';
         }
@@ -448,8 +542,6 @@
     pre.selectNodeContents(editor);
     pre.setEnd(range.startContainer, range.startOffset);
 
-    // Count characters by walking text nodes within the pre-range. We mirror
-    // getPlainText's newline handling so offsets line up.
     var frag = pre.cloneContents();
     var off = 0;
     var walker = document.createTreeWalker(frag, NodeFilter.SHOW_TEXT | NodeFilter.SHOW_ELEMENT, null);
@@ -492,7 +584,6 @@
       remaining -= len;
     }
 
-    // Past the end — place at end of last text node, or at end of editor.
     var range2 = document.createRange();
     if (lastNode) {
       range2.setStart(lastNode, lastNode.nodeValue.length);
@@ -641,7 +732,7 @@
     });
   });
 
-  // Force plain-text paste so we never inherit foreign HTML.
+  // Force plain-text paste
   editor.addEventListener('paste', function (e) {
     e.preventDefault();
     var txt = (e.clipboardData || window.clipboardData).getData('text/plain');
@@ -656,7 +747,7 @@
     refresh({ preserveCaret: true });
   });
 
-  // Insert literal newline on Enter so we don't get nested <div>s.
+  // Insert literal newline on Enter
   editor.addEventListener('keydown', function (e) {
     if (e.key === 'Enter') {
       e.preventDefault();

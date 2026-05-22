@@ -4,923 +4,947 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>The unreasonable effectiveness of HTML — examples</title>
+<title>The Unreasonable Effectiveness of HTML — A Curated Gallery</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&display=swap" rel="stylesheet">
 <style>
+  /* ── Design Tokens ────────────────────────── */
   :root {
-    --ivory:  #FAF9F5;
-    --paper:  #FFFFFF;
-    --slate:  #141413;
-    --clay:   #D97757;
-    --clay-d: #B85C3E;
-    --oat:    #E3DACC;
-    --olive:  #788C5D;
-    --g100:   #F0EEE6;
-    --g200:   #E6E3DA;
-    --g300:   #D1CFC5;
-    --g500:   #87867F;
-    --g700:   #3D3D3A;
-    --serif: ui-serif, Georgia, "Times New Roman", Times, serif;
-    --sans: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    --mono: ui-monospace, "SF Mono", Menlo, Monaco, Consolas, monospace;
+    --bg:        #FAF9F5;
+    --paper:     #FFFFFF;
+    --ink:       #1A1A18;
+    --ink-mid:   #3D3D3A;
+    --ink-light: #6B6B66;
+    --faint:     #9A9A94;
+
+    --accent-terracotta: #C4593A;
+    --accent-sage:       #5E7E52;
+    --accent-navy:       #2E4A6E;
+    --accent-amber:      #B8860B;
+    --accent-plum:       #7A4A6E;
+    --accent-teal:       #2A7A7A;
+    --accent-rust:       #A0522D;
+    --accent-slate:      #4A5A6A;
+    --accent-forest:     #3A6B4A;
+    --accent-wine:       #8B3A4A;
+    --accent-copper:     #B87333;
+    --accent-indigo:     #4A4A8A;
+
+    --rule:      #D8D5CC;
+    --rule-light:#E8E6DF;
+    --surface:   #F3F1EB;
+    --surface-hover: #EDEADF;
+
+    --serif:  'Playfair Display', Georgia, 'Times New Roman', serif;
+    --sans:   'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    --mono:   'IBM Plex Mono', 'SF Mono', Menlo, Consolas, monospace;
+
+    --radius-sm:  6px;
+    --radius-md:  10px;
+    --radius-lg:  14px;
+    --shadow-card: 0 1px 3px rgba(26,26,24,0.04), 0 4px 12px rgba(26,26,24,0.03);
+    --shadow-hover: 0 8px 30px rgba(26,26,24,0.10), 0 2px 8px rgba(26,26,24,0.06);
+
+    --grid-gap: 24px;
   }
-  * { box-sizing: border-box; }
+
+  /* ── Reset & Base ─────────────────────────── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
   body {
-    margin: 0;
-    background: var(--ivory);
-    color: var(--slate);
+    background: var(--bg);
+    color: var(--ink);
     font-family: var(--sans);
-    line-height: 1.55;
+    font-size: 16px;
+    line-height: 1.6;
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
-  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 32px 140px; }
+  a { color: inherit; text-decoration: none; }
+  img, svg { display: block; }
 
-  /* ── masthead ─────────────────────────── */
+  /* ── Page Container ───────────────────────── */
+  .page {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 0 40px 100px;
+  }
+  @media (max-width: 640px) {
+    .page { padding: 0 20px 60px; }
+  }
 
-  header.masthead {
-    padding: 80px 0 56px;
-    border-bottom: 1.5px solid var(--g300);
-    margin-bottom: 12px;
+  /* ── Hero ─────────────────────────────────── */
+  .hero {
+    padding: 80px 0 60px;
+    border-bottom: 1px solid var(--rule);
+    margin-bottom: 64px;
     position: relative;
-    overflow: visible;
   }
-  .eyebrow {
+  @media (max-width: 640px) {
+    .hero { padding: 48px 0 40px; margin-bottom: 40px; }
+  }
+
+  .hero-eyebrow {
     font-family: var(--mono);
-    font-size: 12px;
-    letter-spacing: 0.12em;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
     text-transform: uppercase;
-    color: var(--g500);
-    margin-bottom: 18px;
+    color: var(--faint);
+    margin-bottom: 24px;
     display: flex;
     align-items: center;
     gap: 12px;
   }
-  .eyebrow::before {
+  .hero-eyebrow::before {
     content: "";
-    width: 24px; height: 1.5px;
-    background: var(--clay);
+    display: block;
+    width: 32px;
+    height: 1px;
+    background: var(--accent-terracotta);
   }
-  h1 {
+
+  .hero h1 {
     font-family: var(--serif);
-    font-weight: 500;
-    font-size: clamp(38px, 5.4vw, 62px);
-    line-height: 1.06;
-    letter-spacing: -0.018em;
-    margin: 0 0 8px;
-    max-width: 17ch;
+    font-weight: 600;
+    font-size: clamp(36px, 5.5vw, 68px);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    max-width: 16ch;
+    margin-bottom: 16px;
   }
-  h1 em {
+  .hero h1 em {
     font-style: italic;
-    color: var(--clay);
+    color: var(--accent-terracotta);
+    font-weight: 500;
   }
-  .intro {
-    font-size: 16.5px;
-    color: var(--g700);
-    margin: 22px 0 0;
-    max-width: 620px;
-  }
-  .intro a { color: var(--clay); text-decoration-color: var(--oat); text-underline-offset: 3px; }
-  .intro a:hover { text-decoration-color: var(--clay); }
 
-  .hero-grid {
-    display: grid;
-    grid-template-columns: 1fr 340px;
-    gap: 48px;
-    align-items: end;
+  .hero-subtitle {
+    font-family: var(--sans);
+    font-size: 17px;
+    line-height: 1.65;
+    color: var(--ink-mid);
+    max-width: 560px;
+    font-weight: 400;
   }
-  @media (max-width: 880px) { .hero-grid { grid-template-columns: 1fr; } }
+  .hero-subtitle a {
+    color: var(--accent-terracotta);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-color: var(--rule);
+    transition: text-decoration-color 150ms;
+  }
+  .hero-subtitle a:hover {
+    text-decoration-color: var(--accent-terracotta);
+  }
 
-  /* hero figure — markdown vs html */
-  .hero-fig {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 14px;
-    align-items: end;
-  }
-  @media (max-width: 880px) { .hero-fig { max-width: 400px; margin-top: 28px; } }
-  .hero-fig .pane {
-    border-radius: 10px;
-    border: 1.5px solid var(--g300);
-    background: var(--paper);
-    padding: 14px;
-    aspect-ratio: 4/5;
+  .hero-meta {
+    margin-top: 32px;
     display: flex;
-    flex-direction: column;
-    gap: 7px;
-    position: relative;
-  }
-  .hero-fig .pane.md {
-    background: var(--g100);
-    transform: rotate(-2.5deg) translateY(6px);
-  }
-  .hero-fig .pane.html {
-    transform: rotate(1.5deg);
-    border-color: var(--slate);
-    box-shadow: 0 12px 32px rgba(20,20,19,.10);
-  }
-  .hero-fig .tag {
-    position: absolute;
-    top: -10px; left: 12px;
+    align-items: center;
+    gap: 24px;
     font-family: var(--mono);
-    font-size: 9.5px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    background: var(--ivory);
-    padding: 2px 7px;
-    border: 1.5px solid var(--g300);
-    border-radius: 6px;
-    color: var(--g500);
+    font-size: 12px;
+    color: var(--faint);
   }
-  .hero-fig .pane.html .tag { border-color: var(--slate); color: var(--slate); }
-  .hero-fig .l { height: 6px; border-radius: 3px; background: var(--g300); }
-  .hero-fig .l.w90 { width: 90%; } .hero-fig .l.w75 { width: 75%; }
-  .hero-fig .l.w60 { width: 60%; } .hero-fig .l.w82 { width: 82%; }
-  .hero-fig .l.w70 { width: 70%; } .hero-fig .l.w50 { width: 50%; }
-  .hero-fig .pane.html .l { background: var(--g200); }
-  .hero-fig .pane.html .blk {
-    border-radius: 5px;
-    flex: 1;
-    background: linear-gradient(135deg, var(--oat), #ECE1CF);
-    position: relative;
-    overflow: hidden;
-  }
-  .hero-fig .pane.html .blk::after {
-    content: "";
-    position: absolute;
-    left: 18%; right: 18%; top: 28%;
-    height: 40%;
-    border: 2px solid var(--clay);
+  .hero-meta .dot {
+    width: 4px;
+    height: 4px;
     border-radius: 50%;
-    opacity: .7;
+    background: var(--rule);
   }
-  .hero-fig .pane.html .row {
-    display: flex; gap: 6px; align-items: flex-end;
-  }
-  .hero-fig .pane.html .bar { flex: 1; border-radius: 3px 3px 0 0; }
-  .hero-fig .pane.html .bar.b1 { height: 14px; background: var(--olive); }
-  .hero-fig .pane.html .bar.b2 { height: 26px; background: var(--clay); }
-  .hero-fig .pane.html .bar.b3 { height: 18px; background: var(--oat); }
-  .hero-fig .pane.html .bar.b4 { height: 30px; background: var(--slate); }
 
-  /* ── toc pills ────────────────────────── */
-
-  nav.toc {
+  /* ── Table of Contents ────────────────────── */
+  .toc {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
-    padding: 26px 0 0;
+    margin-top: 28px;
   }
-  nav.toc a {
-    font-size: 12.5px;
-    padding: 7px 14px;
-    border: 1.5px solid var(--g300);
-    border-radius: 999px;
-    text-decoration: none;
-    color: var(--g700);
+  .toc a {
+    font-family: var(--sans);
+    font-size: 12px;
+    font-weight: 500;
+    padding: 6px 14px;
+    border: 1px solid var(--rule);
+    border-radius: 100px;
+    color: var(--ink-mid);
     background: var(--paper);
-    transition: border-color 120ms, color 120ms, background 120ms;
+    transition: all 150ms ease;
     display: inline-flex;
     align-items: center;
-    gap: 7px;
+    gap: 6px;
   }
-  nav.toc a .n {
+  .toc a .toc-count {
     font-family: var(--mono);
     font-size: 10px;
-    color: var(--g500);
+    color: var(--faint);
+    font-weight: 400;
   }
-  nav.toc a:hover { border-color: var(--slate); color: var(--slate); }
-  nav.toc a:hover .n { color: var(--clay); }
-
-  /* ── section ──────────────────────────── */
-
-  section {
-    margin-top: 72px;
-    scroll-margin-top: 28px;
+  .toc a:hover {
+    border-color: var(--ink);
+    color: var(--ink);
+    background: var(--surface);
   }
-  .sec-head {
+  .toc a:hover .toc-count { color: var(--accent-terracotta); }
+
+  /* ── Section ──────────────────────────────── */
+  .section {
+    margin-bottom: 72px;
+    scroll-margin-top: 32px;
+  }
+  @media (max-width: 640px) {
+    .section { margin-bottom: 48px; }
+  }
+
+  .section-header {
     display: flex;
     align-items: baseline;
-    gap: 16px;
-    margin-bottom: 10px;
+    gap: 0;
+    margin-bottom: 28px;
+    position: relative;
   }
-  .sec-head .idx {
+  .section-number {
     font-family: var(--mono);
-    font-size: 13px;
-    color: var(--clay);
+    font-size: 12px;
     font-weight: 600;
-    width: 34px;
-    flex-shrink: 0;
+    letter-spacing: 0.04em;
+    color: var(--section-accent, var(--accent-terracotta));
+    min-width: 28px;
+    padding-right: 16px;
+    position: relative;
   }
-  .sec-head h2 {
+  .section-number::after {
+    content: "";
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--section-accent, var(--accent-terracotta));
+    opacity: 0.5;
+  }
+  .section-title {
     font-family: var(--serif);
+    font-size: 28px;
     font-weight: 500;
-    font-size: 27px;
-    margin: 0;
-    letter-spacing: -0.012em;
+    letter-spacing: -0.015em;
+    color: var(--ink);
+    line-height: 1.2;
+    padding-left: 20px;
   }
-  .sec-head .count {
-    font-family: var(--mono);
-    font-size: 11px;
-    color: var(--g500);
-    background: var(--g100);
-    padding: 2px 8px;
-    border-radius: 999px;
-  }
-  .sec-intro {
+  .section-desc {
     font-size: 14.5px;
-    color: var(--g700);
-    max-width: 700px;
-    margin: 0 0 24px 50px;
+    color: var(--ink-light);
+    line-height: 1.6;
+    max-width: 640px;
+    margin: -12px 0 28px 48px;
   }
-  @media (max-width: 640px) { .sec-intro { margin-left: 0; } }
+  @media (max-width: 640px) {
+    .section-desc { margin-left: 0; margin-top: -4px; }
+  }
 
-  /* ── cards ────────────────────────────── */
-
+  /* ── Card Grid ────────────────────────────── */
   .grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(316px, 1fr));
-    gap: 20px;
-    margin-left: 50px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--grid-gap);
   }
-  @media (max-width: 640px) { .grid { margin-left: 0; } }
+  @media (max-width: 960px) {
+    .grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 600px) {
+    .grid { grid-template-columns: 1fr; gap: 16px; }
+  }
 
-  a.card {
+  /* ── Card ─────────────────────────────────── */
+  .card {
     display: flex;
     flex-direction: column;
     background: var(--paper);
-    border: 1.5px solid var(--g300);
-    border-radius: 14px;
+    border: 1px solid var(--rule-light);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    transition: transform 200ms cubic-bezier(0.22, 0.61, 0.36, 1),
+                box-shadow 200ms cubic-bezier(0.22, 0.61, 0.36, 1),
+                border-color 200ms ease;
+    box-shadow: var(--shadow-card);
     text-decoration: none;
     color: inherit;
-    transition: transform 150ms ease, box-shadow 150ms ease, border-color 150ms ease;
-    overflow: hidden;
+    position: relative;
   }
-  a.card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 30px rgba(20, 20, 19, 0.10);
-    border-color: var(--slate);
+  .card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-hover);
+    border-color: var(--section-accent, var(--ink));
   }
 
-  .thumb {
-    height: 132px;
-    background: var(--g100);
-    border-bottom: 1.5px solid var(--g200);
+  /* accent bar */
+  .card-accent {
+    height: 4px;
+    background: var(--section-accent, var(--accent-terracotta));
+    flex-shrink: 0;
+  }
+
+  .card-body {
+    padding: 24px 24px 20px;
     display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 16px;
-    transition: background 150ms ease;
-  }
-  a.card:hover .thumb { background: var(--oat); }
-  .thumb svg {
-    width: 100%; height: 100%;
-    overflow: visible;
-  }
-  .thumb svg .st { stroke: var(--g500); fill: none; stroke-width: 2.5; }
-  .thumb svg .fl { fill: var(--g300); }
-  .thumb svg .cl { fill: var(--clay); }
-  .thumb svg .ol { fill: var(--olive); }
-  .thumb svg .oa { fill: var(--oat); stroke: var(--g500); stroke-width: 2.5; }
-  .thumb svg .sl { fill: var(--slate); }
-  .thumb svg .wh { fill: var(--paper); stroke: var(--g500); stroke-width: 2.5; }
-  .thumb svg .ln { stroke: var(--g500); stroke-width: 2.5; fill: none; stroke-linecap: round; }
-  .thumb svg .lc { stroke: var(--clay); stroke-width: 2.5; fill: none; stroke-linecap: round; }
-  .thumb svg .da { stroke-dasharray: 4 4; }
-  a.card:hover .thumb svg .fl { fill: var(--g500); }
-  a.card:hover .thumb svg .oa { fill: var(--paper); }
-
-  .body { padding: 18px 20px 16px; display: flex; flex-direction: column; flex: 1; }
-  .title {
-    font-family: var(--serif);
-    font-size: 19px;
-    font-weight: 500;
-    line-height: 1.22;
-    color: var(--slate);
-    margin-bottom: 7px;
-    letter-spacing: -0.008em;
-  }
-  .desc {
-    font-size: 13.5px;
-    color: var(--g700);
-    line-height: 1.5;
-    margin-bottom: 16px;
+    flex-direction: column;
     flex: 1;
   }
-  .file {
+  @media (max-width: 640px) {
+    .card-body { padding: 20px 18px 16px; }
+  }
+
+  .card-num {
     font-family: var(--mono);
     font-size: 11px;
-    color: var(--g500);
-    border-top: 1px solid var(--g100);
-    padding-top: 11px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    color: var(--section-accent, var(--accent-terracotta));
+    margin-bottom: 8px;
+    opacity: 0.7;
+  }
+
+  .card-title {
+    font-family: var(--serif);
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    margin-bottom: 10px;
+  }
+
+  .card-desc {
+    font-family: var(--sans);
+    font-size: 13.5px;
+    line-height: 1.55;
+    color: var(--ink-light);
+    flex: 1;
+    margin-bottom: 16px;
+  }
+
+  .card-footer {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    border-top: 1px solid var(--rule-light);
+    padding-top: 14px;
   }
-  .file .arrow { transition: transform 150ms ease; color: var(--g300); }
-  a.card:hover .file { color: var(--clay); }
-  a.card:hover .file .arrow { transform: translateX(3px); color: var(--clay); }
+  .card-file {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--faint);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .card-arrow {
+    font-family: var(--sans);
+    font-size: 16px;
+    color: var(--rule);
+    transition: transform 200ms ease, color 200ms ease;
+    flex-shrink: 0;
+    margin-left: 12px;
+  }
+  .card:hover .card-file { color: var(--ink-light); }
+  .card:hover .card-arrow {
+    transform: translateX(4px);
+    color: var(--section-accent, var(--accent-terracotta));
+  }
 
-  /* ── footer ───────────────────────────── */
+  /* ── Section Accent Variants ──────────────── */
+  .sec-exploration   { --section-accent: var(--accent-terracotta); }
+  .sec-review        { --section-accent: var(--accent-navy); }
+  .sec-design        { --section-accent: var(--accent-sage); }
+  .sec-prototyping   { --section-accent: var(--accent-amber); }
+  .sec-presentations { --section-accent: var(--accent-plum); }
+  .sec-reports       { --section-accent: var(--accent-teal); }
+  .sec-diagrams      { --section-accent: var(--accent-rust); }
+  .sec-research      { --section-accent: var(--accent-forest); }
+  .sec-planning      { --section-accent: var(--accent-slate); }
+  .sec-pr            { --section-accent: var(--accent-wine); }
+  .sec-editors       { --section-accent: var(--accent-copper); }
+  .sec-data          { --section-accent: var(--accent-indigo); }
 
-  footer {
-    margin-top: 100px;
-    border-top: 1.5px solid var(--g300);
-    padding-top: 36px;
+  /* ── Footer ───────────────────────────────── */
+  .footer {
+    margin-top: 80px;
+    padding-top: 40px;
+    border-top: 1px solid var(--rule);
+  }
+  .footer-inner {
     display: flex;
     justify-content: space-between;
     align-items: baseline;
-    gap: 20px;
+    gap: 24px;
     flex-wrap: wrap;
-    font-size: 13px;
-    color: var(--g500);
   }
-  footer .k { font-family: var(--serif); font-style: italic; color: var(--g700); font-size: 15px; }
-  footer a { color: var(--clay); text-decoration-color: var(--oat); text-underline-offset: 3px; }
+  .footer-quote {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 16px;
+    color: var(--ink-mid);
+    line-height: 1.5;
+  }
+  .footer-quote code {
+    font-family: var(--mono);
+    font-style: normal;
+    font-size: 13px;
+    background: var(--surface);
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+  .footer-meta {
+    font-family: var(--sans);
+    font-size: 12.5px;
+    color: var(--faint);
+    line-height: 1.6;
+    text-align: right;
+  }
+  .footer-meta a {
+    color: var(--accent-terracotta);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    text-decoration-color: var(--rule);
+  }
+  .footer-meta a:hover { text-decoration-color: var(--accent-terracotta); }
+  .footer-license {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--faint);
+    margin-top: 24px;
+    opacity: 0.7;
+  }
+  @media (max-width: 640px) {
+    .footer-inner { flex-direction: column; }
+    .footer-meta { text-align: left; }
+  }
 </style>
 </head>
 <body>
-<div class="wrap">
 
-  <header class="masthead">
-    <div class="hero-grid">
-      <div>
-        <div class="eyebrow">Companion to the blog post</div>
-        <h1>The unreasonable <em>effectiveness</em> of HTML</h1>
-        <p class="intro">
-          Twenty-four self-contained <code>.html</code> files an agent produced instead of a wall of markdown.
-          Each one trades a document you'd skim for one you'd actually read — open any of them directly in
-          a browser. Grouped by the kind of work they replace.
-        </p>
-        <nav class="toc">
-          <a href="#exploration">Exploration &amp; Planning <span class="n">3</span></a>
-          <a href="#code-review">Code Review <span class="n">3</span></a>
-          <a href="#design">Design <span class="n">2</span></a>
-          <a href="#prototyping">Prototyping <span class="n">2</span></a>
-          <a href="#illustrations">Diagrams <span class="n">2</span></a>
-          <a href="#decks">Decks <span class="n">1</span></a>
-          <a href="#research">Research <span class="n">2</span></a>
-          <a href="#reports">Reports <span class="n">2</span></a>
-          <a href="#editors">Custom Editors <span class="n">3</span></a>
-          <a href="#data">Data &amp; Visualization <span class="n">4</span></a>
-        </nav>
-      </div>
-      <div class="hero-fig" aria-hidden="true">
-        <div class="pane md">
-          <span class="tag">.md</span>
-          <span class="l w90"></span><span class="l w75"></span><span class="l w82"></span>
-          <span class="l w60"></span><span class="l w90"></span><span class="l w70"></span>
-          <span class="l w82"></span><span class="l w50"></span><span class="l w75"></span>
-          <span class="l w90"></span><span class="l w60"></span>
-        </div>
-        <div class="pane html">
-          <span class="tag">.html</span>
-          <span class="l w60"></span>
-          <span class="blk"></span>
-          <span class="row"><span class="bar b1"></span><span class="bar b2"></span><span class="bar b3"></span><span class="bar b4"></span></span>
-          <span class="l w75"></span><span class="l w50"></span>
-        </div>
-      </div>
+<div class="page">
+
+  <!-- ── Hero ─────────────────────────────────── -->
+  <header class="hero">
+    <div class="hero-eyebrow">A Curated Collection</div>
+    <h1>The Unreasonable <em>Effectiveness</em> of HTML</h1>
+    <p class="hero-subtitle">
+      Twenty-four self-contained <code>.html</code> files that an agent produced instead of a wall of markdown.
+      Each one trades a document you would skim for one you would actually read.
+      Open any of them directly in a browser.
+    </p>
+    <div class="hero-meta">
+      <span>24 Examples</span>
+      <span class="dot"></span>
+      <span>12 Categories</span>
+      <span class="dot"></span>
+      <span>Zero Dependencies</span>
     </div>
+    <nav class="toc">
+      <a href="#exploration">Code Exploration <span class="toc-count">2</span></a>
+      <a href="#review">Code Review <span class="toc-count">2</span></a>
+      <a href="#design">Design System <span class="toc-count">2</span></a>
+      <a href="#prototyping">Prototyping <span class="toc-count">2</span></a>
+      <a href="#presentations">Presentations <span class="toc-count">2</span></a>
+      <a href="#reports">Reports <span class="toc-count">2</span></a>
+      <a href="#diagrams">Diagrams <span class="toc-count">1</span></a>
+      <a href="#research">Research <span class="toc-count">2</span></a>
+      <a href="#planning">Planning <span class="toc-count">1</span></a>
+      <a href="#pr">PR &amp; Communication <span class="toc-count">1</span></a>
+      <a href="#editors">Editor Tools <span class="toc-count">3</span></a>
+      <a href="#data">Data &amp; Visualization <span class="toc-count">4</span></a>
+    </nav>
   </header>
 
-  <!-- ============================== Exploration & Planning ============================== -->
-  <section id="exploration">
-    <div class="sec-head"><span class="idx">01</span><h2>Exploration &amp; Planning</h2><span class="count">3 demos</span></div>
-    <p class="sec-intro">
-      When you're not sure what you want yet. Ask the agent to fan out across several directions and lay
-      them next to each other so you can point at one — instead of reading three sequential walls of text
-      and trying to hold them all in your head. And once you've picked, turn the pick into a plan the
-      implementer can actually read.
+  <!-- ═══════════════════════════════════════════════════════════════
+       Section 1 — Code Exploration
+       ═══════════════════════════════════════════════════════════════ -->
+  <section class="section sec-exploration" id="exploration">
+    <div class="section-header">
+      <span class="section-number">01</span>
+      <h2 class="section-title">Code Exploration</h2>
+    </div>
+    <p class="section-desc">
+      When you are not sure what you want yet. Ask the agent to fan out across several directions and lay them next to each other so you can point at one — instead of reading three sequential walls of text.
     </p>
     <div class="grid">
       <a class="card" href="01-exploration-code-approaches.html">
-        <div class="thumb"><svg viewBox="0 0 120 80">
-          <rect class="wh" x="4" y="10" width="32" height="60" rx="5"/>
-          <rect class="wh" x="44" y="10" width="32" height="60" rx="5"/>
-          <rect class="oa" x="84" y="10" width="32" height="60" rx="5"/>
-          <line class="ln" x1="10" y1="26" x2="30" y2="26"/><line class="ln" x1="10" y1="36" x2="26" y2="36"/>
-          <line class="ln" x1="50" y1="26" x2="70" y2="26"/><line class="ln" x1="50" y1="36" x2="66" y2="36"/>
-          <line class="lc" x1="90" y1="26" x2="110" y2="26"/><line class="lc" x1="90" y1="36" x2="106" y2="36"/>
-          <circle class="cl" cx="100" cy="56" r="6"/>
-        </svg></div>
-        <div class="body">
-          <div class="title">Three code approaches</div>
-          <div class="desc">Side-by-side comparison of three ways to solve the same problem, with trade-offs called out inline.</div>
-          <div class="file"><span>01-exploration-code-approaches.html</span><span class="arrow">→</span></div>
+        <div class="card-accent"></div>
+        <div class="card-body">
+          <div class="card-num">No. 01</div>
+          <div class="card-title">Three Code Approaches</div>
+          <div class="card-desc">Side-by-side comparison of three ways to solve the same problem, with trade-offs called out inline.</div>
+          <div class="card-footer">
+            <span class="card-file">01-exploration-code-approaches.html</span>
+            <span class="card-arrow">&rarr;</span>
+          </div>
         </div>
       </a>
       <a class="card" href="02-exploration-visual-designs.html">
-        <div class="thumb"><svg viewBox="0 0 120 80">
-          <rect class="wh" x="6" y="8" width="50" height="30" rx="4"/>
-          <rect class="oa" x="64" y="8" width="50" height="30" rx="4"/>
-          <rect class="oa" x="6" y="44" width="50" height="30" rx="4"/>
-          <rect class="wh" x="64" y="44" width="50" height="30" rx="4"/>
-          <circle class="cl" cx="18" cy="20" r="5"/><rect class="fl" x="28" y="16" width="22" height="4" rx="2"/>
-          <rect class="ol" x="72" y="16" width="34" height="6" rx="3"/>
-          <rect class="sl" x="14" y="54" width="34" height="6" rx="3"/>
-          <circle class="ol" cx="102" cy="58" r="6"/>
-        </svg></div>
-        <div class="body">
-          <div class="title">Visual design directions</div>
-          <div class="desc">A handful of layout and palette options rendered live so you can react to them, not imagine them.</div>
-          <div class="file"><span>02-exploration-visual-designs.html</span><span class="arrow">→</span></div>
-        </div>
-      </a>
-      <a class="card" href="16-implementation-plan.html">
-        <div class="thumb"><svg viewBox="0 0 120 80">
-          <line class="ln" x1="14" y1="12" x2="14" y2="68"/>
-          <circle class="cl" cx="14" cy="16" r="5"/><circle class="ol" cx="14" cy="40" r="5"/><circle class="fl" cx="14" cy="64" r="5"/>
-          <rect class="fl" x="28" y="12" width="48" height="4" rx="2"/><rect class="fl" x="28" y="21" width="34" height="4" rx="2"/>
-          <rect class="fl" x="28" y="36" width="42" height="4" rx="2"/><rect class="fl" x="28" y="45" width="28" height="4" rx="2"/>
-          <rect class="fl" x="28" y="60" width="44" height="4" rx="2"/>
-          <rect class="oa" x="86" y="12" width="28" height="24" rx="4"/>
-          <rect class="wh" x="86" y="44" width="28" height="24" rx="4"/>
-          <line class="lc" x1="92" y1="56" x2="108" y2="56"/>
-        </svg></div>
-        <div class="body">
-          <div class="title">Implementation plan</div>
-          <div class="desc">Milestones on a timeline, a data-flow diagram, inline mockups, the risky code, and a risk table — the plan you hand off.</div>
-          <div class="file"><span>16-implementation-plan.html</span><span class="arrow">→</span></div>
+        <div class="card-accent"></div>
+        <div class="card-body">
+          <div class="card-num">No. 02</div>
+          <div class="card-title">Visual Design Directions</div>
+          <div class="card-desc">A handful of layout and palette options rendered live so you can react to them, not imagine them.</div>
+          <div class="card-footer">
+            <span class="card-file">02-exploration-visual-designs.html</span>
+            <span class="card-arrow">&rarr;</span>
+          </div>
         </div>
       </a>
     </div>
   </section>
 
-  <!-- ============================== Code Review & Understanding ============================== -->
-  <section id="code-review">
-    <div class="sec-head"><span class="idx">02</span><h2>Code Review &amp; Understanding</h2><span class="count">3 demos</span></div>
-    <p class="sec-intro">
-      Diffs and call-graphs are spatial information; markdown flattens them. Let the agent render the
-      change as an annotated diff, draw the module as boxes and arrows, or write the PR description your
-      reviewers actually want — so the shape of the code is visible at a glance.
+  <!-- ═══════════════════════════════════════════════════════════════
+       Section 2 — Code Review
+       ═══════════════════════════════════════════════════════════════ -->
+  <section class="section sec-review" id="review">
+    <div class="section-header">
+      <span class="section-number">02</span>
+      <h2 class="section-title">Code Review</h2>
+    </div>
+    <p class="section-desc">
+      Diffs and call-graphs are spatial information; markdown flattens them. Let the agent render the change as an annotated diff or draw the module as boxes and arrows — so the shape of the code is visible at a glance.
     </p>
     <div class="grid">
       <a class="card" href="03-code-review-pr.html">
-        <div class="thumb"><svg viewBox="0 0 120 80">
-          <rect class="wh" x="6" y="8" width="72" height="64" rx="5"/>
-          <line class="ln" x1="14" y1="20" x2="66" y2="20"/>
-          <rect class="ol" x="14" y="28" width="56" height="7" rx="2" opacity=".5"/>
-          <rect class="cl" x="14" y="38" width="48" height="7" rx="2" opacity=".5"/>
-          <line class="ln" x1="14" y1="52" x2="58" y2="52"/><line class="ln" x1="14" y1="62" x2="50" y2="62"/>
-          <rect class="oa" x="86" y="22" width="28" height="20" rx="4"/>
-          <line class="lc da" x1="78" y1="32" x2="86" y2="32"/>
-          <circle class="cl" cx="100" cy="58" r="7"/>
-        </svg></div>
-        <div class="body">
-          <div class="title">Annotated pull request</div>
-          <div class="desc">A diff rendered with margin notes, severity tags and jump links — easier to scan than scrolling a terminal.</div>
-          <div class="file"><span>03-code-review-pr.html</span><span class="arrow">→</span></div>
-        </div>
-      </a>
-      <a class="card" href="17-pr-writeup.html">
-        <div class="thumb"><svg viewBox="0 0 120 80">
-          <rect class="oa" x="6" y="8" width="48" height="28" rx="4"/>
-          <rect class="wh" x="6" y="44" width="48" height="28" rx="4"/>
-          <line class="ln" x1="14" y1="20" x2="46" y2="20"/><line class="ln" x1="14" y1="28" x2="38" y2="28"/>
-          <line class="lc" x1="14" y1="56" x2="46" y2="56"/><line class="ln" x1="14" y1="64" x2="38" y2="64"/>
-          <rect class="wh" x="64" y="8" width="50" height="64" rx="5"/>
-          <circle class="cl" cx="74" cy="22" r="5"/><rect class="fl" x="84" y="19" width="24" height="5" rx="2"/>
-          <circle class="ol" cx="74" cy="42" r="5"/><rect class="fl" x="84" y="39" width="22" height="5" rx="2"/>
-          <circle class="fl" cx="74" cy="62" r="5"/><rect class="fl" x="84" y="59" width="26" height="5" rx="2"/>
-        </svg></div>
-        <div class="body">
-          <div class="title">PR writeup for reviewers</div>
-          <div class="desc">The author's side: motivation, before/after, a file-by-file tour with the <em>why</em>, and where to focus the review.</div>
-          <div class="file"><span>17-pr-writeup.html</span><span class="arrow">→</span></div>
+        <div class="card-accent"></div>
+        <div class="card-body">
+          <div class="card-num">No. 03</div>
+          <div class="card-title">Annotated Pull Request</div>
+          <div class="card-desc">A diff rendered with margin notes, severity tags and jump links — easier to scan than scrolling a terminal.</div>
+          <div class="card-footer">
+            <span class="card-file">03-code-review-pr.html</span>
+            <span class="card-arrow">&rarr;</span>
+          </div>
         </div>
       </a>
       <a class="card" href="04-code-understanding.html">
-        <div class="thumb"><svg viewBox="0 0 120 80">
-          <rect class="wh" x="44" y="8" width="32" height="20" rx="4"/>
-          <rect class="oa" x="8" y="52" width="32" height="20" rx="4"/>
-          <rect class="cl" x="44" y="52" width="32" height="20" rx="4"/>
-          <rect class="wh" x="80" y="52" width="32" height="20" rx="4"/>
-          <line class="ln" x1="50" y1="28" x2="26" y2="52"/>
-          <line class="lc" x1="60" y1="28" x2="60" y2="52"/>
-          <line class="ln" x1="70" y1="28" x2="94" y2="52"/>
-        </svg></div>
-        <div class="body">
-          <div class="title">Module map</div>
-          <div class="desc">An unfamiliar package drawn as boxes and arrows, with the hot path highlighted and entry points listed.</div>
-          <div class="file"><span>04-code-understanding.html</span><span class="arrow">→</span></div>
+        <div class="card-accent"></div>
+        <div class="card-body">
+          <div class="card-num">No. 04</div>
+          <div class="card-title">Module Map</div>
+          <div class="card-desc">An unfamiliar package drawn as boxes and arrows, with the hot path highlighted and entry points listed.</div>
+          <div class="card-footer">
+            <span class="card-file">04-code-understanding.html</span>
+            <span class="card-arrow">&rarr;</span>
+          </div>
         </div>
       </a>
     </div>
   </section>
 
-  <!-- ============================== Design ============================== -->
-  <section id="design">
-    <div class="sec-head"><span class="idx">03</span><h2>Design</h2><span class="count">2 demos</span></div>
-    <p class="sec-intro">
-      HTML <em>is</em> the medium your design system ships in, so it's the natural format for talking about
-      it. Tokens become swatches, components become contact sheets, and the artifact can be fed straight
-      back into the next prompt.
+  <!-- ═══════════════════════════════════════════════════════════════
+       Section 3 — Design System
+       ═══════════════════════════════════════════════════════════════ -->
+  <section class="section sec-design" id="design">
+    <div class="section-header">
+      <span class="section-number">03</span>
+      <h2 class="section-title">Design System</h2>
+    </div>
+    <p class="section-desc">
+      HTML is the medium your design system ships in, so it is the natural format for talking about it. Tokens become swatches, components become contact sheets.
     </p>
     <div class="grid">
       <a class="card" href="05-design-system.html">
-        <div class="thumb"><svg viewBox="0 0 120 80">
-          <rect class="cl" x="8" y="10" width="22" height="22" rx="4"/>
-          <rect class="ol" x="36" y="10" width="22" height="22" rx="4"/>
-          <rect class="oa" x="64" y="10" width="22" height="22" rx="4"/>
-          <rect class="sl" x="92" y="10" width="22" height="22" rx="4"/>
-          <rect class="fl" x="8" y="42" width="80" height="8" rx="2"/>
-          <rect class="fl" x="8" y="56" width="56" height="6" rx="2"/>
-          <rect class="fl" x="8" y="68" width="40" height="5" rx="2"/>
-        </svg></div>
-        <div class="body">
-          <div class="title">Living design system</div>
-          <div class="desc">Colors, type scale and spacing tokens pulled from a repo and rendered as swatches you can copy from.</div>
-          <div class="file"><span>05-design-system.html</span><span class="arrow">→</span></div>
+        <div class="card-accent"></div>
+        <div class="card-body">
+          <div class="card-num">No. 05</div>
+          <div class="card-title">Living Design System</div>
+          <div class="card-desc">Colors, type scale and spacing tokens pulled from a repo and rendered as swatches you can copy from.</div>
+          <div class="card-footer">
+            <span class="card-file">05-design-system.html</span>
+            <span class="card-arrow">&rarr;</span>
+          </div>
         </div>
       </a>
       <a class="card" href="06-component-variants.html">
-        <div class="thumb"><svg viewBox="0 0 120 80">
-          <rect class="cl" x="10" y="14" width="44" height="14" rx="7"/>
-          <rect class="wh" x="10" y="34" width="44" height="14" rx="7"/>
-          <rect class="oa" x="10" y="54" width="44" height="14" rx="7"/>
-          <rect class="cl" x="66" y="14" width="34" height="11" rx="5.5"/>
-          <rect class="wh" x="66" y="32" width="34" height="11" rx="5.5"/>
-          <rect class="oa" x="66" y="50" width="34" height="11" rx="5.5"/>
-          <circle class="cl" cx="110" cy="20" r="4"/><circle class="fl" cx="110" cy="37" r="4"/><circle class="ol" cx="110" cy="56" r="4"/>
-        </svg></div>
-        <div class="body">
-          <div class="title">Component variants</div>
-          <div class="desc">Every size, state and intent of one component laid out on a single sheet for review.</div>
-          <div class="file"><span>06-component-variants.html</span><span class="arrow">→</span></div>
+        <div class="card-accent"></div>
+        <div class="card-body">
+          <div class="card-num">No. 06</div>
+          <div class="card-title">Component Variants</div>
+          <div class="card-desc">Every size, state and intent of one component laid out on a single sheet for review.</div>
+          <div class="card-footer">
+            <span class="card-file">06-component-variants.html</span>
+            <span class="card-arrow">&rarr;</span>
+          </div>
         </div>
       </a>
     </div>
   </section>
 
-  <!-- ============================== Prototyping ============================== -->
-  <section id="prototyping">
-    <div class="sec-head"><span class="idx">04</span><h2>Prototyping</h2><span class="count">2 demos</span></div>
-    <p class="sec-intro">
-      Motion and interaction can't be described, only felt. A throwaway page with the real easing curve or
-      the real click-through tells you in five seconds what a paragraph of prose never could.
+  <!-- ═══════════════════════════════════════════════════════════════
+       Section 4 — Prototyping
+       ═══════════════════════════════════════════════════════════════ -->
+  <section class="section sec-prototyping" id="prototyping">
+    <div class="section-header">
+      <span class="section-number">04</span>
+      <h2 class="section-title">Prototyping</h2>
+    </div>
+    <p class="section-desc">
+      Motion and interaction cannot be described, only felt. A throwaway page with the real easing curve or the real click-through tells you in five seconds what a paragraph of prose never could.
     </p>
     <div class="grid">
       <a class="card" href="07-prototype-animation.html">
-        <div class="thumb"><svg viewBox="0 0 120 80">
-          <rect class="wh" x="8" y="10" width="104" height="34" rx="5"/>
-          <path class="lc" d="M16 38 C 40 38, 56 16, 104 16" fill="none"/>
-          <circle class="cl" cx="72" cy="23" r="4.5"/>
-          <line class="ln" x1="12" y1="58" x2="108" y2="58"/><circle class="cl" cx="44" cy="58" r="6"/>
-          <line class="ln" x1="12" y1="70" x2="108" y2="70"/><circle class="ol" cx="82" cy="70" r="6"/>
-        </svg></div>
-        <div class="body">
-          <div class="title">Animation sandbox</div>
-          <div class="desc">The transition in isolation with sliders for duration and easing, so you can tune it before wiring it in.</div>
-          <div class="file"><span>07-prototype-animation.html</span><span class="arrow">→</span></div>
+        <div class="card-accent"></div>
+        <div class="card-body">
+          <div class="card-num">No. 07</div>
+          <div class="card-title">Animation Sandbox</div>
+          <div class="card-desc">The transition in isolation with sliders for duration and easing, so you can tune it before wiring it in.</div>
+          <div class="card-footer">
+            <span class="card-file">07-prototype-animation.html</span>
+            <span class="card-arrow">&rarr;</span>
+          </div>
         </div>
       </a>
       <a class="card" href="08-prototype-interaction.html">
-        <div class="thumb"><svg viewBox="0 0 120 80">
-          <rect class="wh" x="6" y="22" width="28" height="36" rx="4"/>
-          <rect class="oa" x="46" y="22" width="28" height="36" rx="4"/>
-          <rect class="wh" x="86" y="22" width="28" height="36" rx="4"/>
-          <line class="lc" x1="34" y1="40" x2="46" y2="40"/>
-          <line class="lc" x1="74" y1="40" x2="86" y2="40"/>
-          <circle class="cl" cx="20" cy="50" r="4"/><rect class="fl" x="52" y="30" width="16" height="4" rx="2"/><rect class="ol" x="92" y="46" width="16" height="6" rx="3"/>
-        </svg></div>
-        <div class="body">
-          <div class="title">Clickable flow</div>
-          <div class="desc">Four screens linked together — enough fidelity to feel whether the interaction is right.</div>
-          <div class="file"><span>08-prototype-interaction.html</span><span class="arrow">→</span></div>
+        <div class="card-accent"></div>
+        <div class="card-body">
+          <div class="card-num">No. 08</div>
+          <div class="card-title">Clickable Flow</div>
+          <div class="card-desc">Four screens linked together — enough fidelity to feel whether the interaction is right.</div>
+          <div class="card-footer">
+            <span class="card-file">08-prototype-interaction.html</span>
+            <span class="card-arrow">&rarr;</span>
+          </div>
         </div>
       </a>
     </div>
   </section>
 
-  <!-- ============================== Illustrations & Diagrams ============================== -->
-  <section id="illustrations">
-    <div class="sec-head"><span class="idx">05</span><h2>Illustrations &amp; Diagrams</h2><span class="count">2 demos</span></div>
-    <p class="sec-intro">
-      Inline SVG gives the agent a real pen. Ask for the figures for a post or a flowchart of a process and
-      get vector art you can tweak by hand or paste straight into the final document.
-    </p>
-    <div class="grid">
-      <a class="card" href="10-svg-illustrations.html">
-        <div class="thumb"><svg viewBox="0 0 120 80">
-          <circle class="oa" cx="32" cy="40" r="24"/>
-          <circle class="cl" cx="32" cy="40" r="11"/>
-          <path class="lc" d="M68 60 L86 20 L104 60" fill="none"/>
-          <line class="ln" x1="66" y1="66" x2="106" y2="66"/>
-          <circle class="ol" cx="86" cy="20" r="5"/>
-        </svg></div>
-        <div class="body">
-          <div class="title">SVG figure sheet</div>
-          <div class="desc">The diagrams for a blog post, drawn inline so they can be tweaked and copied out one by one.</div>
-          <div class="file"><span>10-svg-illustrations.html</span><span class="arrow">→</span></div>
-        </div>
-      </a>
-      <a class="card" href="13-flowchart-diagram.html">
-        <div class="thumb"><svg viewBox="0 0 120 80">
-          <rect class="wh" x="10" y="10" width="30" height="16" rx="4"/>
-          <path class="oa" d="M60 34 L80 46 L60 58 L40 46 Z"/>
-          <rect class="wh" x="82" y="10" width="30" height="16" rx="4"/>
-          <rect class="cl" x="82" y="56" width="30" height="16" rx="4"/>
-          <line class="ln" x1="25" y1="26" x2="25" y2="46"/><line class="ln" x1="25" y1="46" x2="40" y2="46"/>
-          <line class="lc" x1="80" y1="46" x2="97" y2="46"/><line class="lc" x1="97" y1="46" x2="97" y2="56"/>
-          <line class="ln" x1="60" y1="34" x2="60" y2="22"/><line class="ln" x1="60" y1="22" x2="82" y2="22"/>
-        </svg></div>
-        <div class="body">
-          <div class="title">Annotated flowchart</div>
-          <div class="desc">A deploy pipeline drawn as a real flowchart — click any step to see what runs, timings, and failure paths.</div>
-          <div class="file"><span>13-flowchart-diagram.html</span><span class="arrow">→</span></div>
-        </div>
-      </a>
+  <!-- ═══════════════════════════════════════════════════════════════
+       Section 5 — Presentations
+       ═══════════════════════════════════════════════════════════════ -->
+  <section class="section sec-presentations" id="presentations">
+    <div class="section-header">
+      <span class="section-number">05</span>
+      <h2 class="section-title">Presentations</h2>
     </div>
-  </section>
-
-  <!-- ============================== Decks ============================== -->
-  <section id="decks">
-    <div class="sec-head"><span class="idx">06</span><h2>Decks</h2><span class="count">1 demo</span></div>
-    <p class="sec-intro">
-      A handful of <code>&lt;section&gt;</code> tags and twenty lines of JS is a slide deck. Point the agent at a
-      Slack thread or a design doc and get something you can arrow-key through in a meeting — no Keynote,
-      no export step.
+    <p class="section-desc">
+      A handful of section tags and twenty lines of JS is a slide deck. Point the agent at a Slack thread or a design doc and get something you can arrow-key through in a meeting.
     </p>
     <div class="grid">
       <a class="card" href="09-slide-deck.html">
-        <div class="thumb"><svg viewBox="0 0 120 80">
-          <rect class="oa" x="8" y="18" width="70" height="44" rx="5"/>
-          <rect class="wh" x="22" y="12" width="76" height="50" rx="5"/>
-          <rect class="cl" x="32" y="24" width="36" height="7" rx="3"/>
-          <rect class="fl" x="32" y="36" width="52" height="4" rx="2"/><rect class="fl" x="32" y="44" width="44" height="4" rx="2"/>
-          <circle class="fl" cx="50" cy="70" r="3"/><circle class="cl" cx="60" cy="70" r="3"/><circle class="fl" cx="70" cy="70" r="3"/>
-        </svg></div>
-        <div class="body">
-          <div class="title">Arrow-key slide deck</div>
-          <div class="desc">A short presentation as one HTML file. Left and right to navigate, no build step.</div>
-          <div class="file"><span>09-slide-deck.html</span><span class="arrow">→</span></div>
+        <div class="card-accent"></div>
+        <div class="card-body">
+          <div class="card-num">No. 09</div>
+          <div class="card-title">Arrow-Key Slide Deck</div>
+          <div class="card-desc">A short presentation as one HTML file. Left and right to navigate, no build step.</div>
+          <div class="card-footer">
+            <span class="card-file">09-slide-deck.html</span>
+            <span class="card-arrow">&rarr;</span>
+          </div>
+        </div>
+      </a>
+      <a class="card" href="10-svg-illustrations.html">
+        <div class="card-accent"></div>
+        <div class="card-body">
+          <div class="card-num">No. 10</div>
+          <div class="card-title">SVG Figure Sheet</div>
+          <div class="card-desc">The diagrams for a blog post, drawn inline so they can be tweaked and copied out one by one.</div>
+          <div class="card-footer">
+            <span class="card-file">10-svg-illustrations.html</span>
+            <span class="card-arrow">&rarr;</span>
+          </div>
         </div>
       </a>
     </div>
   </section>
 
-  <!-- ============================== Research & Learning ============================== -->
-  <section id="research">
-    <div class="sec-head"><span class="idx">07</span><h2>Research &amp; Learning</h2><span class="count">2 demos</span></div>
-    <p class="sec-intro">
-      An explainer with collapsible sections, tabbed code samples and a glossary in the margin reads very
-      differently from the same words dumped linearly. The agent can build the scaffolding that makes a new
-      topic navigable.
-    </p>
-    <div class="grid">
-      <a class="card" href="14-research-feature-explainer.html">
-        <div class="thumb"><svg viewBox="0 0 120 80">
-          <rect class="cl" x="8" y="8" width="104" height="20" rx="4" opacity=".35"/>
-          <rect class="fl" x="14" y="15" width="60" height="6" rx="3"/>
-          <rect class="wh" x="8" y="34" width="104" height="14" rx="4"/>
-          <rect class="wh" x="8" y="52" width="104" height="14" rx="4"/>
-          <path class="ln" d="M16 39 l4 4 l-4 4"/><rect class="fl" x="28" y="38" width="46" height="5" rx="2.5"/>
-          <path class="ln" d="M16 57 l4 4 l-4 4"/><rect class="fl" x="28" y="56" width="38" height="5" rx="2.5"/>
-        </svg></div>
-        <div class="body">
-          <div class="title">How a feature works</div>
-          <div class="desc">"Explain rate limiting in this repo" — TL;DR box, collapsible request-path steps, tabbed config snippets, and an FAQ.</div>
-          <div class="file"><span>14-research-feature-explainer.html</span><span class="arrow">→</span></div>
-        </div>
-      </a>
-      <a class="card" href="15-research-concept-explainer.html">
-        <div class="thumb"><svg viewBox="0 0 120 80">
-          <circle class="st" cx="42" cy="40" r="26"/>
-          <circle class="cl" cx="42" cy="14" r="5"/><circle class="ol" cx="68" cy="40" r="5"/>
-          <circle class="fl" cx="42" cy="66" r="5"/><circle class="fl" cx="16" cy="40" r="5"/>
-          <rect class="fl" x="82" y="20" width="30" height="5" rx="2.5"/><rect class="fl" x="82" y="32" width="24" height="5" rx="2.5"/>
-          <rect class="fl" x="82" y="44" width="28" height="5" rx="2.5"/><rect class="fl" x="82" y="56" width="20" height="5" rx="2.5"/>
-        </svg></div>
-        <div class="body">
-          <div class="title">Concept explainer</div>
-          <div class="desc">Consistent hashing taught with a live ring you can add/remove nodes from, a comparison table, and a hover-linked glossary.</div>
-          <div class="file"><span>15-research-concept-explainer.html</span><span class="arrow">→</span></div>
-        </div>
-      </a>
+  <!-- ═══════════════════════════════════════════════════════════════
+       Section 6 — Reports
+       ═══════════════════════════════════════════════════════════════ -->
+  <section class="section sec-reports" id="reports">
+    <div class="section-header">
+      <span class="section-number">06</span>
+      <h2 class="section-title">Reports</h2>
     </div>
-  </section>
-
-  <!-- ============================== Reports ============================== -->
-  <section id="reports">
-    <div class="sec-head"><span class="idx">08</span><h2>Reports</h2><span class="count">2 demos</span></div>
-    <p class="sec-intro">
-      Recurring documents — status updates, post-mortems — benefit most from a bit of structure and color.
-      A small chart and a colored timeline turn something people skim into something they actually read.
+    <p class="section-desc">
+      Recurring documents — status updates, post-mortems — benefit most from a bit of structure and color. A small chart and a colored timeline turn something people skim into something they actually read.
     </p>
     <div class="grid">
       <a class="card" href="11-status-report.html">
-        <div class="thumb"><svg viewBox="0 0 120 80">
-          <rect class="fl" x="8" y="10" width="54" height="6" rx="3"/>
-          <rect class="ol" x="8" y="24" width="36" height="8" rx="3" opacity=".6"/>
-          <rect class="oa" x="8" y="38" width="28" height="8" rx="3"/>
-          <rect class="cl" x="8" y="52" width="20" height="8" rx="3" opacity=".6"/>
-          <rect class="wh" x="72" y="16" width="40" height="48" rx="5"/>
-          <rect class="ol" x="80" y="44" width="6" height="14"/>
-          <rect class="cl" x="90" y="34" width="6" height="24"/>
-          <rect class="fl" x="100" y="50" width="6" height="8"/>
-        </svg></div>
-        <div class="body">
-          <div class="title">Weekly status</div>
-          <div class="desc">What shipped, what slipped, and a small chart — formatted for a quick skim on Monday morning.</div>
-          <div class="file"><span>11-status-report.html</span><span class="arrow">→</span></div>
+        <div class="card-accent"></div>
+        <div class="card-body">
+          <div class="card-num">No. 11</div>
+          <div class="card-title">Weekly Status</div>
+          <div class="card-desc">What shipped, what slipped, and a small chart — formatted for a quick skim on Monday morning.</div>
+          <div class="card-footer">
+            <span class="card-file">11-status-report.html</span>
+            <span class="card-arrow">&rarr;</span>
+          </div>
         </div>
       </a>
       <a class="card" href="12-incident-report.html">
-        <div class="thumb"><svg viewBox="0 0 120 80">
-          <line class="ln" x1="18" y1="12" x2="18" y2="68"/>
-          <circle class="fl" cx="18" cy="16" r="5"/><circle class="cl" cx="18" cy="34" r="5"/>
-          <circle class="cl" cx="18" cy="50" r="5"/><circle class="ol" cx="18" cy="66" r="5"/>
-          <rect class="fl" x="32" y="13" width="40" height="5" rx="2.5"/>
-          <rect class="fl" x="32" y="31" width="56" height="5" rx="2.5"/>
-          <rect class="fl" x="32" y="47" width="48" height="5" rx="2.5"/>
-          <rect class="fl" x="32" y="63" width="36" height="5" rx="2.5"/>
-          <rect class="oa" x="94" y="26" width="20" height="30" rx="4"/>
-        </svg></div>
-        <div class="body">
-          <div class="title">Incident timeline</div>
-          <div class="desc">A post-mortem with a minute-by-minute timeline, log excerpts and the follow-up checklist.</div>
-          <div class="file"><span>12-incident-report.html</span><span class="arrow">→</span></div>
+        <div class="card-accent"></div>
+        <div class="card-body">
+          <div class="card-num">No. 12</div>
+          <div class="card-title">Incident Timeline</div>
+          <div class="card-desc">A post-mortem with a minute-by-minute timeline, log excerpts and the follow-up checklist.</div>
+          <div class="card-footer">
+            <span class="card-file">12-incident-report.html</span>
+            <span class="card-arrow">&rarr;</span>
+          </div>
         </div>
       </a>
     </div>
   </section>
 
-  <!-- ============================== Custom Editing Interfaces ============================== -->
-  <section id="editors">
-    <div class="sec-head"><span class="idx">09</span><h2>Custom Editing Interfaces</h2><span class="count">3 demos</span></div>
-    <p class="sec-intro">
-      Sometimes it's hard to describe what you want in a text box. Ask for a throwaway editor for the exact
-      thing you're working on — and always end with an export button that turns whatever you did in the UI
-      back into something you can paste into the agent or commit. You stay in the loop; the loop gets tighter.
+  <!-- ═══════════════════════════════════════════════════════════════
+       Section 7 — Diagrams & Flowcharts
+       ═══════════════════════════════════════════════════════════════ -->
+  <section class="section sec-diagrams" id="diagrams">
+    <div class="section-header">
+      <span class="section-number">07</span>
+      <h2 class="section-title">Diagrams &amp; Flowcharts</h2>
+    </div>
+    <p class="section-desc">
+      Inline SVG gives the agent a real pen. Ask for the figures for a post or a flowchart of a process and get vector art you can tweak by hand or paste straight into the final document.
+    </p>
+    <div class="grid">
+      <a class="card" href="13-flowchart-diagram.html">
+        <div class="card-accent"></div>
+        <div class="card-body">
+          <div class="card-num">No. 13</div>
+          <div class="card-title">Annotated Flowchart</div>
+          <div class="card-desc">A deploy pipeline drawn as a real flowchart — click any step to see what runs, timings, and failure paths.</div>
+          <div class="card-footer">
+            <span class="card-file">13-flowchart-diagram.html</span>
+            <span class="card-arrow">&rarr;</span>
+          </div>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       Section 8 — Research & Explainers
+       ═══════════════════════════════════════════════════════════════ -->
+  <section class="section sec-research" id="research">
+    <div class="section-header">
+      <span class="section-number">08</span>
+      <h2 class="section-title">Research &amp; Explainers</h2>
+    </div>
+    <p class="section-desc">
+      An explainer with collapsible sections, tabbed code samples and a glossary in the margin reads very differently from the same words dumped linearly. The agent can build the scaffolding that makes a new topic navigable.
+    </p>
+    <div class="grid">
+      <a class="card" href="14-research-feature-explainer.html">
+        <div class="card-accent"></div>
+        <div class="card-body">
+          <div class="card-num">No. 14</div>
+          <div class="card-title">How a Feature Works</div>
+          <div class="card-desc">TL;DR box, collapsible request-path steps, tabbed config snippets, and an FAQ — the explainer format that actually works.</div>
+          <div class="card-footer">
+            <span class="card-file">14-research-feature-explainer.html</span>
+            <span class="card-arrow">&rarr;</span>
+          </div>
+        </div>
+      </a>
+      <a class="card" href="15-research-concept-explainer.html">
+        <div class="card-accent"></div>
+        <div class="card-body">
+          <div class="card-num">No. 15</div>
+          <div class="card-title">Concept Explainer</div>
+          <div class="card-desc">Consistent hashing taught with a live ring you can add/remove nodes from, a comparison table, and a hover-linked glossary.</div>
+          <div class="card-footer">
+            <span class="card-file">15-research-concept-explainer.html</span>
+            <span class="card-arrow">&rarr;</span>
+          </div>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       Section 9 — Planning
+       ═══════════════════════════════════════════════════════════════ -->
+  <section class="section sec-planning" id="planning">
+    <div class="section-header">
+      <span class="section-number">09</span>
+      <h2 class="section-title">Planning</h2>
+    </div>
+    <p class="section-desc">
+      Turn a direction into a plan the implementer can actually read. Milestones on a timeline, data-flow diagrams, inline mockups, the risky code, and a risk table.
+    </p>
+    <div class="grid">
+      <a class="card" href="16-implementation-plan.html">
+        <div class="card-accent"></div>
+        <div class="card-body">
+          <div class="card-num">No. 16</div>
+          <div class="card-title">Implementation Plan</div>
+          <div class="card-desc">Milestones on a timeline, a data-flow diagram, inline mockups, the risky code, and a risk table — the plan you hand off.</div>
+          <div class="card-footer">
+            <span class="card-file">16-implementation-plan.html</span>
+            <span class="card-arrow">&rarr;</span>
+          </div>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       Section 10 — PR & Communication
+       ═══════════════════════════════════════════════════════════════ -->
+  <section class="section sec-pr" id="pr">
+    <div class="section-header">
+      <span class="section-number">10</span>
+      <h2 class="section-title">PR &amp; Communication</h2>
+    </div>
+    <p class="section-desc">
+      The author's side: motivation, before/after, a file-by-file tour with the why, and where to focus the review. Write the PR description your reviewers actually want.
+    </p>
+    <div class="grid">
+      <a class="card" href="17-pr-writeup.html">
+        <div class="card-accent"></div>
+        <div class="card-body">
+          <div class="card-num">No. 17</div>
+          <div class="card-title">PR Writeup for Reviewers</div>
+          <div class="card-desc">The author's side: motivation, before/after, a file-by-file tour with the why, and where to focus the review.</div>
+          <div class="card-footer">
+            <span class="card-file">17-pr-writeup.html</span>
+            <span class="card-arrow">&rarr;</span>
+          </div>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       Section 11 — Editor Tools
+       ═══════════════════════════════════════════════════════════════ -->
+  <section class="section sec-editors" id="editors">
+    <div class="section-header">
+      <span class="section-number">11</span>
+      <h2 class="section-title">Editor Tools</h2>
+    </div>
+    <p class="section-desc">
+      Ask for a throwaway editor for the exact thing you are working on — and always end with an export button that turns whatever you did in the UI back into something you can paste into the agent or commit.
     </p>
     <div class="grid">
       <a class="card" href="18-editor-triage-board.html">
-        <div class="thumb"><svg viewBox="0 0 120 80">
-          <rect class="wh" x="6" y="10" width="24" height="60" rx="4"/>
-          <rect class="wh" x="34" y="10" width="24" height="60" rx="4"/>
-          <rect class="wh" x="62" y="10" width="24" height="60" rx="4"/>
-          <rect class="wh" x="90" y="10" width="24" height="60" rx="4"/>
-          <rect class="cl" x="10" y="18" width="16" height="9" rx="2"/>
-          <rect class="fl" x="10" y="31" width="16" height="9" rx="2"/>
-          <rect class="fl" x="10" y="44" width="16" height="9" rx="2"/>
-          <rect class="fl" x="38" y="18" width="16" height="9" rx="2"/>
-          <rect class="ol" x="38" y="31" width="16" height="9" rx="2"/>
-          <rect class="fl" x="66" y="18" width="16" height="9" rx="2"/>
-          <rect class="oa" x="48" y="50" width="20" height="11" rx="2"/>
-        </svg></div>
-        <div class="body">
-          <div class="title">Ticket triage board</div>
-          <div class="desc">Drag thirty tickets across Now / Next / Later / Cut, then copy the final ordering out as markdown.</div>
-          <div class="file"><span>18-editor-triage-board.html</span><span class="arrow">→</span></div>
+        <div class="card-accent"></div>
+        <div class="card-body">
+          <div class="card-num">No. 18</div>
+          <div class="card-title">Ticket Triage Board</div>
+          <div class="card-desc">Drag thirty tickets across Now / Next / Later / Cut, then copy the final ordering out as markdown.</div>
+          <div class="card-footer">
+            <span class="card-file">18-editor-triage-board.html</span>
+            <span class="card-arrow">&rarr;</span>
+          </div>
         </div>
       </a>
       <a class="card" href="19-editor-feature-flags.html">
-        <div class="thumb"><svg viewBox="0 0 120 80">
-          <rect class="wh" x="8" y="10" width="104" height="14" rx="4"/>
-          <rect class="wh" x="8" y="30" width="104" height="14" rx="4"/>
-          <rect class="wh" x="8" y="50" width="104" height="14" rx="4"/>
-          <rect class="ol" x="88" y="13" width="18" height="8" rx="4"/><circle class="wh" cx="100" cy="17" r="3"/>
-          <rect class="fl" x="88" y="33" width="18" height="8" rx="4"/><circle class="wh" cx="93" cy="37" r="3"/>
-          <rect class="cl" x="88" y="53" width="18" height="8" rx="4"/><circle class="wh" cx="100" cy="57" r="3"/>
-          <rect class="fl" x="14" y="14" width="34" height="5" rx="2.5"/>
-          <rect class="fl" x="14" y="34" width="42" height="5" rx="2.5"/>
-          <rect class="fl" x="14" y="54" width="28" height="5" rx="2.5"/>
-          <line class="lc da" x1="62" y1="24" x2="62" y2="50"/>
-        </svg></div>
-        <div class="body">
-          <div class="title">Feature flag editor</div>
-          <div class="desc">Toggles grouped by area, dependency warnings when a prerequisite is off, and a "copy diff" button for just the changed keys.</div>
-          <div class="file"><span>19-editor-feature-flags.html</span><span class="arrow">→</span></div>
+        <div class="card-accent"></div>
+        <div class="card-body">
+          <div class="card-num">No. 19</div>
+          <div class="card-title">Feature Flag Editor</div>
+          <div class="card-desc">Toggles grouped by area, dependency warnings when a prerequisite is off, and a copy-diff button for just the changed keys.</div>
+          <div class="card-footer">
+            <span class="card-file">19-editor-feature-flags.html</span>
+            <span class="card-arrow">&rarr;</span>
+          </div>
         </div>
       </a>
       <a class="card" href="20-editor-prompt-tuner.html">
-        <div class="thumb"><svg viewBox="0 0 120 80">
-          <rect class="wh" x="6" y="10" width="56" height="60" rx="4"/>
-          <rect class="fl" x="12" y="18" width="40" height="4" rx="2"/>
-          <rect class="cl" x="12" y="26" width="22" height="4" rx="2"/>
-          <rect class="fl" x="12" y="34" width="44" height="4" rx="2"/>
-          <rect class="ol" x="12" y="42" width="18" height="4" rx="2"/>
-          <rect class="fl" x="12" y="50" width="36" height="4" rx="2"/>
-          <rect class="oa" x="68" y="10" width="46" height="18" rx="4"/>
-          <rect class="oa" x="68" y="32" width="46" height="18" rx="4"/>
-          <rect class="oa" x="68" y="54" width="46" height="18" rx="4"/>
-        </svg></div>
-        <div class="body">
-          <div class="title">Prompt tuner</div>
-          <div class="desc">Editable template on the left with variable slots highlighted; three sample inputs on the right re-render live as you type.</div>
-          <div class="file"><span>20-editor-prompt-tuner.html</span><span class="arrow">→</span></div>
+        <div class="card-accent"></div>
+        <div class="card-body">
+          <div class="card-num">No. 20</div>
+          <div class="card-title">Prompt Tuner</div>
+          <div class="card-desc">Editable template on the left with variable slots highlighted; three sample inputs on the right re-render live as you type.</div>
+          <div class="card-footer">
+            <span class="card-file">20-editor-prompt-tuner.html</span>
+            <span class="card-arrow">&rarr;</span>
+          </div>
         </div>
       </a>
     </div>
   </section>
 
-  <!-- ============================== Data & Visualization ============================== -->
-  <section id="data">
-    <div class="sec-head"><span class="idx">10</span><h2>Data &amp; Visualization</h2><span class="count">4 demos</span></div>
-    <p class="sec-intro">
-      Numbers tell a story when they have shape and color. A dashboard of metric cards, a sortable table,
-      a service topology, or a gantt chart — all possible with nothing more than CSS Grid, inline SVG,
-      and a few lines of vanilla JavaScript.
+  <!-- ═══════════════════════════════════════════════════════════════
+       Section 12 — Data & Visualization
+       ═══════════════════════════════════════════════════════════════ -->
+  <section class="section sec-data" id="data">
+    <div class="section-header">
+      <span class="section-number">12</span>
+      <h2 class="section-title">Data &amp; Visualization</h2>
+    </div>
+    <p class="section-desc">
+      Numbers tell a story when they have shape and color. A dashboard of metric cards, a sortable table, a service topology, or a gantt chart — all possible with nothing more than CSS Grid, inline SVG, and a few lines of vanilla JavaScript.
     </p>
     <div class="grid">
       <a class="card" href="21-dashboard.html">
-        <div class="thumb"><svg viewBox="0 0 120 80">
-          <rect class="wh" x="6" y="6" width="26" height="30" rx="4"/>
-          <rect class="wh" x="36" y="6" width="26" height="30" rx="4"/>
-          <rect class="wh" x="66" y="6" width="26" height="30" rx="4"/>
-          <rect class="wh" x="96" y="6" width="18" height="30" rx="4"/>
-          <rect class="fl" x="10" y="14" width="18" height="4" rx="2"/>
-          <rect class="cl" x="10" y="22" width="12" height="8" rx="2"/>
-          <rect class="fl" x="40" y="14" width="18" height="4" rx="2"/>
-          <rect class="ol" x="40" y="22" width="14" height="8" rx="2"/>
-          <rect class="fl" x="70" y="14" width="18" height="4" rx="2"/>
-          <rect class="oa" x="70" y="22" width="10" height="8" rx="2"/>
-          <rect class="wh" x="6" y="42" width="62" height="32" rx="5"/>
-          <rect class="wh" x="74" y="42" width="40" height="32" rx="5"/>
-          <rect class="cl" x="12" y="62" width="6" height="8" rx="1"/>
-          <rect class="ol" x="22" y="56" width="6" height="14" rx="1"/>
-          <rect class="oa" x="32" y="52" width="6" height="18" rx="1"/>
-          <rect class="cl" x="42" y="48" width="6" height="22" rx="1"/>
-          <rect class="ol" x="52" y="44" width="6" height="26" rx="1"/>
-          <circle class="cl" cx="94" cy="58" r="12" fill="none" stroke-width="6"/>
-          <circle class="ol" cx="94" cy="58" r="12" fill="none" stroke-width="6" stroke-dasharray="28 48" stroke-dashoffset="14"/>
-        </svg></div>
-        <div class="body">
-          <div class="title">Metrics dashboard</div>
-          <div class="desc">KPI cards, bar chart, donut chart, sparklines, and a service health table — one page, zero dependencies.</div>
-          <div class="file"><span>21-dashboard.html</span><span class="arrow">→</span></div>
+        <div class="card-accent"></div>
+        <div class="card-body">
+          <div class="card-num">No. 21</div>
+          <div class="card-title">Metrics Dashboard</div>
+          <div class="card-desc">KPI cards, bar chart, donut chart, sparklines, and a service health table — one page, zero dependencies.</div>
+          <div class="card-footer">
+            <span class="card-file">21-dashboard.html</span>
+            <span class="card-arrow">&rarr;</span>
+          </div>
         </div>
       </a>
       <a class="card" href="22-interactive-table.html">
-        <div class="thumb"><svg viewBox="0 0 120 80">
-          <rect class="wh" x="6" y="6" width="108" height="12" rx="4"/>
-          <rect class="fl" x="10" y="10" width="30" height="4" rx="2"/>
-          <rect class="oa" x="78" y="9" width="32" height="6" rx="3"/>
-          <rect class="wh" x="6" y="22" width="108" height="52" rx="5"/>
-          <line class="ln" x1="6" y1="34" x2="114" y2="34"/>
-          <line class="ln" x1="6" y1="46" x2="114" y2="46"/>
-          <line class="ln" x1="6" y1="58" x2="114" y2="58"/>
-          <rect class="fl" x="12" y="26" width="24" height="4" rx="2"/>
-          <rect class="fl" x="42" y="26" width="16" height="4" rx="2"/>
-          <rect class="fl" x="12" y="38" width="28" height="4" rx="2"/>
-          <rect class="cl" x="42" y="37" width="20" height="6" rx="3"/>
-          <rect class="fl" x="12" y="50" width="20" height="4" rx="2"/>
-          <rect class="ol" x="42" y="49" width="18" height="6" rx="3"/>
-          <rect class="fl" x="12" y="62" width="26" height="4" rx="2"/>
-          <rect class="oa" x="42" y="61" width="22" height="6" rx="3"/>
-        </svg></div>
-        <div class="body">
-          <div class="title">Sortable, filterable table</div>
-          <div class="desc">Search box, role filters, clickable column headers for sort — all in vanilla JS with avatar initials and role badges.</div>
-          <div class="file"><span>22-interactive-table.html</span><span class="arrow">→</span></div>
+        <div class="card-accent"></div>
+        <div class="card-body">
+          <div class="card-num">No. 22</div>
+          <div class="card-title">Sortable, Filterable Table</div>
+          <div class="card-desc">Search box, role filters, clickable column headers for sort — all in vanilla JS with avatar initials and role badges.</div>
+          <div class="card-footer">
+            <span class="card-file">22-interactive-table.html</span>
+            <span class="card-arrow">&rarr;</span>
+          </div>
         </div>
       </a>
       <a class="card" href="23-system-architecture.html">
-        <div class="thumb"><svg viewBox="0 0 120 80">
-          <rect class="cl" x="30" y="4" width="22" height="14" rx="3"/>
-          <rect class="cl" x="58" y="4" width="22" height="14" rx="3"/>
-          <rect class="wh" x="44" y="28" width="22" height="14" rx="3"/>
-          <rect class="ol" x="16" y="52" width="22" height="14" rx="3"/>
-          <rect class="ol" x="44" y="52" width="22" height="14" rx="3"/>
-          <rect class="ol" x="72" y="52" width="22" height="14" rx="3"/>
-          <line class="ln" x1="41" y1="18" x2="55" y2="28"/>
-          <line class="ln" x1="69" y1="18" x2="55" y2="28"/>
-          <line class="ln" x1="55" y1="42" x2="27" y2="52"/>
-          <line class="ln" x1="55" y1="42" x2="55" y2="52"/>
-          <line class="ln" x1="55" y1="42" x2="83" y2="52"/>
-        </svg></div>
-        <div class="body">
-          <div class="title">System architecture</div>
-          <div class="desc">Layered service topology — clients, gateway, core services, data stores, external dependencies — with SVG connector arrows and a legend.</div>
-          <div class="file"><span>23-system-architecture.html</span><span class="arrow">→</span></div>
+        <div class="card-accent"></div>
+        <div class="card-body">
+          <div class="card-num">No. 23</div>
+          <div class="card-title">System Architecture</div>
+          <div class="card-desc">Layered service topology — clients, gateway, core services, data stores, external dependencies — with SVG connector arrows and a legend.</div>
+          <div class="card-footer">
+            <span class="card-file">23-system-architecture.html</span>
+            <span class="card-arrow">&rarr;</span>
+          </div>
         </div>
       </a>
       <a class="card" href="24-timeline-gantt.html">
-        <div class="thumb"><svg viewBox="0 0 120 80">
-          <rect class="fl" x="6" y="10" width="108" height="10" rx="2"/>
-          <rect class="fl" x="6" y="24" width="108" height="10" rx="2"/>
-          <rect class="fl" x="6" y="38" width="108" height="10" rx="2"/>
-          <rect class="fl" x="6" y="52" width="108" height="10" rx="2"/>
-          <rect class="cl" x="10" y="12" width="28" height="6" rx="2"/>
-          <rect class="ol" x="42" y="26" width="36" height="6" rx="2"/>
-          <rect class="oa" x="30" y="40" width="24" height="6" rx="2"/>
-          <rect class="oa" x="60" y="40" width="30" height="6" rx="2"/>
-          <rect class="oa" x="20" y="54" width="44" height="6" rx="2"/>
-          <rect class="st" x="52" y="52" width="8" height="8" rx="1" transform="rotate(45 56 56)"/>
-          <line class="lc" x1="72" y1="6" x2="72" y2="66"/>
-        </svg></div>
-        <div class="body">
-          <div class="title">Project timeline / Gantt</div>
-          <div class="desc">CSS Grid gantt chart with grouped tasks, progress bars, milestone diamonds, and a "today" marker — no chart library needed.</div>
-          <div class="file"><span>24-timeline-gantt.html</span><span class="arrow">→</span></div>
+        <div class="card-accent"></div>
+        <div class="card-body">
+          <div class="card-num">No. 24</div>
+          <div class="card-title">Project Timeline / Gantt</div>
+          <div class="card-desc">CSS Grid gantt chart with grouped tasks, progress bars, milestone diamonds, and a today marker — no chart library needed.</div>
+          <div class="card-footer">
+            <span class="card-file">24-timeline-gantt.html</span>
+            <span class="card-arrow">&rarr;</span>
+          </div>
         </div>
       </a>
     </div>
   </section>
 
-  <footer>
-    <span class="k">Everything on this page is itself a single <code>.html</code> file.</span>
-    <span>Inspired by <a href="https://thariqs.github.io/html-effectiveness/">thariqs.github.io/html-effectiveness</a> · Examples 21–24 are original additions</span>
+  <!-- ── Footer ───────────────────────────────── -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-quote">
+        Everything on this page is itself a single <code>.html</code> file.
+      </div>
+      <div class="footer-meta">
+        Inspired by <a href="https://thariqs.github.io/html-effectiveness/">thariqs.github.io/html-effectiveness</a><br>
+        Examples 21-24 are original additions
+      </div>
+    </div>
+    <div class="footer-license">
+      Copyright 2026 Anthropic PBC &middot; SPDX-License-Identifier: Apache-2.0
+    </div>
   </footer>
 
 </div>

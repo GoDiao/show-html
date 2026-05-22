@@ -5,6 +5,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Acme — Card Variant Matrix</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
   :root {
     --ivory: #FAF9F5;
@@ -12,27 +15,34 @@
     --clay: #D97757;
     --oat: #E3DACC;
     --olive: #788C5D;
+    --sky: #5C7CA3;
     --gray-100: #F0EEE6;
     --gray-300: #D1CFC5;
     --gray-500: #87867F;
     --gray-700: #3D3D3A;
     --white: #FFFFFF;
 
-    --serif: ui-serif, Georgia, serif;
-    --sans: system-ui, -apple-system, sans-serif;
-    --mono: ui-monospace, 'SF Mono', Menlo, monospace;
+    --sans: 'Space Grotesk', system-ui, -apple-system, sans-serif;
+    --mono: 'Space Mono', ui-monospace, 'SF Mono', Menlo, monospace;
 
     /* live-controlled tokens */
     --card-pad: 20px;
     --card-border: 1.5px solid var(--gray-300);
     --card-shadow: 0 4px 14px rgba(20, 20, 19, 0.08);
+
+    /* Swiss design accent */
+    --accent: #E05A3A;
+    --accent-light: #FEF0ED;
+    --grid-dot: rgba(0, 0, 0, 0.06);
   }
 
   * { box-sizing: border-box; }
 
   body {
     margin: 0;
-    background: var(--ivory);
+    background: var(--white);
+    background-image: radial-gradient(circle, var(--grid-dot) 1px, transparent 1px);
+    background-size: 24px 24px;
     color: var(--slate);
     font-family: var(--sans);
     font-size: 15px;
@@ -41,29 +51,62 @@
   }
 
   .page {
-    max-width: 1100px;
+    max-width: 1120px;
     margin: 0 auto;
-    padding: 0 28px 80px;
+    padding: 0 32px 80px;
   }
 
+  /* ---------- HEADER ---------- */
   header {
-    padding: 48px 0 20px;
+    padding: 56px 0 8px;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 16px 32px;
+    align-items: end;
+  }
+  header .big-num {
+    font-family: var(--sans);
+    font-weight: 700;
+    font-size: 96px;
+    line-height: 0.85;
+    color: var(--accent);
+    letter-spacing: -0.04em;
+    grid-row: 1 / 3;
   }
   header h1 {
-    font-family: var(--serif);
-    font-weight: 500;
-    font-size: 36px;
-    letter-spacing: -0.01em;
-    margin: 0 0 6px;
+    font-family: var(--sans);
+    font-weight: 700;
+    font-size: 32px;
+    letter-spacing: -0.02em;
+    margin: 0;
+    color: var(--slate);
+    align-self: end;
   }
   header p {
     color: var(--gray-500);
     font-size: 14px;
     margin: 0;
-    max-width: 640px;
+    max-width: 560px;
+    line-height: 1.6;
+    padding-bottom: 4px;
+  }
+  header p code {
+    font-family: var(--mono);
+    font-size: 12px;
+    background: var(--accent-light);
+    color: var(--accent);
+    padding: 2px 6px;
+    border-radius: 3px;
+  }
+  .header-rule {
+    grid-column: 1 / -1;
+    border: none;
+    height: 3px;
+    background: var(--slate);
+    margin: 24px 0 0;
   }
 
-  /* ---------- Toolbar ---------- */
+  /* ---------- TOOLBAR ---------- */
   .toolbar {
     position: sticky;
     top: 0;
@@ -71,12 +114,23 @@
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 28px;
-    padding: 16px 20px;
-    margin: 24px 0 36px;
+    gap: 32px;
+    padding: 20px 24px;
+    margin: 32px 0 40px;
     background: var(--white);
-    border: 1.5px solid var(--gray-300);
-    border-radius: 12px;
+    border: 2px solid var(--slate);
+    box-shadow: 4px 4px 0 var(--slate);
+  }
+  .toolbar-title {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--accent);
+    writing-mode: vertical-lr;
+    transform: rotate(180deg);
+    margin-right: -8px;
   }
   .control {
     display: flex;
@@ -85,98 +139,119 @@
   }
   .control-label {
     font-family: var(--mono);
-    font-size: 12px;
-    color: var(--gray-700);
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--slate);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
   }
   .control-value {
     font-family: var(--mono);
-    font-size: 12px;
-    color: var(--gray-500);
-    min-width: 36px;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--accent);
+    min-width: 40px;
+    background: var(--accent-light);
+    padding: 2px 6px;
+    border-radius: 2px;
   }
 
   input[type="range"] {
     appearance: none;
-    width: 140px;
-    height: 4px;
+    width: 120px;
+    height: 6px;
     background: var(--gray-300);
-    border-radius: 2px;
+    border-radius: 0;
     outline: none;
   }
   input[type="range"]::-webkit-slider-thumb {
     appearance: none;
-    width: 16px; height: 16px;
-    background: var(--clay);
-    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    background: var(--accent);
+    border-radius: 0;
     cursor: pointer;
+    border: 2px solid var(--slate);
   }
   input[type="range"]::-moz-range-thumb {
-    width: 16px; height: 16px;
-    background: var(--clay);
-    border: none;
-    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    background: var(--accent);
+    border-radius: 0;
     cursor: pointer;
+    border: 2px solid var(--slate);
   }
 
   .radio-group {
     display: inline-flex;
-    border: 1.5px solid var(--gray-300);
-    border-radius: 8px;
+    border: 2px solid var(--slate);
+    border-radius: 0;
     overflow: hidden;
   }
   .radio-group label {
-    padding: 6px 12px;
-    font-size: 13px;
+    padding: 6px 14px;
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 700;
     cursor: pointer;
     user-select: none;
     color: var(--gray-700);
-    border-right: 1px solid var(--gray-300);
+    border-right: 2px solid var(--slate);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    transition: background 0.1s ease, color 0.1s ease;
   }
   .radio-group label:last-child { border-right: none; }
   .radio-group input { display: none; }
-  .radio-group input:checked + span {
-    color: var(--slate);
-  }
   .radio-group label:has(input:checked) {
-    background: var(--gray-100);
+    background: var(--accent);
+    color: var(--white);
   }
 
   .check {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
-    font-size: 13px;
+    gap: 10px;
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 700;
     cursor: pointer;
     user-select: none;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
   }
   .check input {
     appearance: none;
-    width: 16px; height: 16px;
-    border: 1.5px solid var(--gray-300);
-    border-radius: 4px;
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--slate);
+    border-radius: 0;
     margin: 0;
     cursor: pointer;
     position: relative;
+    transition: background 0.1s ease;
   }
   .check input:checked {
-    background: var(--clay);
-    border-color: var(--clay);
+    background: var(--accent);
+    border-color: var(--accent);
   }
   .check input:checked::after {
     content: "";
     position: absolute;
-    left: 4px; top: 0;
-    width: 4px; height: 9px;
+    left: 5px;
+    top: 1px;
+    width: 5px;
+    height: 10px;
     border: solid var(--white);
-    border-width: 0 2px 2px 0;
+    border-width: 0 3px 3px 0;
     transform: rotate(45deg);
   }
 
-  /* ---------- Grid ---------- */
+  /* ---------- GRID ---------- */
   .grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 28px;
+    gap: 24px;
   }
   @media (max-width: 960px) {
     .grid { grid-template-columns: repeat(2, 1fr); }
@@ -185,100 +260,133 @@
     .grid { grid-template-columns: 1fr; }
   }
 
-  .cell {}
+  .cell {
+    position: relative;
+  }
   .variant-label {
     display: inline-flex;
     align-items: center;
-    height: 22px;
-    padding: 0 9px;
+    height: 28px;
+    padding: 0 12px;
     font-family: var(--mono);
     font-size: 11px;
-    font-weight: 500;
-    color: var(--gray-700);
-    background: var(--gray-100);
-    border-radius: 999px;
-    margin-bottom: 10px;
+    font-weight: 700;
+    color: var(--white);
+    background: var(--slate);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 12px;
+  }
+  .variant-label .v-num {
+    color: var(--accent);
+    margin-right: 6px;
+    font-size: 13px;
   }
   .variant-note {
-    font-size: 12px;
+    font-family: var(--mono);
+    font-size: 10px;
     color: var(--gray-500);
-    margin-top: 10px;
+    margin-top: 12px;
+    letter-spacing: 0.02em;
   }
 
   /* ---------- Card base ---------- */
   .card {
-    border-radius: 12px;
+    border-radius: 0;
     padding: var(--card-pad);
-    transition: padding 0.15s ease, box-shadow 0.15s ease, border 0.15s ease;
+    transition: padding 0.15s ease, box-shadow 0.15s ease, border 0.15s ease, transform 0.15s ease;
     cursor: pointer;
+    position: relative;
   }
-  .card:hover { outline: 2px solid var(--clay); outline-offset: 2px; }
+  .card:hover {
+    outline: 3px solid var(--accent);
+    outline-offset: 3px;
+  }
 
   .card-head {
     display: flex;
     align-items: center;
-    gap: 12px;
-    margin-bottom: 12px;
+    gap: 14px;
+    margin-bottom: 14px;
   }
   .avatar {
-    width: 36px; height: 36px;
-    border-radius: 50%;
-    background: var(--oat);
+    width: 40px;
+    height: 40px;
+    border-radius: 0;
+    background: var(--slate);
     flex-shrink: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--gray-700);
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--white);
+    letter-spacing: 0.04em;
   }
   .card-titles { min-width: 0; }
   .card-title {
-    font-family: var(--serif);
-    font-size: 17px;
-    font-weight: 500;
+    font-family: var(--sans);
+    font-size: 16px;
+    font-weight: 700;
     margin: 0 0 2px;
     line-height: 1.3;
+    letter-spacing: -0.01em;
   }
   .card-sub {
-    font-size: 13px;
+    font-family: var(--mono);
+    font-size: 11px;
     color: var(--gray-500);
     margin: 0;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    letter-spacing: 0.02em;
   }
   .chips {
     display: flex;
-    gap: 6px;
-    margin-bottom: 14px;
+    gap: 8px;
+    margin-bottom: 16px;
   }
   .chip {
     display: inline-flex;
     align-items: center;
-    height: 20px;
-    padding: 0 8px;
-    font-size: 11px;
-    font-weight: 500;
-    border-radius: 999px;
+    height: 24px;
+    padding: 0 10px;
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 700;
+    border-radius: 0;
     background: var(--gray-100);
     color: var(--gray-700);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
   }
-  .chip.olive { background: rgba(120,140,93,0.16); color: var(--olive); }
+  .chip.olive {
+    background: rgba(120, 140, 93, 0.12);
+    color: var(--olive);
+  }
   .ghost-btn {
     display: inline-flex;
     align-items: center;
-    height: 30px;
-    padding: 0 12px;
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--gray-700);
+    height: 34px;
+    padding: 0 16px;
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--slate);
     background: transparent;
-    border: 1.5px solid var(--gray-300);
-    border-radius: 8px;
+    border: 2px solid var(--slate);
+    border-radius: 0;
     cursor: pointer;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    transition: background 0.1s ease, color 0.1s ease;
   }
-  .ghost-btn:hover { background: var(--gray-100); }
+  .ghost-btn:hover {
+    background: var(--slate);
+    color: var(--white);
+  }
 
   /* ---------- Variant treatments ---------- */
   .v-flat {
@@ -306,18 +414,20 @@
   .v-stripe::before {
     content: "";
     position: absolute;
-    left: 0; right: 0; top: 0;
-    height: 4px;
-    background: var(--clay);
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 5px;
+    background: var(--accent);
   }
   .v-inset {
     background: var(--oat);
     border: none;
     box-shadow: none;
   }
-  .v-inset .chip { background: rgba(255,255,255,0.6); }
-  .v-inset .ghost-btn { border-color: rgba(20,20,19,0.15); }
-  .v-inset .avatar { background: var(--white); }
+  .v-inset .chip { background: rgba(255, 255, 255, 0.7); }
+  .v-inset .ghost-btn { border-color: rgba(20, 20, 19, 0.2); }
+  .v-inset .avatar { background: var(--white); color: var(--slate); }
 
   .v-horizontal {
     background: var(--white);
@@ -325,7 +435,7 @@
     box-shadow: none;
     display: flex;
     align-items: center;
-    gap: 14px;
+    gap: 16px;
   }
   .v-horizontal .card-head { margin: 0; flex: 1; min-width: 0; }
   .v-horizontal .chips { margin: 0; }
@@ -334,29 +444,50 @@
 
   /* ---------- Snippet panel ---------- */
   .snippet-panel {
-    margin-top: 40px;
-    border: 1.5px solid var(--gray-300);
-    border-radius: 12px;
+    margin-top: 48px;
+    border: 2px solid var(--slate);
     overflow: hidden;
+    box-shadow: 4px 4px 0 var(--slate);
   }
   .snippet-head {
-    padding: 10px 16px;
+    padding: 12px 20px;
     font-family: var(--mono);
-    font-size: 12px;
-    color: var(--gray-500);
-    background: var(--gray-100);
-    border-bottom: 1px solid var(--gray-300);
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--white);
+    background: var(--slate);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .snippet-head::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    background: var(--accent);
   }
   pre#snippet {
     margin: 0;
-    padding: 20px;
-    background: var(--slate);
-    color: var(--ivory);
+    padding: 24px;
+    background: #1E1E1E;
+    color: #D4D4D4;
     font-family: var(--mono);
-    font-size: 13px;
-    line-height: 1.6;
+    font-size: 12px;
+    line-height: 1.7;
     overflow-x: auto;
-    min-height: 120px;
+    min-height: 140px;
+    border-left: 4px solid var(--accent);
+  }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width: 768px) {
+    header .big-num { font-size: 64px; }
+    header h1 { font-size: 24px; }
+    header { gap: 12px 20px; }
+    .toolbar { gap: 20px; padding: 16px; }
+    .toolbar-title { display: none; }
   }
 </style>
 </head>
@@ -364,12 +495,15 @@
 <div class="page">
 
   <header>
-    <h1>Card variant matrix</h1>
-    <p>Six structural treatments of the Acme <code style="font-family:var(--mono);font-size:13px">&lt;Card /&gt;</code> component. Adjust density and emphasis with the controls, hover a variant to see its prop combo.</p>
+    <div class="big-num">06</div>
+    <h1>Card Variant Matrix</h1>
+    <p>Six structural treatments of the Acme <code>&lt;Card /&gt;</code> component. Adjust density and emphasis with the controls, hover a variant to see its prop combo.</p>
+    <hr class="header-rule">
   </header>
 
   <!-- ---------- Toolbar ---------- -->
   <div class="toolbar">
+    <div class="toolbar-title">Controls</div>
     <div class="control">
       <span class="control-label">Padding</span>
       <input id="ctl-pad" type="range" min="12" max="32" value="20" step="2">
@@ -379,16 +513,16 @@
     <div class="control">
       <span class="control-label">Border</span>
       <div class="radio-group">
-        <label><input type="radio" name="border" value="none"><span>none</span></label>
-        <label><input type="radio" name="border" value="hairline" checked><span>hairline</span></label>
-        <label><input type="radio" name="border" value="solid"><span>solid</span></label>
+        <label><input type="radio" name="border" value="none"><span>None</span></label>
+        <label><input type="radio" name="border" value="hairline" checked><span>Hair</span></label>
+        <label><input type="radio" name="border" value="solid"><span>Solid</span></label>
       </div>
     </div>
 
     <div class="control">
       <label class="check">
         <input id="ctl-shadow" type="checkbox" checked>
-        Show shadow
+        Shadow
       </label>
     </div>
   </div>
@@ -398,7 +532,7 @@
 
     <!-- A: Flat -->
     <div class="cell">
-      <span class="variant-label">A &middot; Flat</span>
+      <span class="variant-label"><span class="v-num">A</span> Flat</span>
       <div class="card v-flat"
            data-snippet='<Card variant="flat" padding={PAD}>
   <Card.Header avatar title="Weekly planning" subtitle="12 tasks &middot; due Friday" />
@@ -418,12 +552,12 @@
         </div>
         <button class="ghost-btn">Open</button>
       </div>
-      <p class="variant-note">best for: dense lists on tinted backgrounds</p>
+      <p class="variant-note">Best for: dense lists on tinted backgrounds</p>
     </div>
 
     <!-- B: Outlined -->
     <div class="cell">
-      <span class="variant-label">B &middot; Outlined</span>
+      <span class="variant-label"><span class="v-num">B</span> Outlined</span>
       <div class="card v-outlined"
            data-snippet='<Card variant="outlined" padding={PAD} border="BORDER">
   <Card.Header avatar title="Weekly planning" subtitle="12 tasks &middot; due Friday" />
@@ -443,12 +577,12 @@
         </div>
         <button class="ghost-btn">Open</button>
       </div>
-      <p class="variant-note">best for: default content cards on ivory</p>
+      <p class="variant-note">Best for: default content cards on ivory</p>
     </div>
 
     <!-- C: Elevated -->
     <div class="cell">
-      <span class="variant-label">C &middot; Elevated</span>
+      <span class="variant-label"><span class="v-num">C</span> Elevated</span>
       <div class="card v-elevated"
            data-snippet='<Card variant="elevated" padding={PAD} shadow="md">
   <Card.Header avatar title="Weekly planning" subtitle="12 tasks &middot; due Friday" />
@@ -468,12 +602,12 @@
         </div>
         <button class="ghost-btn">Open</button>
       </div>
-      <p class="variant-note">best for: draggable items, popovers</p>
+      <p class="variant-note">Best for: draggable items, popovers</p>
     </div>
 
     <!-- D: Accent stripe -->
     <div class="cell">
-      <span class="variant-label">D &middot; Accent stripe</span>
+      <span class="variant-label"><span class="v-num">D</span> Stripe</span>
       <div class="card v-stripe"
            data-snippet='<Card variant="outlined" accent="clay" padding={PAD} border="BORDER">
   <Card.Header avatar title="Weekly planning" subtitle="12 tasks &middot; due Friday" />
@@ -493,12 +627,12 @@
         </div>
         <button class="ghost-btn">Open</button>
       </div>
-      <p class="variant-note">best for: pinned or priority items</p>
+      <p class="variant-note">Best for: pinned or priority items</p>
     </div>
 
     <!-- E: Inset / filled -->
     <div class="cell">
-      <span class="variant-label">E &middot; Inset</span>
+      <span class="variant-label"><span class="v-num">E</span> Inset</span>
       <div class="card v-inset"
            data-snippet='<Card variant="filled" tone="oat" padding={PAD}>
   <Card.Header avatar title="Weekly planning" subtitle="12 tasks &middot; due Friday" />
@@ -518,12 +652,12 @@
         </div>
         <button class="ghost-btn">Open</button>
       </div>
-      <p class="variant-note">best for: nested cards inside white panels</p>
+      <p class="variant-note">Best for: nested cards inside white panels</p>
     </div>
 
     <!-- F: Horizontal / compact -->
     <div class="cell">
-      <span class="variant-label">F &middot; Horizontal</span>
+      <span class="variant-label"><span class="v-num">F</span> Horizontal</span>
       <div class="card v-horizontal"
            data-snippet='<Card variant="outlined" layout="row" padding={PAD} border="BORDER">
   <Card.Header avatar title="Weekly planning" />
@@ -543,7 +677,7 @@
         </div>
         <button class="ghost-btn">Open</button>
       </div>
-      <p class="variant-note">best for: compact row lists, sidebars</p>
+      <p class="variant-note">Best for: compact row lists, sidebars</p>
     </div>
 
   </div>

@@ -13,171 +13,307 @@
     --oat:     #E3DACC;
     --olive:   #788C5D;
     --sky:     #6A8CAF;
+    --rust:    #B04A3F;
+    --gray-100:#F5F4EE;
     --gray-150:#F0EEE6;
     --gray-300:#D1CFC5;
     --gray-500:#87867F;
     --gray-700:#3D3D3A;
+
+    /* Scholarly accent */
+    --ink:     #1A2A3A;
+    --parchment: #FDFBF5;
+    --margin-line: rgba(180,60,40,0.12);
+    --highlight-bg: rgba(217,119,87,0.10);
+
     --serif: ui-serif, Georgia, "Times New Roman", serif;
     --sans:  system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
     --mono:  ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    --academic: Georgia, "Times New Roman", ui-serif, serif;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
   body {
-    background: var(--ivory);
+    background: var(--parchment);
     color: var(--gray-700);
-    font-family: var(--sans);
-    font-size: 15px;
-    line-height: 1.65;
+    font-family: var(--academic);
+    font-size: 15.5px;
+    line-height: 1.72;
     -webkit-font-smoothing: antialiased;
-    padding: 56px 24px 120px;
+    padding: 0;
   }
   .page {
-    max-width: 1100px;
+    max-width: 1120px;
     margin: 0 auto;
     display: grid;
-    grid-template-columns: minmax(0, 1fr) 240px;
-    gap: 48px;
+    grid-template-columns: minmax(0, 1fr) 250px;
+    gap: 0 44px;
   }
-  @media (max-width: 960px) { .page { grid-template-columns: 1fr; } aside { order: 2; position: static; } }
+  @media (max-width: 960px) {
+    .page { grid-template-columns: 1fr; }
+    aside { order: 2; position: static; }
+    main { padding: 40px 24px 120px; }
+  }
+
+  /* ── Main column ── */
+  main { padding: 52px 0 120px 48px; position: relative; }
+
+  /* Vertical margin line */
+  main::before {
+    content: "";
+    position: absolute;
+    left: 24px;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: var(--margin-line);
+  }
 
   /* ── header ───────────────────────────── */
   .eyebrow {
     font-family: var(--mono);
-    font-size: 11px;
-    letter-spacing: 0.08em;
+    font-size: 10px;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--gray-500);
-    margin-bottom: 10px;
+    margin-bottom: 14px;
   }
   h1 {
-    font-family: var(--serif);
-    font-weight: 500;
-    font-size: 33px;
-    color: var(--slate);
+    font-family: var(--academic);
+    font-weight: 400;
+    font-size: 38px;
+    color: var(--ink);
     letter-spacing: -0.01em;
+    line-height: 1.18;
+    margin-bottom: 20px;
+  }
+  .lead {
+    max-width: 640px;
     margin-bottom: 12px;
+    font-size: 16px;
+    line-height: 1.7;
   }
-  .lead { max-width: 640px; margin-bottom: 8px; }
+  .lead em { font-style: italic; }
+  .lead code, p code {
+    font-family: var(--mono);
+    font-size: 13px;
+    background: var(--highlight-bg);
+    padding: 1px 5px;
+    border-radius: 3px;
+    color: var(--ink);
+  }
   h2 {
-    font-family: var(--serif);
-    font-weight: 500;
-    font-size: 22px;
-    color: var(--slate);
-    margin: 40px 0 12px;
+    font-family: var(--academic);
+    font-weight: 400;
+    font-size: 24px;
+    color: var(--ink);
+    margin: 48px 0 14px;
+    letter-spacing: -0.005em;
+    position: relative;
+    padding-left: 16px;
   }
-  p { margin-bottom: 12px; max-width: 680px; }
-  code { font-family: var(--mono); font-size: 13px; }
+  h2::before {
+    content: "\00a7";
+    position: absolute;
+    left: 0;
+    color: var(--clay);
+    font-size: 20px;
+    opacity: 0.6;
+  }
+  p { margin-bottom: 14px; max-width: 680px; }
   .term {
     border-bottom: 1.5px dotted var(--clay);
     cursor: help;
-    color: var(--slate);
+    color: var(--ink);
+    transition: background 150ms ease;
+  }
+  .term:hover {
+    background: var(--highlight-bg);
   }
 
   /* ── demo panel ───────────────────────── */
   .demo {
     border: 1.5px solid var(--gray-300);
-    border-radius: 14px;
+    border-radius: 12px;
     background: #fff;
-    padding: 24px;
-    margin: 12px 0 8px;
+    padding: 28px;
+    margin: 16px 0 10px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.03);
   }
   .demo-grid {
     display: grid;
-    grid-template-columns: 320px 1fr;
-    gap: 28px;
+    grid-template-columns: 300px 1fr;
+    gap: 32px;
     align-items: center;
   }
   @media (max-width: 760px) { .demo-grid { grid-template-columns: 1fr; } }
 
-  svg.ring { display: block; width: 100%; max-width: 320px; }
+  svg.ring { display: block; width: 100%; max-width: 300px; }
   .ring .track { fill: none; stroke: var(--gray-300); stroke-width: 14; }
   .ring .arc   { fill: none; stroke-width: 14; transition: stroke-dasharray 300ms ease; }
-  .ring .node  { stroke: #fff; stroke-width: 2; transition: cx 300ms, cy 300ms, opacity 200ms; }
+  .ring .node  { stroke: #fff; stroke-width: 2.5; transition: cx 300ms, cy 300ms, opacity 200ms; }
   .ring .key   { fill: var(--slate); transition: cx 300ms, cy 300ms; }
   .ring .lbl   { font-family: var(--mono); font-size: 10px; fill: var(--gray-500); }
 
   .controls { font-size: 13px; }
-  .controls .row { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
-  .controls label { width: 64px; color: var(--gray-500); font-family: var(--mono); font-size: 11px; }
-  .controls .val { font-family: var(--mono); font-size: 12px; color: var(--slate); width: 28px; }
-  .controls input[type=range] { flex: 1; accent-color: var(--clay); }
+  .controls .row { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+  .controls label {
+    width: 56px;
+    color: var(--gray-500);
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .controls .val {
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink);
+    width: 28px;
+    text-align: center;
+  }
+  .controls input[type=range] {
+    flex: 1;
+    accent-color: var(--clay);
+    height: 4px;
+  }
+  .controls .btn-row { display: flex; gap: 6px; flex-wrap: wrap; }
   .controls button {
     appearance: none;
     border: 1.5px solid var(--gray-300);
-    background: var(--gray-150);
+    background: var(--gray-100);
     border-radius: 6px;
     font-family: var(--mono);
     font-size: 11px;
-    padding: 6px 10px;
+    padding: 7px 12px;
     cursor: pointer;
-    margin-right: 6px;
+    transition: all 100ms ease;
   }
-  .controls button:hover { background: var(--oat); }
+  .controls button:hover { background: var(--oat); border-color: var(--gray-500); }
 
   .readout {
     border-top: 1px solid var(--gray-300);
-    margin-top: 16px;
+    margin-top: 18px;
     padding-top: 14px;
     font-size: 13px;
+    font-family: var(--mono);
   }
-  .readout b { color: var(--slate); }
-  .moved { color: var(--clay); font-family: var(--mono); }
+  .readout b { color: var(--ink); }
+  .moved { color: var(--clay); font-family: var(--mono); font-weight: 600; }
+
+  .demo-caption {
+    font-size: 13px;
+    color: var(--gray-500);
+    max-width: 640px;
+    margin-top: 10px;
+    font-style: italic;
+    font-family: var(--academic);
+  }
 
   /* ── compare table ────────────────────── */
   table {
     border-collapse: collapse;
     width: 100%;
     max-width: 640px;
-    font-size: 13.5px;
-    margin: 12px 0;
+    font-size: 14px;
+    margin: 16px 0;
   }
-  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--gray-300); }
-  th { font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--gray-500); font-weight: 500; }
-  td.bad { color: #B04A3F; }
-  td.good { color: var(--olive); }
+  th, td { text-align: left; padding: 12px 14px; border-bottom: 1px solid var(--gray-300); }
+  th {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--gray-500);
+    font-weight: 500;
+    padding-bottom: 10px;
+  }
+  td.bad { color: #A04030; font-weight: 500; }
+  td.good { color: #4B6B35; font-weight: 500; }
 
   /* ── glossary ─────────────────────────── */
   aside {
     position: sticky;
     top: 32px;
     align-self: start;
+    padding: 28px 0 28px 0;
+  }
+  .gloss-panel {
     border: 1.5px solid var(--gray-300);
     border-radius: 12px;
     background: #fff;
-    padding: 18px 18px 8px;
+    padding: 20px 18px 12px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.03);
   }
-  aside .label {
+  .gloss-panel .label {
     font-family: var(--mono);
-    font-size: 10px;
-    letter-spacing: 0.1em;
+    font-size: 9px;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
     color: var(--gray-500);
-    margin-bottom: 12px;
+    margin-bottom: 14px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--gray-300);
   }
   aside dl dt {
-    font-family: var(--serif);
+    font-family: var(--academic);
     font-size: 15px;
-    color: var(--slate);
+    color: var(--ink);
+    font-weight: 600;
     margin-top: 0;
+    transition: background 200ms ease, padding 200ms ease;
+    border-radius: 4px;
+    padding: 2px 6px;
+    margin-left: -6px;
   }
   aside dl dd {
-    font-size: 12.5px;
-    line-height: 1.5;
+    font-family: var(--sans);
+    font-size: 12px;
+    line-height: 1.55;
     color: var(--gray-700);
-    margin: 2px 0 14px;
+    margin: 3px 0 16px;
+    padding-left: 6px;
+    border-left: 2px solid transparent;
+    transition: border-color 200ms ease;
   }
-  aside dl dt.hl, aside dl dt.hl + dd { background: rgba(217,119,87,0.10); margin-left: -8px; margin-right: -8px; padding-left: 8px; padding-right: 8px; border-radius: 4px; }
+  aside dl dt.hl {
+    background: var(--highlight-bg);
+  }
+  aside dl dt.hl + dd {
+    border-left-color: var(--clay);
+  }
+  aside dl dd code {
+    font-family: var(--mono);
+    font-size: 11px;
+    background: var(--highlight-bg);
+    padding: 0px 4px;
+    border-radius: 2px;
+    color: var(--ink);
+  }
+
+  /* ── reading progress bar ── */
+  .progress-bar {
+    position: fixed;
+    top: 0; left: 0;
+    width: 0%;
+    height: 2px;
+    background: var(--clay);
+    z-index: 100;
+    transition: width 100ms linear;
+  }
 </style>
 </head>
 <body>
+<div class="progress-bar" id="progressBar"></div>
 <div class="page">
 
   <main>
-    <div class="eyebrow">Research &amp; Learning · concept explainer</div>
+    <div class="eyebrow">Research &amp; Learning &middot; concept explainer</div>
     <h1>Consistent hashing, in one ring</h1>
     <p class="lead">
       You have <em>K</em> keys spread across <em>N</em> cache servers. A server dies, or you add one. How many
-      keys have to move? With naive <code>hash(key) mod N</code> the answer is "almost all of them." Consistent
+      keys have to move? With naive <code>hash(key) mod N</code> the answer is &#8220;almost all of them.&#8221; Consistent
       hashing gets it down to roughly <code>K&nbsp;/&nbsp;N</code>. Here's why.
     </p>
 
@@ -186,7 +322,7 @@
       Map both <span class="term" data-term="node">nodes</span> and keys onto the same
       <span class="term" data-term="ring">ring</span> (the hash output space, wrapped around). A key belongs to
       the first node found by walking clockwise from the key's position. When a node leaves, only the keys in
-      its <span class="term" data-term="arc">arc</span> reassign — to the next node round — and everything else
+      its <span class="term" data-term="arc">arc</span> reassign &#8212; to the next node round &#8212; and everything else
       stays put.
     </p>
 
@@ -204,18 +340,18 @@
             <input id="kSlider" type="range" min="10" max="60" value="32" step="2">
             <span class="val" id="kVal">32</span>
           </div>
-          <div>
+          <div class="btn-row">
             <button id="rm">remove a node</button>
             <button id="add">add a node</button>
             <button id="reset">reset</button>
           </div>
           <div class="readout" id="readout">
-            <b>4</b> nodes · <b>32</b> keys · <span class="moved">—</span> moved on last change
+            <b>4</b> nodes &middot; <b>32</b> keys &middot; <span class="moved">&#8212;</span> moved on last change
           </div>
         </div>
       </div>
     </div>
-    <p style="font-size:13px; color:var(--gray-500); max-width:640px;">
+    <p class="demo-caption">
       Colored arcs show ownership. Removing a node hands its arc to its clockwise neighbor; every dot outside
       that arc keeps its color. That's the whole idea.
     </p>
@@ -224,8 +360,8 @@
     <table>
       <thead><tr><th></th><th>hash mod N</th><th>consistent hashing</th></tr></thead>
       <tbody>
-        <tr><td>Keys moved when N→N+1</td><td class="bad">~ (N−1)/N of all keys</td><td class="good">~ 1/(N+1)</td></tr>
-        <tr><td>Hot-spot risk</td><td class="good">even by construction</td><td>uneven — fix with <span class="term" data-term="vnode">virtual nodes</span></td></tr>
+        <tr><td>Keys moved when N&#8594;N+1</td><td class="bad">~ (N&#8722;1)/N of all keys</td><td class="good">~ 1/(N+1)</td></tr>
+        <tr><td>Hot-spot risk</td><td class="good">even by construction</td><td>uneven &#8212; fix with <span class="term" data-term="vnode">virtual nodes</span></td></tr>
         <tr><td>Lookup cost</td><td class="good">O(1)</td><td>O(log N) (binary search on ring)</td></tr>
         <tr><td>Used by</td><td>array sharding, simple LB</td><td>Dynamo, Cassandra, Memcached clients, Envoy</td></tr>
       </tbody>
@@ -243,19 +379,21 @@
 
   <!-- glossary -->
   <aside>
-    <div class="label">Glossary</div>
-    <dl id="gloss">
-      <dt data-g="ring">Ring</dt>
-      <dd>The hash function's output range, treated as a circle so the value after <code>max</code> is <code>0</code>.</dd>
-      <dt data-g="node">Node</dt>
-      <dd>A server placed on the ring at <code>hash(node_id)</code>. Owns every key between it and its anticlockwise neighbor.</dd>
-      <dt data-g="arc">Arc</dt>
-      <dd>The stretch of ring a node owns. Removing a node merges its arc into the next node's.</dd>
-      <dt data-g="vnode">Virtual node</dt>
-      <dd>Placing each physical node at many ring positions so arcs are small and evenly sized.</dd>
-      <dt data-g="successor">Successor</dt>
-      <dd>The first node clockwise from a given point — the owner of any key landing there.</dd>
-    </dl>
+    <div class="gloss-panel">
+      <div class="label">Glossary</div>
+      <dl id="gloss">
+        <dt data-g="ring">Ring</dt>
+        <dd>The hash function's output range, treated as a circle so the value after <code>max</code> is <code>0</code>.</dd>
+        <dt data-g="node">Node</dt>
+        <dd>A server placed on the ring at <code>hash(node_id)</code>. Owns every key between it and its anticlockwise neighbor.</dd>
+        <dt data-g="arc">Arc</dt>
+        <dd>The stretch of ring a node owns. Removing a node merges its arc into the next node's.</dd>
+        <dt data-g="vnode">Virtual node</dt>
+        <dd>Placing each physical node at many ring positions so arcs are small and evenly sized.</dd>
+        <dt data-g="successor">Successor</dt>
+        <dd>The first node clockwise from a given point &#8212; the owner of any key landing there.</dd>
+      </dl>
+    </div>
   </aside>
 
 </div>
@@ -326,7 +464,7 @@ function render(moved) {
   ring.innerHTML = svg;
 
   readout.innerHTML =
-    `<b>${nodes.length}</b> nodes · <b>${keys.length}</b> keys · ` +
+    `<b>${nodes.length}</b> nodes &middot; <b>${keys.length}</b> keys &middot; ` +
     `<span class="moved">${moved == null ? "—" : moved + " (" + Math.round(moved / keys.length * 100) + "%)"}</span> moved on last change`;
 }
 
@@ -362,6 +500,13 @@ document.querySelectorAll(".term").forEach(el => {
   el.addEventListener("mouseenter", () => document.querySelector(`dt[data-g="${g}"]`)?.classList.add("hl"));
   el.addEventListener("mouseleave", () => document.querySelector(`dt[data-g="${g}"]`)?.classList.remove("hl"));
 });
+
+/* reading progress bar */
+window.addEventListener("scroll", () => {
+  const h = document.documentElement;
+  const pct = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100;
+  document.getElementById("progressBar").style.width = pct + "%";
+}, { passive: true });
 
 reset();
 </script>

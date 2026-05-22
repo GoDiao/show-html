@@ -6,6 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Acme — Product Dashboard — March 2026</title>
 <style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600&display=swap');
   :root {
     --ivory:   #FAF9F5;
     --slate:   #141413;
@@ -19,168 +20,275 @@
     --gray-300:#D1CFC5;
     --gray-500:#87867F;
     --gray-700:#3D3D3A;
-    --serif: ui-serif, Georgia, "Times New Roman", serif;
-    --sans:  system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-    --mono:  ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+    /* Dark theme tokens */
+    --surface-0: #111113;
+    --surface-1: #1a1a1e;
+    --surface-2: #222228;
+    --surface-3: #2c2c33;
+    --border:    #2e2e36;
+    --border-subtle: #252530;
+    --text-primary: #eeeef0;
+    --text-secondary: #9e9ea8;
+    --text-muted: #6e6e7a;
+    --accent-clay: #E08A64;
+    --accent-olive: #8FA870;
+    --accent-sky: #6FA3CC;
+    --accent-rust: #CC5E52;
+    --glow-clay: rgba(224,138,100,0.12);
+    --glow-olive: rgba(143,168,112,0.12);
+    --glow-sky: rgba(111,163,204,0.12);
+
+    --serif: 'DM Serif Display', ui-serif, Georgia, serif;
+    --sans:  'DM Sans', system-ui, -apple-system, sans-serif;
+    --mono:  'DM Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
-    background: var(--ivory);
-    color: var(--slate);
-    font-family: var(--sans);
-    font-size: 15px;
-    line-height: 1.6;
-    padding: 56px 24px 120px;
-    -webkit-font-smoothing: antialiased;
+    background: var(--surface-0); color: var(--text-primary);
+    font-family: var(--sans); font-size: 15px; line-height: 1.6;
+    padding: 48px 24px 120px; -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
   }
-  .page { max-width: 1080px; margin: 0 auto; }
+  .page { max-width: 1120px; margin: 0 auto; }
 
   /* ── header ── */
-  header { margin-bottom: 40px; }
-  .header-top {
-    display: flex; align-items: baseline; justify-content: space-between;
-    flex-wrap: wrap; gap: 12px; margin-bottom: 8px;
+  header { margin-bottom: 40px; display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+  .header-left { max-width: 560px; }
+  .eyebrow {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--accent-clay); margin-bottom: 8px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .eyebrow::before {
+    content: ''; width: 16px; height: 2px; background: var(--accent-clay);
+    border-radius: 1px;
   }
   h1 {
-    font-family: var(--serif); font-weight: 500;
-    font-size: 38px; letter-spacing: -0.01em; margin: 0;
+    font-family: var(--serif); font-weight: 400;
+    font-size: 36px; letter-spacing: -0.01em; margin-bottom: 8px;
+    color: var(--text-primary);
+  }
+  .lead { color: var(--text-secondary); font-size: 14px; line-height: 1.5; }
+  .header-meta {
+    display: flex; align-items: center; gap: 12px;
   }
   .auto-pill {
-    font-family: var(--mono); font-size: 11px; text-transform: uppercase;
-    letter-spacing: 0.06em; color: var(--gray-500);
-    background: var(--gray-100); border: 1.5px solid var(--gray-300);
-    border-radius: 999px; padding: 5px 11px; white-space: nowrap;
+    font-family: var(--mono); font-size: 10px; text-transform: uppercase;
+    letter-spacing: 0.08em; color: var(--text-muted);
+    background: var(--surface-2); border: 1px solid var(--border);
+    border-radius: 6px; padding: 6px 12px; white-space: nowrap;
   }
-  .sub { color: var(--gray-500); max-width: 640px; }
+  .live-dot {
+    width: 6px; height: 6px; border-radius: 50%; background: var(--accent-olive);
+    display: inline-block; margin-right: 2px;
+    animation: pulse-dot 2s ease-in-out infinite;
+  }
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
 
   /* ── metric cards ── */
   .metrics {
     display: grid; grid-template-columns: repeat(4, 1fr);
-    gap: 16px; margin-bottom: 36px;
+    gap: 12px; margin-bottom: 24px;
   }
   @media (max-width: 768px) { .metrics { grid-template-columns: repeat(2, 1fr); } }
   .metric {
-    background: var(--white); border: 1.5px solid var(--gray-300);
-    border-radius: 12px; padding: 22px 24px;
+    background: var(--surface-1); border: 1px solid var(--border);
+    border-radius: 14px; padding: 22px 24px; position: relative;
+    overflow: hidden; transition: border-color 200ms;
   }
+  .metric:hover { border-color: var(--surface-3); }
+  .metric::after {
+    content: ''; position: absolute; top: 0; left: 0; right: 0;
+    height: 1px; background: linear-gradient(90deg, transparent, var(--surface-3), transparent);
+    opacity: 0; transition: opacity 200ms;
+  }
+  .metric:hover::after { opacity: 1; }
   .metric-label {
-    font-family: var(--mono); font-size: 11px; text-transform: uppercase;
-    letter-spacing: 0.06em; color: var(--gray-500); margin-bottom: 10px;
+    font-family: var(--mono); font-size: 10px; text-transform: uppercase;
+    letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 14px;
   }
   .metric-value {
-    font-family: var(--serif); font-size: 34px; font-weight: 500;
-    color: var(--slate); line-height: 1.1;
+    font-family: var(--serif); font-size: 36px; font-weight: 400;
+    color: var(--text-primary); line-height: 1; letter-spacing: -0.02em;
   }
   .metric-change {
-    font-family: var(--mono); font-size: 12px; margin-top: 8px;
-    display: flex; align-items: center; gap: 4px;
+    font-family: var(--mono); font-size: 11px; margin-top: 10px;
+    display: flex; align-items: center; gap: 5px;
   }
-  .metric-change.up { color: var(--olive); }
-  .metric-change.down { color: var(--rust); }
-  .metric-change .arrow { font-size: 14px; }
+  .metric-change.up { color: var(--accent-olive); }
+  .metric-change.down { color: var(--accent-rust); }
+  .change-badge {
+    display: inline-flex; align-items: center; gap: 2px;
+    padding: 2px 6px; border-radius: 4px; font-size: 10px;
+    font-weight: 500;
+  }
+  .metric-change.up .change-badge { background: rgba(143,168,112,0.12); }
+  .metric-change.down .change-badge { background: rgba(204,94,82,0.12); }
+  .metric-spark {
+    position: absolute; bottom: 0; left: 24px; right: 24px; height: 32px;
+    opacity: 0.25;
+  }
 
   /* ── chart panels ── */
-  .charts { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; margin-bottom: 36px; }
+  .charts { display: grid; grid-template-columns: 5fr 3fr; gap: 12px; margin-bottom: 24px; }
   @media (max-width: 768px) { .charts { grid-template-columns: 1fr; } }
   .chart-panel {
-    background: var(--white); border: 1.5px solid var(--gray-300);
-    border-radius: 12px; padding: 24px;
+    background: var(--surface-1); border: 1px solid var(--border);
+    border-radius: 14px; padding: 24px;
+  }
+  .chart-header {
+    display: flex; align-items: baseline; justify-content: space-between;
+    margin-bottom: 24px;
   }
   .chart-title {
-    font-family: var(--serif); font-size: 18px; font-weight: 500;
-    margin-bottom: 20px; color: var(--slate);
+    font-family: var(--serif); font-size: 18px; font-weight: 400;
+    color: var(--text-primary);
+  }
+  .chart-subtitle {
+    font-family: var(--mono); font-size: 10px; color: var(--text-muted);
+    text-transform: uppercase; letter-spacing: 0.06em;
   }
 
   /* bar chart */
-  .bar-chart { display: flex; align-items: flex-end; gap: 8px; height: 180px; padding-top: 8px; }
-  .bar-col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; height: 100%; justify-content: flex-end; }
+  .bar-chart { display: flex; align-items: flex-end; gap: 6px; height: 180px; padding-top: 8px; }
+  .bar-col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 8px; height: 100%; justify-content: flex-end; }
   .bar {
     width: 100%; border-radius: 4px 4px 0 0; min-height: 4px;
-    transition: opacity 120ms;
+    transition: all 200ms ease; position: relative;
   }
-  .bar:hover { opacity: 0.8; }
+  .bar:hover { filter: brightness(1.15); }
+  .bar-value {
+    position: absolute; top: -20px; left: 50%; transform: translateX(-50%);
+    font-family: var(--mono); font-size: 9px; color: var(--text-muted);
+    opacity: 0; transition: opacity 200ms; white-space: nowrap;
+  }
+  .bar:hover .bar-value { opacity: 1; }
   .bar-label {
-    font-family: var(--mono); font-size: 10px; color: var(--gray-500);
+    font-family: var(--mono); font-size: 9px; color: var(--text-muted);
     text-transform: uppercase; letter-spacing: 0.04em;
   }
 
-  /* donut chart via SVG */
-  .donut-wrap { display: flex; flex-direction: column; align-items: center; gap: 20px; }
-  .donut-svg { width: 160px; height: 160px; }
+  /* donut chart */
+  .donut-wrap { display: flex; flex-direction: column; align-items: center; gap: 24px; }
+  .donut-svg { width: 140px; height: 140px; }
+  .donut-center {
+    font-family: var(--serif); font-size: 20px; fill: var(--text-primary);
+  }
+  .donut-center-label {
+    font-family: var(--mono); font-size: 8px; fill: var(--text-muted);
+    text-transform: uppercase; letter-spacing: 0.06em;
+  }
   .donut-legend { width: 100%; }
   .legend-item {
-    display: flex; align-items: center; gap: 8px;
-    font-size: 13px; color: var(--gray-700); padding: 5px 0;
+    display: flex; align-items: center; gap: 10px;
+    font-size: 13px; color: var(--text-secondary); padding: 6px 0;
   }
   .legend-dot {
-    width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0;
+    width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0;
   }
+  .legend-label { flex: 1; }
   .legend-val {
-    margin-left: auto; font-family: var(--mono); font-size: 12px;
-    color: var(--gray-500);
+    font-family: var(--mono); font-size: 12px;
+    color: var(--text-muted);
   }
 
-  /* sparkline */
+  /* ── sparkline section ── */
   .sparkline-section {
     display: grid; grid-template-columns: repeat(3, 1fr);
-    gap: 16px; margin-bottom: 36px;
+    gap: 12px; margin-bottom: 24px;
   }
   @media (max-width: 768px) { .sparkline-section { grid-template-columns: 1fr; } }
   .spark-card {
-    background: var(--white); border: 1.5px solid var(--gray-300);
-    border-radius: 12px; padding: 20px 22px;
+    background: var(--surface-1); border: 1px solid var(--border);
+    border-radius: 14px; padding: 20px 22px;
   }
   .spark-header {
-    display: flex; justify-content: space-between; align-items: center;
-    margin-bottom: 14px;
+    display: flex; justify-content: space-between; align-items: flex-start;
+    margin-bottom: 16px;
   }
   .spark-label {
-    font-size: 13px; color: var(--gray-700);
+    font-size: 12px; color: var(--text-muted);
+    font-family: var(--mono); text-transform: uppercase;
+    letter-spacing: 0.04em; font-size: 10px;
   }
   .spark-num {
-    font-family: var(--serif); font-size: 22px; font-weight: 500; color: var(--slate);
+    font-family: var(--serif); font-size: 24px; font-weight: 400; color: var(--text-primary);
+    letter-spacing: -0.01em;
   }
   .sparkline { width: 100%; height: 48px; }
 
   /* ── table ── */
   .table-panel {
-    background: var(--white); border: 1.5px solid var(--gray-300);
-    border-radius: 12px; padding: 24px; overflow-x: auto;
+    background: var(--surface-1); border: 1px solid var(--border);
+    border-radius: 14px; overflow: hidden;
+  }
+  .table-header {
+    padding: 20px 24px 0;
+    display: flex; align-items: baseline; justify-content: space-between;
   }
   .table-title {
-    font-family: var(--serif); font-size: 18px; font-weight: 500;
-    margin-bottom: 16px; color: var(--slate);
+    font-family: var(--serif); font-size: 18px; font-weight: 400;
+    color: var(--text-primary);
   }
+  .table-count {
+    font-family: var(--mono); font-size: 11px; color: var(--text-muted);
+  }
+  .table-scroll { overflow-x: auto; padding: 0 8px; }
   table { width: 100%; border-collapse: collapse; font-size: 14px; }
   th {
-    text-align: left; font-family: var(--mono); font-size: 11px;
-    text-transform: uppercase; letter-spacing: 0.06em;
-    color: var(--gray-500); padding: 10px 12px;
-    border-bottom: 1.5px solid var(--gray-300); white-space: nowrap;
+    text-align: left; font-family: var(--mono); font-size: 10px;
+    text-transform: uppercase; letter-spacing: 0.08em;
+    color: var(--text-muted); padding: 14px 16px;
+    border-bottom: 1px solid var(--border); white-space: nowrap;
   }
   td {
-    padding: 12px; border-bottom: 1px solid var(--gray-100);
-    color: var(--gray-700); vertical-align: middle;
+    padding: 14px 16px; border-bottom: 1px solid var(--border-subtle);
+    color: var(--text-secondary); vertical-align: middle;
   }
   tr:last-child td { border-bottom: none; }
+  tr:hover td { background: var(--surface-2); }
+  td:first-child { font-weight: 500; color: var(--text-primary); }
   .badge {
-    display: inline-block; font-family: var(--mono); font-size: 11px;
-    padding: 3px 10px; border-radius: 999px; letter-spacing: 0.03em;
+    display: inline-block; font-family: var(--mono); font-size: 10px;
+    padding: 3px 10px; border-radius: 6px; letter-spacing: 0.03em;
+    font-weight: 500;
   }
-  .badge-live    { background: #E8F5E4; color: #3A7D32; }
-  .badge-staging { background: #FFF3E0; color: #B86E00; }
-  .badge-dev     { background: var(--gray-100); color: var(--gray-500); }
+  .badge-live    { background: rgba(143,168,112,0.15); color: var(--accent-olive); }
+  .badge-staging { background: rgba(224,138,100,0.15); color: var(--accent-clay); }
+  .badge-dev     { background: var(--surface-3); color: var(--text-muted); }
+  .cell-mono {
+    font-family: var(--mono); font-size: 12px; color: var(--text-muted);
+  }
+
+  /* ── footer ── */
+  .footer {
+    margin-top: 40px; padding-top: 20px;
+    border-top: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .footer-text {
+    font-family: var(--mono); font-size: 10px; color: var(--text-muted);
+    letter-spacing: 0.04em;
+  }
 </style>
 </head>
 <body>
 <div class="page">
 
   <header>
-    <div class="header-top">
-      <h1>Product Dashboard</h1>
-      <span class="auto-pill">Auto-generated · March 2026</span>
+    <div class="header-left">
+      <div class="eyebrow">Product Dashboard</div>
+      <h1>Platform Health</h1>
+      <p class="lead">Key metrics and activity for Acme Platform over the past 30 days. Data refreshed weekly.</p>
     </div>
-    <p class="sub">Key metrics and activity for Acme Platform over the past 30 days. Data refreshed weekly.</p>
+    <div class="header-meta">
+      <span class="auto-pill"><span class="live-dot"></span> Live</span>
+      <span class="auto-pill">March 2026</span>
+    </div>
   </header>
 
   <!-- metrics -->
@@ -188,57 +296,81 @@
     <div class="metric">
       <div class="metric-label">Active Users</div>
       <div class="metric-value">12,847</div>
-      <div class="metric-change up"><span class="arrow">&#9650;</span> 14.2% vs last month</div>
+      <div class="metric-change up"><span class="change-badge">&#9650; 14.2%</span> vs last month</div>
+      <svg class="metric-spark" viewBox="0 0 100 32" preserveAspectRatio="none">
+        <polyline fill="none" stroke="var(--accent-olive)" stroke-width="1.5" stroke-linecap="round"
+          points="0,28 10,26 20,24 30,25 40,20 50,18 60,22 70,16 80,12 90,10 100,6"/>
+      </svg>
     </div>
     <div class="metric">
       <div class="metric-label">API Requests</div>
       <div class="metric-value">3.2M</div>
-      <div class="metric-change up"><span class="arrow">&#9650;</span> 8.7% vs last month</div>
+      <div class="metric-change up"><span class="change-badge">&#9650; 8.7%</span> vs last month</div>
+      <svg class="metric-spark" viewBox="0 0 100 32" preserveAspectRatio="none">
+        <polyline fill="none" stroke="var(--accent-sky)" stroke-width="1.5" stroke-linecap="round"
+          points="0,22 10,20 20,24 30,18 40,16 50,20 60,14 70,12 80,16 90,8 100,4"/>
+      </svg>
     </div>
     <div class="metric">
       <div class="metric-label">P99 Latency</div>
       <div class="metric-value">142ms</div>
-      <div class="metric-change down"><span class="arrow">&#9660;</span> 6.1% improvement</div>
+      <div class="metric-change down"><span class="change-badge">&#9660; 6.1%</span> improvement</div>
+      <svg class="metric-spark" viewBox="0 0 100 32" preserveAspectRatio="none">
+        <polyline fill="none" stroke="var(--accent-olive)" stroke-width="1.5" stroke-linecap="round"
+          points="0,6 10,8 20,10 30,8 40,14 50,16 60,12 70,18 80,20 90,24 100,28"/>
+      </svg>
     </div>
     <div class="metric">
       <div class="metric-label">Error Rate</div>
       <div class="metric-value">0.12%</div>
-      <div class="metric-change up"><span class="arrow">&#9650;</span> 0.03% increase</div>
+      <div class="metric-change up"><span class="change-badge">&#9650; 0.03%</span> increase</div>
+      <svg class="metric-spark" viewBox="0 0 100 32" preserveAspectRatio="none">
+        <polyline fill="none" stroke="var(--accent-rust)" stroke-width="1.5" stroke-linecap="round"
+          points="0,20 10,18 20,22 30,16 40,18 50,14 60,16 70,12 80,10 90,14 100,8"/>
+      </svg>
     </div>
   </section>
 
   <!-- charts -->
   <section class="charts">
     <div class="chart-panel">
-      <div class="chart-title">Weekly API Requests</div>
+      <div class="chart-header">
+        <div class="chart-title">Weekly API Requests</div>
+        <div class="chart-subtitle">8-week trend</div>
+      </div>
       <div class="bar-chart">
-        <div class="bar-col"><div class="bar" style="height:55%; background:var(--oat)"></div><span class="bar-label">W1</span></div>
-        <div class="bar-col"><div class="bar" style="height:72%; background:var(--oat)"></div><span class="bar-label">W2</span></div>
-        <div class="bar-col"><div class="bar" style="height:68%; background:var(--oat)"></div><span class="bar-label">W3</span></div>
-        <div class="bar-col"><div class="bar" style="height:90%; background:var(--clay)"></div><span class="bar-label">W4</span></div>
-        <div class="bar-col"><div class="bar" style="height:85%; background:var(--clay)"></div><span class="bar-label">W5</span></div>
-        <div class="bar-col"><div class="bar" style="height:78%; background:var(--clay)"></div><span class="bar-label">W6</span></div>
-        <div class="bar-col"><div class="bar" style="height:95%; background:var(--olive)"></div><span class="bar-label">W7</span></div>
-        <div class="bar-col"><div class="bar" style="height:100%; background:var(--olive)"></div><span class="bar-label">W8</span></div>
+        <div class="bar-col"><div class="bar" style="height:55%; background:var(--surface-3)"><span class="bar-value">412K</span></div><span class="bar-label">W1</span></div>
+        <div class="bar-col"><div class="bar" style="height:72%; background:var(--surface-3)"><span class="bar-value">540K</span></div><span class="bar-label">W2</span></div>
+        <div class="bar-col"><div class="bar" style="height:68%; background:var(--surface-3)"><span class="bar-value">510K</span></div><span class="bar-label">W3</span></div>
+        <div class="bar-col"><div class="bar" style="height:90%; background:var(--accent-clay)"><span class="bar-value">675K</span></div><span class="bar-label">W4</span></div>
+        <div class="bar-col"><div class="bar" style="height:85%; background:var(--accent-clay)"><span class="bar-value">638K</span></div><span class="bar-label">W5</span></div>
+        <div class="bar-col"><div class="bar" style="height:78%; background:var(--accent-clay)"><span class="bar-value">585K</span></div><span class="bar-label">W6</span></div>
+        <div class="bar-col"><div class="bar" style="height:95%; background:var(--accent-olive)"><span class="bar-value">712K</span></div><span class="bar-label">W7</span></div>
+        <div class="bar-col"><div class="bar" style="height:100%; background:var(--accent-olive)"><span class="bar-value">750K</span></div><span class="bar-label">W8</span></div>
       </div>
     </div>
 
     <div class="chart-panel">
-      <div class="chart-title">Traffic by Source</div>
+      <div class="chart-header">
+        <div class="chart-title">Traffic by Source</div>
+        <div class="chart-subtitle">Distribution</div>
+      </div>
       <div class="donut-wrap">
         <svg class="donut-svg" viewBox="0 0 36 36">
-          <circle cx="18" cy="18" r="14" fill="none" stroke="var(--gray-100)" stroke-width="4"/>
-          <circle cx="18" cy="18" r="14" fill="none" stroke="var(--clay)" stroke-width="4"
+          <circle cx="18" cy="18" r="14" fill="none" stroke="var(--surface-3)" stroke-width="3.5"/>
+          <circle cx="18" cy="18" r="14" fill="none" stroke="var(--accent-clay)" stroke-width="3.5"
             stroke-dasharray="42 88" stroke-dashoffset="25" stroke-linecap="round"/>
-          <circle cx="18" cy="18" r="14" fill="none" stroke="var(--olive)" stroke-width="4"
+          <circle cx="18" cy="18" r="14" fill="none" stroke="var(--accent-olive)" stroke-width="3.5"
             stroke-dasharray="26 88" stroke-dashoffset="83" stroke-linecap="round"/>
-          <circle cx="18" cy="18" r="14" fill="none" stroke="var(--sky)" stroke-width="4"
+          <circle cx="18" cy="18" r="14" fill="none" stroke="var(--accent-sky)" stroke-width="3.5"
             stroke-dasharray="20 88" stroke-dashoffset="57" stroke-linecap="round"/>
+          <text x="18" y="17" text-anchor="middle" class="donut-center">3.2M</text>
+          <text x="18" y="22" text-anchor="middle" class="donut-center-label">total</text>
         </svg>
         <div class="donut-legend">
-          <div class="legend-item"><span class="legend-dot" style="background:var(--clay)"></span>Direct<span class="legend-val">48%</span></div>
-          <div class="legend-item"><span class="legend-dot" style="background:var(--olive)"></span>Organic<span class="legend-val">30%</span></div>
-          <div class="legend-item"><span class="legend-dot" style="background:var(--sky)"></span>Referral<span class="legend-val">22%</span></div>
+          <div class="legend-item"><span class="legend-dot" style="background:var(--accent-clay)"></span><span class="legend-label">Direct</span><span class="legend-val">48%</span></div>
+          <div class="legend-item"><span class="legend-dot" style="background:var(--accent-olive)"></span><span class="legend-label">Organic</span><span class="legend-val">30%</span></div>
+          <div class="legend-item"><span class="legend-dot" style="background:var(--accent-sky)"></span><span class="legend-label">Referral</span><span class="legend-val">22%</span></div>
         </div>
       </div>
     </div>
@@ -252,14 +384,14 @@
         <span class="spark-num">423</span>
       </div>
       <svg class="sparkline" viewBox="0 0 200 48" preserveAspectRatio="none">
-        <polyline fill="none" stroke="var(--clay)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-          points="0,40 15,38 30,35 45,36 60,30 75,28 90,32 105,24 120,22 135,18 150,20 165,14 180,12 200,8"/>
+        <defs><linearGradient id="grad1" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#E08A64" stop-opacity="0.2"/>
+          <stop offset="100%" stop-color="#E08A64" stop-opacity="0"/>
+        </linearGradient></defs>
         <polyline fill="url(#grad1)" stroke="none"
           points="0,40 15,38 30,35 45,36 60,30 75,28 90,32 105,24 120,22 135,18 150,20 165,14 180,12 200,8 200,48 0,48"/>
-        <defs><linearGradient id="grad1" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="var(--clay)" stop-opacity="0.15"/>
-          <stop offset="100%" stop-color="var(--clay)" stop-opacity="0"/>
-        </linearGradient></defs>
+        <polyline fill="none" stroke="#E08A64" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+          points="0,40 15,38 30,35 45,36 60,30 75,28 90,32 105,24 120,22 135,18 150,20 165,14 180,12 200,8"/>
       </svg>
     </div>
     <div class="spark-card">
@@ -268,14 +400,14 @@
         <span class="spark-num">89</span>
       </div>
       <svg class="sparkline" viewBox="0 0 200 48" preserveAspectRatio="none">
-        <polyline fill="none" stroke="var(--olive)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-          points="0,10 15,12 30,14 45,11 60,18 75,20 90,16 105,22 120,24 135,28 150,26 165,30 180,34 200,38"/>
+        <defs><linearGradient id="grad2" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#8FA870" stop-opacity="0.2"/>
+          <stop offset="100%" stop-color="#8FA870" stop-opacity="0"/>
+        </linearGradient></defs>
         <polyline fill="url(#grad2)" stroke="none"
           points="0,10 15,12 30,14 45,11 60,18 75,20 90,16 105,22 120,24 135,28 150,26 165,30 180,34 200,38 200,48 0,48"/>
-        <defs><linearGradient id="grad2" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="var(--olive)" stop-opacity="0.15"/>
-          <stop offset="100%" stop-color="var(--olive)" stop-opacity="0"/>
-        </linearGradient></defs>
+        <polyline fill="none" stroke="#8FA870" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+          points="0,10 15,12 30,14 45,11 60,18 75,20 90,16 105,22 120,24 135,28 150,26 165,30 180,34 200,38"/>
       </svg>
     </div>
     <div class="spark-card">
@@ -284,68 +416,78 @@
         <span class="spark-num">17</span>
       </div>
       <svg class="sparkline" viewBox="0 0 200 48" preserveAspectRatio="none">
-        <polyline fill="none" stroke="var(--sky)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-          points="0,30 15,28 30,32 45,24 60,26 75,20 90,22 105,16 120,18 135,14 150,12 165,16 180,10 200,8"/>
+        <defs><linearGradient id="grad3" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#6FA3CC" stop-opacity="0.2"/>
+          <stop offset="100%" stop-color="#6FA3CC" stop-opacity="0"/>
+        </linearGradient></defs>
         <polyline fill="url(#grad3)" stroke="none"
           points="0,30 15,28 30,32 45,24 60,26 75,20 90,22 105,16 120,18 135,14 150,12 165,16 180,10 200,8 200,48 0,48"/>
-        <defs><linearGradient id="grad3" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="var(--sky)" stop-opacity="0.15"/>
-          <stop offset="100%" stop-color="var(--sky)" stop-opacity="0"/>
-        </linearGradient></defs>
+        <polyline fill="none" stroke="#6FA3CC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+          points="0,30 15,28 30,32 45,24 60,26 75,20 90,22 105,16 120,18 135,14 150,12 165,16 180,10 200,8"/>
       </svg>
     </div>
   </section>
 
   <!-- service table -->
   <section class="table-panel">
-    <div class="table-title">Service Health</div>
-    <table>
-      <thead>
-        <tr>
-          <th>Service</th>
-          <th>Status</th>
-          <th>Uptime (30d)</th>
-          <th>Req / sec</th>
-          <th>P99 Latency</th>
-          <th>Last Deploy</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td style="font-weight:500; color:var(--slate)">auth-service</td>
-          <td><span class="badge badge-live">Live</span></td>
-          <td>99.98%</td>
-          <td>1,240</td>
-          <td>45ms</td>
-          <td style="font-family:var(--mono); font-size:13px; color:var(--gray-500)">Mar 18</td>
-        </tr>
-        <tr>
-          <td style="font-weight:500; color:var(--slate)">payment-gateway</td>
-          <td><span class="badge badge-live">Live</span></td>
-          <td>99.95%</td>
-          <td>832</td>
-          <td>112ms</td>
-          <td style="font-family:var(--mono); font-size:13px; color:var(--gray-500)">Mar 16</td>
-        </tr>
-        <tr>
-          <td style="font-weight:500; color:var(--slate)">notification-worker</td>
-          <td><span class="badge badge-staging">Staging</span></td>
-          <td>99.87%</td>
-          <td>3,450</td>
-          <td>28ms</td>
-          <td style="font-family:var(--mono); font-size:13px; color:var(--gray-500)">Mar 20</td>
-        </tr>
-        <tr>
-          <td style="font-weight:500; color:var(--slate)">search-indexer</td>
-          <td><span class="badge badge-dev">Dev</span></td>
-          <td>98.40%</td>
-          <td>210</td>
-          <td>340ms</td>
-          <td style="font-family:var(--mono); font-size:13px; color:var(--gray-500)">Mar 21</td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="table-header">
+      <div class="table-title">Service Health</div>
+      <div class="table-count">4 services</div>
+    </div>
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>Service</th>
+            <th>Status</th>
+            <th>Uptime (30d)</th>
+            <th>Req / sec</th>
+            <th>P99 Latency</th>
+            <th>Last Deploy</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>auth-service</td>
+            <td><span class="badge badge-live">Live</span></td>
+            <td>99.98%</td>
+            <td>1,240</td>
+            <td>45ms</td>
+            <td class="cell-mono">Mar 18</td>
+          </tr>
+          <tr>
+            <td>payment-gateway</td>
+            <td><span class="badge badge-live">Live</span></td>
+            <td>99.95%</td>
+            <td>832</td>
+            <td>112ms</td>
+            <td class="cell-mono">Mar 16</td>
+          </tr>
+          <tr>
+            <td>notification-worker</td>
+            <td><span class="badge badge-staging">Staging</span></td>
+            <td>99.87%</td>
+            <td>3,450</td>
+            <td>28ms</td>
+            <td class="cell-mono">Mar 20</td>
+          </tr>
+          <tr>
+            <td>search-indexer</td>
+            <td><span class="badge badge-dev">Dev</span></td>
+            <td>98.40%</td>
+            <td>210</td>
+            <td>340ms</td>
+            <td class="cell-mono">Mar 21</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </section>
+
+  <div class="footer">
+    <span class="footer-text">Auto-generated by Acme Analytics</span>
+    <span class="footer-text">Data as of Mar 21, 2026</span>
+  </div>
 
 </div>
 </body>

@@ -15,27 +15,60 @@
     --clay:    #D97757;
     --oat:     #E3DACC;
     --olive:   #788C5D;
-    --gray-150:#F0EEE6;
+    --rust:    #B04A3F;
+    --sky:     #6B9DAD;
+    --gray-100:#F0EEE6;
+    --gray-150:#EDEAE0;
     --gray-300:#D1CFC5;
     --gray-500:#87867F;
     --gray-700:#3D3D3A;
 
-    --serif: ui-serif, Georgia, "Times New Roman", serif;
-    --sans:  system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --serif: ui-serif, Georgia, "Noto Serif", "Times New Roman", serif;
+    --sans:  system-ui, -apple-system, "Segoe UI", sans-serif;
     --mono:  ui-monospace, "SF Mono", Menlo, Consolas, monospace;
   }
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
   html { scroll-behavior: smooth; }
 
   body {
     font-family: var(--sans);
-    background: var(--ivory);
-    color: var(--slate);
+    background: var(--slate);
+    color: var(--ivory);
     -webkit-font-smoothing: antialiased;
     scroll-snap-type: y mandatory;
     overflow-x: hidden;
+  }
+
+  /* ------------------------------------------------------------------
+     Progress bar — fixed top
+     ------------------------------------------------------------------ */
+  #progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3px;
+    background: var(--clay);
+    width: 0%;
+    z-index: 100;
+    transition: width 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  /* ------------------------------------------------------------------
+     Slide counter — fixed bottom-right
+     ------------------------------------------------------------------ */
+  #counter {
+    position: fixed;
+    bottom: 28px;
+    right: 36px;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    color: rgba(250, 249, 245, 0.35);
+    user-select: none;
+    z-index: 10;
+    mix-blend-mode: difference;
   }
 
   /* ------------------------------------------------------------------
@@ -49,118 +82,160 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 8vh 6vw;
+    padding: 8vh 7vw;
+    position: relative;
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+                transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .slide.visible {
+    opacity: 1;
+    transform: translateY(0);
   }
 
   .slide-inner {
     width: 100%;
-    max-width: 780px;
+    max-width: 800px;
   }
 
-  .slide.invert {
+  .slide.light {
+    background: var(--ivory);
+    color: var(--slate);
+  }
+
+  .slide.dark {
     background: var(--slate);
     color: var(--ivory);
   }
 
+  .slide.dark-texture {
+    background: #1A1A19;
+    color: var(--ivory);
+  }
+
+  .slide.warm {
+    background: linear-gradient(165deg, #2A2520 0%, var(--slate) 60%);
+    color: var(--ivory);
+  }
+
+  /* Slide number — bottom-left */
+  .slide::after {
+    content: attr(data-num);
+    position: absolute;
+    bottom: 28px;
+    left: 36px;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    opacity: 0.25;
+    user-select: none;
+  }
+  .slide.light::after { color: var(--slate); }
+  .slide:not(.light)::after { color: var(--ivory); }
+
   /* ------------------------------------------------------------------
-     Typography
+     Typography — dramatic scale
      ------------------------------------------------------------------ */
   .eyebrow {
     font-family: var(--mono);
-    font-size: 12px;
-    letter-spacing: 0.12em;
+    font-size: 11px;
+    letter-spacing: 0.18em;
     text-transform: uppercase;
-    color: var(--gray-500);
-    margin-bottom: 28px;
+    color: var(--clay);
+    margin-bottom: 32px;
   }
-  .invert .eyebrow { color: var(--gray-300); }
+  .light .eyebrow { color: var(--clay); }
 
   h1 {
     font-family: var(--serif);
-    font-weight: 500;
-    font-size: clamp(40px, 6vw, 64px);
-    line-height: 1.08;
-    letter-spacing: -0.01em;
-    margin-bottom: 20px;
+    font-weight: 400;
+    font-size: clamp(48px, 7.5vw, 80px);
+    line-height: 1.02;
+    letter-spacing: -0.025em;
+    margin-bottom: 24px;
   }
 
   h2 {
     font-family: var(--serif);
-    font-weight: 500;
-    font-size: clamp(30px, 4vw, 42px);
-    line-height: 1.15;
-    letter-spacing: -0.005em;
-    margin-bottom: 44px;
+    font-weight: 400;
+    font-size: clamp(34px, 5vw, 52px);
+    line-height: 1.1;
+    letter-spacing: -0.015em;
+    margin-bottom: 48px;
   }
 
   .subtitle {
-    font-size: 17px;
-    line-height: 1.6;
-    color: var(--gray-700);
-    max-width: 520px;
+    font-size: 18px;
+    line-height: 1.65;
+    color: rgba(250, 249, 245, 0.6);
+    max-width: 480px;
   }
 
   .mono { font-family: var(--mono); }
 
   /* ------------------------------------------------------------------
-     Slide 1 — title
+     Slide 1 — Title
      ------------------------------------------------------------------ */
   .title-slide .slide-inner { text-align: left; }
 
   .ornament {
     display: block;
-    margin: 0 0 40px 0;
+    margin: 0 0 48px 0;
   }
 
   .byline {
-    margin-top: 56px;
+    margin-top: 72px;
     font-family: var(--mono);
-    font-size: 12px;
-    color: var(--gray-500);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    color: rgba(250, 249, 245, 0.35);
     display: flex;
-    gap: 24px;
+    gap: 32px;
   }
 
   /* ------------------------------------------------------------------
-     Slide 2 — shipped list
+     Slide 2 — Shipped list
      ------------------------------------------------------------------ */
   .ship-list {
     list-style: none;
     display: flex;
     flex-direction: column;
-    gap: 28px;
+    gap: 0;
   }
 
   .ship-item {
     display: grid;
-    grid-template-columns: 14px 1fr auto;
-    column-gap: 20px;
-    align-items: baseline;
-    padding-bottom: 24px;
-    border-bottom: 1px solid var(--gray-150);
+    grid-template-columns: 18px 1fr auto;
+    column-gap: 24px;
+    align-items: start;
+    padding: 28px 0;
+    border-bottom: 1px solid rgba(20, 20, 19, 0.08);
   }
+  .ship-item:first-child { padding-top: 0; }
   .ship-item:last-child { border-bottom: none; }
 
   .ship-dot {
-    width: 9px;
-    height: 9px;
+    width: 10px;
+    height: 10px;
     border-radius: 50%;
     background: var(--olive);
-    margin-top: 8px;
-    align-self: start;
+    margin-top: 10px;
   }
 
   .ship-title {
     font-family: var(--serif);
-    font-size: 20px;
-    font-weight: 500;
+    font-size: 22px;
+    font-weight: 400;
     margin-bottom: 6px;
+    letter-spacing: -0.01em;
   }
 
   .ship-desc {
     font-size: 14px;
-    line-height: 1.55;
-    color: var(--gray-700);
+    line-height: 1.6;
+    color: var(--gray-500);
   }
 
   .ship-ref {
@@ -168,165 +243,213 @@
     font-size: 11px;
     color: var(--gray-500);
     white-space: nowrap;
-    padding-top: 4px;
+    padding-top: 6px;
+    letter-spacing: 0.02em;
   }
 
   /* ------------------------------------------------------------------
-     Slide 3 — in progress
+     Slide 3 — In progress
      ------------------------------------------------------------------ */
   .prog-list {
     list-style: none;
     display: flex;
     flex-direction: column;
-    gap: 40px;
+    gap: 48px;
   }
 
   .prog-item .prog-head {
     display: flex;
     justify-content: space-between;
     align-items: baseline;
-    margin-bottom: 10px;
+    margin-bottom: 14px;
   }
 
   .prog-title {
     font-family: var(--serif);
-    font-size: 20px;
-    font-weight: 500;
+    font-size: 22px;
+    font-weight: 400;
+    letter-spacing: -0.01em;
   }
 
   .prog-pct {
     font-family: var(--mono);
     font-size: 12px;
-    color: var(--gray-500);
+    letter-spacing: 0.04em;
+    color: rgba(250, 249, 245, 0.4);
   }
 
   .prog-track {
     width: 100%;
-    height: 5px;
-    background: var(--gray-150);
-    border-radius: 3px;
+    height: 4px;
+    background: rgba(250, 249, 245, 0.08);
+    border-radius: 2px;
     overflow: hidden;
-    margin-bottom: 10px;
+    margin-bottom: 16px;
   }
 
   .prog-fill {
     height: 100%;
     background: var(--clay);
-    border-radius: 3px;
+    border-radius: 2px;
+    transition: width 1.2s cubic-bezier(0.22, 1, 0.36, 1);
   }
 
   .prog-note {
-    font-size: 13px;
-    line-height: 1.55;
-    color: var(--gray-700);
+    font-size: 14px;
+    line-height: 1.6;
+    color: rgba(250, 249, 245, 0.5);
   }
 
   /* ------------------------------------------------------------------
-     Slide 4 — metrics
+     Slide 4 — Metrics
      ------------------------------------------------------------------ */
   .metrics {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 56px;
-    margin-bottom: 48px;
+    gap: 64px;
+    margin-bottom: 56px;
   }
 
   .metric-label {
     font-family: var(--mono);
-    font-size: 11px;
-    letter-spacing: 0.08em;
+    font-size: 10px;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: var(--gray-500);
-    margin-bottom: 14px;
+    color: rgba(250, 249, 245, 0.4);
+    margin-bottom: 16px;
   }
 
   .metric-value {
     font-family: var(--serif);
-    font-size: 52px;
-    font-weight: 500;
+    font-size: 64px;
+    font-weight: 400;
     line-height: 1;
-    letter-spacing: -0.01em;
+    letter-spacing: -0.03em;
+  }
+
+  .metric-value .unit {
+    font-size: 32px;
+    opacity: 0.5;
+    margin-left: 2px;
   }
 
   .metric-delta {
     font-family: var(--mono);
-    font-size: 13px;
-    margin-top: 12px;
+    font-size: 12px;
+    letter-spacing: 0.02em;
+    margin-top: 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
   }
   .metric-delta.down { color: var(--olive); }
+  .metric-delta.down::before {
+    content: "";
+    display: inline-block;
+    width: 0;
+    height: 0;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 5px solid var(--olive);
+  }
   .metric-delta.up   { color: var(--clay); }
+  .metric-delta.up::before {
+    content: "";
+    display: inline-block;
+    width: 0;
+    height: 0;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-bottom: 5px solid var(--clay);
+  }
 
   .sparkline-wrap {
-    border-top: 1px solid var(--gray-300);
-    padding-top: 28px;
+    border-top: 1px solid rgba(250, 249, 245, 0.08);
+    padding-top: 32px;
   }
 
   .sparkline-caption {
     font-size: 12px;
-    color: var(--gray-500);
-    margin-top: 10px;
+    color: rgba(250, 249, 245, 0.3);
+    margin-top: 12px;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.04em;
   }
 
   /* ------------------------------------------------------------------
-     Slide 5 — decision (inverted)
+     Slide 5 — Decision (warm dark)
      ------------------------------------------------------------------ */
   .decision-card {
-    border: 1.5px solid var(--clay);
-    border-radius: 14px;
-    padding: 36px 38px;
-    background: rgba(217, 119, 87, 0.06);
+    border: 1px solid rgba(217, 119, 87, 0.4);
+    border-radius: 16px;
+    padding: 44px 48px;
+    background: rgba(217, 119, 87, 0.05);
+    backdrop-filter: blur(4px);
   }
 
   .decision-q {
     font-family: var(--serif);
-    font-size: 24px;
+    font-size: 26px;
     line-height: 1.4;
-    margin-bottom: 12px;
+    margin-bottom: 16px;
+    letter-spacing: -0.01em;
   }
 
   .decision-context {
-    font-size: 14px;
-    line-height: 1.6;
-    color: var(--gray-300);
+    font-size: 15px;
+    line-height: 1.65;
+    color: rgba(250, 249, 245, 0.5);
   }
 
   .options {
     display: flex;
-    gap: 14px;
-    margin-top: 32px;
+    gap: 12px;
+    margin-top: 40px;
     flex-wrap: wrap;
   }
 
   .chip {
     font-family: var(--mono);
     font-size: 12px;
-    padding: 10px 18px;
+    letter-spacing: 0.02em;
+    padding: 12px 22px;
     border-radius: 999px;
-    border: 1px solid var(--gray-700);
-    color: var(--ivory);
+    border: 1px solid rgba(250, 249, 245, 0.15);
+    color: rgba(250, 249, 245, 0.6);
     background: transparent;
+    transition: all 0.25s ease;
+  }
+  .chip:hover {
+    border-color: rgba(250, 249, 245, 0.3);
+    color: var(--ivory);
   }
   .chip.lean {
     border-color: var(--clay);
     color: var(--clay);
+    background: rgba(217, 119, 87, 0.08);
+  }
+  .chip.lean:hover {
+    background: rgba(217, 119, 87, 0.15);
   }
 
   /* ------------------------------------------------------------------
-     Slide 6 — next week
+     Slide 6 — Next week (light)
      ------------------------------------------------------------------ */
   .next-list {
     list-style: none;
     display: flex;
     flex-direction: column;
-    gap: 22px;
+    gap: 24px;
   }
 
   .next-list li {
     font-family: var(--serif);
-    font-size: 21px;
+    font-size: 22px;
     line-height: 1.45;
-    padding-left: 36px;
+    padding-left: 40px;
     position: relative;
+    letter-spacing: -0.01em;
   }
 
   .next-list li::before {
@@ -334,50 +457,51 @@
     position: absolute;
     left: 0;
     top: 0.55em;
-    width: 18px;
-    height: 1.5px;
+    width: 22px;
+    height: 2px;
     background: var(--clay);
   }
 
   .footnote {
-    margin-top: 56px;
+    margin-top: 72px;
     font-family: var(--mono);
     font-size: 11px;
     color: var(--gray-500);
+    letter-spacing: 0.02em;
   }
 
   /* ------------------------------------------------------------------
-     Slide counter
+     Responsive
      ------------------------------------------------------------------ */
-  #counter {
-    position: fixed;
-    bottom: 22px;
-    right: 28px;
-    font-family: var(--mono);
-    font-size: 12px;
-    color: var(--gray-500);
-    user-select: none;
-    z-index: 10;
-  }
-
   @media (max-width: 640px) {
-    .metrics { grid-template-columns: 1fr; gap: 36px; }
+    .metrics { grid-template-columns: 1fr; gap: 40px; }
     .ship-item { grid-template-columns: 14px 1fr; }
     .ship-ref { grid-column: 2; padding-top: 8px; }
+    .decision-card { padding: 28px 24px; }
+    .slide { padding: 6vh 5vw; }
+    h1 { font-size: clamp(36px, 10vw, 56px); }
+    h2 { font-size: clamp(28px, 7vw, 40px); }
+    .metric-value { font-size: 48px; }
   }
 </style>
 </head>
 <body>
 
+  <!-- Progress bar -->
+  <div id="progress"></div>
+
+  <!-- Slide counter -->
+  <div id="counter">1 / 6</div>
+
   <!-- ============================================================
-       Slide 1 — Title
+       Slide 1 — Title (dark)
        ============================================================ -->
-  <section class="slide title-slide" id="s1">
+  <section class="slide dark-texture title-slide visible" id="s1" data-num="01">
     <div class="slide-inner">
-      <svg class="ornament" width="56" height="56" viewBox="0 0 56 56" aria-hidden="true">
-        <circle cx="28" cy="28" r="22" fill="none" stroke="#D1CFC5" stroke-width="1.5"/>
-        <path d="M16 28 H40 M28 16 V40" stroke="#D97757" stroke-width="1.5" stroke-linecap="round"/>
-        <circle cx="28" cy="28" r="3" fill="#141413"/>
+      <svg class="ornament" width="64" height="64" viewBox="0 0 64 64" aria-hidden="true">
+        <circle cx="32" cy="32" r="26" fill="none" stroke="rgba(250,249,245,0.12)" stroke-width="1"/>
+        <path d="M18 32 H46 M32 18 V46" stroke="#D97757" stroke-width="1.5" stroke-linecap="round"/>
+        <circle cx="32" cy="32" r="3.5" fill="rgba(250,249,245,0.9)"/>
       </svg>
       <h1>Platform Eng<br>— Week of Mar 10</h1>
       <p class="subtitle">
@@ -393,9 +517,9 @@
   </section>
 
   <!-- ============================================================
-       Slide 2 — Shipped
+       Slide 2 — Shipped (light)
        ============================================================ -->
-  <section class="slide" id="s2">
+  <section class="slide light" id="s2" data-num="02">
     <div class="slide-inner">
       <div class="eyebrow">Shipped this week</div>
       <h2>Three things out the door</h2>
@@ -438,9 +562,9 @@
   </section>
 
   <!-- ============================================================
-       Slide 3 — In progress
+       Slide 3 — In progress (dark)
        ============================================================ -->
-  <section class="slide" id="s3">
+  <section class="slide dark" id="s3" data-num="03">
     <div class="slide-inner">
       <div class="eyebrow">In progress</div>
       <h2>Carrying into next week</h2>
@@ -472,9 +596,9 @@
   </section>
 
   <!-- ============================================================
-       Slide 4 — Metrics
+       Slide 4 — Metrics (dark)
        ============================================================ -->
-  <section class="slide" id="s4">
+  <section class="slide dark-texture" id="s4" data-num="04">
     <div class="slide-inner">
       <div class="eyebrow">Metrics</div>
       <h2>Numbers we watch</h2>
@@ -482,18 +606,27 @@
       <div class="metrics">
         <div class="metric">
           <div class="metric-label">API p95 latency</div>
-          <div class="metric-value">184<span style="font-size:28px">ms</span></div>
-          <div class="metric-delta down">↓ 12% wk/wk</div>
+          <div class="metric-value">184<span class="unit">ms</span></div>
+          <div class="metric-delta down">12% wk/wk</div>
         </div>
         <div class="metric">
           <div class="metric-label">Background job error rate</div>
-          <div class="metric-value">0.21<span style="font-size:28px">%</span></div>
-          <div class="metric-delta down">↓ 0.08pp</div>
+          <div class="metric-value">0.21<span class="unit">%</span></div>
+          <div class="metric-delta down">0.08pp</div>
         </div>
       </div>
 
       <div class="sparkline-wrap">
         <svg width="100%" height="64" viewBox="0 0 780 64" preserveAspectRatio="none" aria-hidden="true">
+          <defs>
+            <linearGradient id="sparkGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#788C5D" stop-opacity="0.15"/>
+              <stop offset="100%" stop-color="#788C5D" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+          <polygon
+            points="0,22 110,30 220,18 330,34 440,26 550,40 660,24 780,12 780,63 0,63"
+            fill="url(#sparkGrad)"/>
           <polyline
             points="0,22 110,30 220,18 330,34 440,26 550,40 660,24 780,12"
             fill="none"
@@ -501,8 +634,9 @@
             stroke-width="2"
             stroke-linejoin="round"
             stroke-linecap="round"/>
-          <circle cx="780" cy="12" r="3.5" fill="#788C5D"/>
-          <line x1="0" y1="63" x2="780" y2="63" stroke="#D1CFC5" stroke-width="1"/>
+          <circle cx="780" cy="12" r="4" fill="#788C5D"/>
+          <circle cx="780" cy="12" r="8" fill="none" stroke="#788C5D" stroke-width="1" opacity="0.3"/>
+          <line x1="0" y1="63" x2="780" y2="63" stroke="rgba(250,249,245,0.06)" stroke-width="1"/>
         </svg>
         <div class="sparkline-caption">
           p95 latency, trailing 8 days — lower is better
@@ -512,9 +646,9 @@
   </section>
 
   <!-- ============================================================
-       Slide 5 — Decision needed (inverted)
+       Slide 5 — Decision needed (warm dark gradient)
        ============================================================ -->
-  <section class="slide invert" id="s5">
+  <section class="slide warm" id="s5" data-num="05">
     <div class="slide-inner">
       <div class="eyebrow">Decision needed</div>
       <h2>One call to make</h2>
@@ -539,9 +673,9 @@
   </section>
 
   <!-- ============================================================
-       Slide 6 — Next week
+       Slide 6 — Next week (light)
        ============================================================ -->
-  <section class="slide" id="s6">
+  <section class="slide light" id="s6" data-num="06">
     <div class="slide-inner">
       <div class="eyebrow">Next week</div>
       <h2>On deck</h2>
@@ -556,20 +690,26 @@
     </div>
   </section>
 
-  <!-- ============================================================
-       Slide counter
-       ============================================================ -->
-  <div id="counter">1 / 6</div>
-
 <script>
   (function () {
-    const slides = Array.from(document.querySelectorAll('.slide'));
-    const counter = document.getElementById('counter');
-    let current = 0;
+    var slides = Array.from(document.querySelectorAll('.slide'));
+    var counter = document.getElementById('counter');
+    var progress = document.getElementById('progress');
+    var current = 0;
+    var total = slides.length;
 
     function go(i) {
-      current = Math.max(0, Math.min(slides.length - 1, i));
+      current = Math.max(0, Math.min(total - 1, i));
       slides[current].scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function updateProgress() {
+      var pct = ((current + 1) / total) * 100;
+      progress.style.width = pct + '%';
+    }
+
+    function revealSlide(idx) {
+      slides[idx].classList.add('visible');
     }
 
     document.addEventListener('keydown', function (e) {
@@ -577,16 +717,20 @@
       if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')                     { e.preventDefault(); go(current - 1); }
     });
 
-    const obs = new IntersectionObserver(function (entries) {
+    var obs = new IntersectionObserver(function (entries) {
       entries.forEach(function (en) {
         if (en.isIntersecting) {
-          current = slides.indexOf(en.target);
-          counter.textContent = (current + 1) + ' / ' + slides.length;
+          var idx = slides.indexOf(en.target);
+          current = idx;
+          counter.textContent = (idx + 1) + ' / ' + total;
+          updateProgress();
+          revealSlide(idx);
         }
       });
     }, { threshold: 0.6 });
 
     slides.forEach(function (s) { obs.observe(s); });
+    updateProgress();
   })();
 </script>
 </body>

@@ -5,6 +5,9 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Acme — Task completed micro-interaction</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Outfit:wght@300;400;500;600;700&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
     --ivory: #FAF9F5;
@@ -12,89 +15,174 @@
     --clay: #D97757;
     --oat: #E3DACC;
     --olive: #788C5D;
-    --gray-50: #F0EEE6;
-    --gray-200: #D1CFC5;
+    --sky: #5C7CA3;
+    --gray-50: #F6F5F1;
+    --gray-100: #F0EEE6;
+    --gray-200: #E0DED6;
+    --gray-300: #D1CFC5;
     --gray-500: #87867F;
-    --gray-800: #3D3D3A;
+    --gray-700: #3D3D3A;
+    --gray-800: #2A2A28;
     --white: #ffffff;
-    --serif: ui-serif, Georgia, "Times New Roman", serif;
-    --sans: system-ui, -apple-system, "Segoe UI", sans-serif;
-    --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-    /* swapped at runtime by the easing panel */
+    --font-display: 'Fraunces', ui-serif, Georgia, serif;
+    --font-body: 'Outfit', system-ui, sans-serif;
+    --font-mono: 'Fira Code', ui-monospace, 'SF Mono', Menlo, monospace;
     --ease: cubic-bezier(0.34, 1.56, 0.64, 1);
   }
-  * { box-sizing: border-box; }
-  html, body {
-    margin: 0;
-    background: var(--ivory);
-    color: var(--slate);
-    font-family: var(--sans);
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { -webkit-font-smoothing: antialiased; }
+
+  body {
+    background: var(--gray-800);
+    color: var(--gray-100);
+    font-family: var(--font-body);
     font-size: 14px;
     line-height: 1.5;
-  }
-  .wrap {
-    max-width: 1080px;
-    margin: 0 auto;
-    padding: 48px 32px 64px;
-  }
-  header { margin-bottom: 28px; }
-  .eyebrow {
-    font-family: var(--mono);
-    font-size: 11px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--gray-500);
-  }
-  h1 {
-    font-family: var(--serif);
-    font-weight: 500;
-    font-size: 30px;
-    letter-spacing: -0.01em;
-    margin: 6px 0 4px;
-  }
-  .sub {
-    color: var(--gray-500);
-    max-width: 560px;
+    min-height: 100vh;
+    overflow-x: hidden;
   }
 
-  /* ---------- layout ---------- */
-  .bench {
-    display: grid;
-    grid-template-columns: 1fr 240px;
-    gap: 24px;
-    align-items: start;
+  /* ===== CANVAS AREA ===== */
+  .canvas-area {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    background:
+      radial-gradient(ellipse at 20% 50%, rgba(217,119,87,0.06) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 30%, rgba(92,124,163,0.05) 0%, transparent 50%),
+      var(--gray-800);
   }
-  .stage {
-    background: var(--white);
-    border: 1.5px solid var(--gray-200);
-    border-radius: 12px;
-    height: 360px;
+
+  /* subtle dot grid */
+  .canvas-area::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background-image: radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px);
+    background-size: 24px 24px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ===== TOP BAR ===== */
+  .topbar {
+    position: relative;
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 24px;
+    background: rgba(42,42,40,0.9);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .topbar-logo {
+    font-family: var(--font-display);
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--white);
+    letter-spacing: -0.01em;
+  }
+  .topbar-logo em {
+    font-style: italic;
+    color: var(--clay);
+  }
+  .topbar-sep {
+    width: 1px;
+    height: 20px;
+    background: rgba(255,255,255,0.1);
+  }
+  .topbar-crumb {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--gray-500);
+  }
+  .topbar-crumb strong {
+    color: var(--gray-200);
+    font-weight: 500;
+  }
+  .topbar-right {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .topbar-pill {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--gray-500);
+    background: rgba(255,255,255,0.06);
+    padding: 4px 10px;
+    border-radius: 6px;
+  }
+
+  /* ===== STAGE ===== */
+  .stage-wrapper {
+    flex: 1;
     display: flex;
     align-items: center;
     justify-content: center;
     position: relative;
-    overflow: hidden;
-  }
-  .hint {
-    position: absolute;
-    bottom: 14px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-family: var(--mono);
-    font-size: 11px;
-    color: var(--gray-500);
+    z-index: 1;
+    padding: 40px 32px;
   }
 
-  /* ---------- the task row ---------- */
+  .stage {
+    width: 560px;
+    max-width: 100%;
+    background: var(--ivory);
+    border-radius: 20px;
+    padding: 48px 40px;
+    position: relative;
+    box-shadow:
+      0 0 0 1px rgba(255,255,255,0.05),
+      0 24px 80px rgba(0,0,0,0.35),
+      0 0 120px rgba(217,119,87,0.08);
+    animation: stageIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    opacity: 0;
+    transform: translateY(20px) scale(0.97);
+  }
+  @keyframes stageIn {
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  .stage-label {
+    position: absolute;
+    top: -32px;
+    left: 0;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--gray-500);
+    letter-spacing: 0.06em;
+  }
+
+  .stage-title {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 24px;
+    color: var(--slate);
+    letter-spacing: -0.015em;
+    margin-bottom: 6px;
+  }
+  .stage-desc {
+    font-size: 14px;
+    color: var(--gray-500);
+    margin-bottom: 28px;
+    line-height: 1.55;
+  }
+
+  /* ===== THE TASK ROW ===== */
   .task {
     display: flex;
     align-items: center;
     gap: 14px;
     padding: 14px 18px;
-    border: 1.5px solid var(--gray-200);
-    border-radius: 8px;
+    border: 1.5px solid var(--gray-300);
+    border-radius: 10px;
     background: var(--white);
-    width: 360px;
     max-height: 64px;
     position: relative;
     transition: max-height 280ms var(--ease) 600ms,
@@ -140,6 +228,7 @@
     position: relative;
     font-size: 15px;
     color: var(--slate);
+    font-weight: 500;
     transition: color 200ms var(--ease) 120ms;
   }
   .label::after {
@@ -155,17 +244,17 @@
 
   .due {
     margin-left: auto;
-    font-family: var(--mono);
+    font-family: var(--font-mono);
     font-size: 11px;
     color: var(--gray-500);
     background: var(--gray-50);
-    border: 1.5px solid var(--gray-200);
+    border: 1.5px solid var(--gray-300);
     padding: 3px 8px;
-    border-radius: 8px;
+    border-radius: 6px;
     transition: opacity 200ms var(--ease) 120ms;
   }
 
-  /* confetti — six particles, css-only, driven by .done on the row */
+  /* confetti */
   .confetti {
     position: absolute;
     left: 22px;
@@ -176,14 +265,14 @@
     opacity: 0;
     pointer-events: none;
   }
-  .confetti.c1 { background: var(--clay);  }
+  .confetti.c1 { background: var(--clay); }
   .confetti.c2 { background: var(--olive); }
-  .confetti.c3 { background: var(--oat);   }
-  .confetti.c4 { background: var(--clay);  }
+  .confetti.c3 { background: var(--oat); }
+  .confetti.c4 { background: var(--clay); }
   .confetti.c5 { background: var(--olive); }
-  .confetti.c6 { background: var(--gray-800); }
+  .confetti.c6 { background: var(--gray-700); }
 
-  /* ---------- done state ---------- */
+  /* ===== DONE STATE ===== */
   .task.done .check {
     background: var(--olive);
     border-color: var(--olive);
@@ -206,82 +295,135 @@
     opacity: 0.6;
   }
   .task.done .confetti { animation: pop 520ms var(--ease) 200ms forwards; }
-  .task.done .confetti.c1 { --dx: -28px; --dy: -22px; --rot:  40deg; }
-  .task.done .confetti.c2 { --dx:  -6px; --dy: -34px; --rot: -60deg; }
-  .task.done .confetti.c3 { --dx:  18px; --dy: -26px; --rot:  90deg; }
-  .task.done .confetti.c4 { --dx:  30px; --dy:  -4px; --rot: -30deg; }
-  .task.done .confetti.c5 { --dx: -24px; --dy:  14px; --rot:  20deg; }
-  .task.done .confetti.c6 { --dx:  12px; --dy:  22px; --rot: -80deg; }
+  .task.done .confetti.c1 { --dx: -28px; --dy: -22px; --rot: 40deg; }
+  .task.done .confetti.c2 { --dx: -6px;  --dy: -34px; --rot: -60deg; }
+  .task.done .confetti.c3 { --dx: 18px;  --dy: -26px; --rot: 90deg; }
+  .task.done .confetti.c4 { --dx: 30px;  --dy: -4px;  --rot: -30deg; }
+  .task.done .confetti.c5 { --dx: -24px; --dy: 14px;  --rot: 20deg; }
+  .task.done .confetti.c6 { --dx: 12px;  --dy: 22px;  --rot: -80deg; }
   @keyframes pop {
     0%   { opacity: 0; transform: translate(0, 0) rotate(0) scale(0.6); }
     15%  { opacity: 1; }
     100% { opacity: 0; transform: translate(var(--dx), var(--dy)) rotate(var(--rot)) scale(1); }
   }
 
-  /* ---------- easing panel ---------- */
-  .panel {
-    background: var(--white);
-    border: 1.5px solid var(--gray-200);
-    border-radius: 12px;
-    padding: 18px;
-  }
-  .panel h2 {
-    font-family: var(--serif);
-    font-weight: 500;
-    font-size: 16px;
-    margin: 0 0 4px;
-  }
-  .panel p {
-    margin: 0 0 14px;
-    font-size: 12px;
+  .stage-hint {
+    text-align: center;
+    margin-top: 16px;
+    font-family: var(--font-mono);
+    font-size: 11px;
     color: var(--gray-500);
-  }
-  .ease-btn {
-    display: block;
-    width: 100%;
-    text-align: left;
-    background: var(--gray-50);
-    border: 1.5px solid var(--gray-200);
-    border-radius: 8px;
-    padding: 10px 12px;
-    margin-bottom: 8px;
-    font-family: var(--sans);
-    font-size: 13px;
-    color: var(--slate);
-    cursor: pointer;
-  }
-  .ease-btn:hover { border-color: var(--gray-500); }
-  .ease-btn.active {
-    border-color: var(--clay);
-    background: #FBF1EC;
-  }
-  .ease-btn code {
-    display: block;
-    font-family: var(--mono);
-    font-size: 10px;
-    color: var(--gray-500);
-    margin-top: 2px;
   }
 
-  /* ---------- timeline ---------- */
-  .timeline {
-    margin-top: 28px;
-    background: var(--white);
-    border: 1.5px solid var(--gray-200);
-    border-radius: 12px;
-    padding: 22px 22px 30px;
+  /* ===== FLOATING TOOLBAR ===== */
+  .toolbar {
+    position: absolute;
+    z-index: 15;
+    left: 50%;
+    bottom: 32px;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    background: rgba(42,42,40,0.92);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 14px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    animation: toolbarIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards;
+    opacity: 0;
+    transform: translateX(-50%) translateY(12px);
   }
-  .timeline h2 {
-    font-family: var(--serif);
+  @keyframes toolbarIn {
+    to { opacity: 1; transform: translateX(-50%) translateY(0); }
+  }
+
+  .toolbar-group {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .ease-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: transparent;
+    border: 1.5px solid transparent;
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-family: var(--font-body);
+    font-size: 13px;
     font-weight: 500;
-    font-size: 16px;
-    margin: 0 0 18px;
+    color: rgba(255,255,255,0.5);
+    cursor: pointer;
+    transition: all 0.15s ease;
+    white-space: nowrap;
   }
-  .track {
+  .ease-btn:hover {
+    color: rgba(255,255,255,0.85);
+    background: rgba(255,255,255,0.05);
+  }
+  .ease-btn.active {
+    color: var(--white);
+    background: rgba(217,119,87,0.15);
+    border-color: rgba(217,119,87,0.3);
+  }
+  .ease-btn code {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: rgba(255,255,255,0.3);
+  }
+  .ease-btn.active code { color: var(--clay); }
+
+  /* ===== RIGHT PANEL ===== */
+  .right-panel {
+    position: absolute;
+    z-index: 15;
+    right: 32px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 260px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    animation: panelIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards;
+    opacity: 0;
+  }
+  @keyframes panelIn {
+    to { opacity: 1; }
+  }
+
+  .panel-card {
+    background: rgba(42,42,40,0.88);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 14px;
+    padding: 18px 20px;
+  }
+  .panel-card h3 {
+    font-family: var(--font-display);
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--white);
+    margin-bottom: 4px;
+  }
+  .panel-card p {
+    font-size: 12px;
+    color: var(--gray-500);
+    margin-bottom: 14px;
+    line-height: 1.5;
+  }
+
+  /* ===== KEYFRAME TIMELINE ===== */
+  .timeline {
     position: relative;
     height: 2px;
-    background: var(--gray-200);
-    margin: 20px 8px 0;
+    background: rgba(255,255,255,0.08);
+    margin: 16px 4px 0;
   }
   .key {
     position: absolute;
@@ -290,78 +432,117 @@
     height: 12px;
     border-radius: 50%;
     background: var(--clay);
-    border: 1.5px solid var(--white);
-    box-shadow: 0 0 0 1.5px var(--clay);
+    border: 1.5px solid rgba(42,42,40,0.9);
+    box-shadow: 0 0 0 1px var(--clay);
     transform: translateX(-50%);
   }
   .key span {
     position: absolute;
-    top: 16px;
+    top: 18px;
     left: 50%;
     transform: translateX(-50%);
     white-space: nowrap;
-    font-family: var(--mono);
+    font-family: var(--font-mono);
     font-size: 10px;
-    color: var(--gray-800);
+    color: rgba(255,255,255,0.35);
   }
   .key em {
     position: absolute;
-    bottom: 16px;
+    bottom: 18px;
     left: 50%;
     transform: translateX(-50%);
     white-space: nowrap;
     font-style: normal;
     font-size: 11px;
-    color: var(--gray-500);
+    color: rgba(255,255,255,0.5);
   }
-  .k1 { left: 0%;   }
-  .k2 { left: 13%;  }
-  .k3 { left: 20%;  }
-  .k4 { left: 33%;  }
-  .k5 { left: 100%; background: var(--olive); box-shadow: 0 0 0 1.5px var(--olive); }
+  .k1 { left: 0%; }
+  .k2 { left: 13%; }
+  .k3 { left: 20%; }
+  .k4 { left: 33%; }
+  .k5 { left: 100%; background: var(--olive); box-shadow: 0 0 0 1px var(--olive); }
 
-  /* ---------- snippet ---------- */
-  .snippet {
-    margin-top: 28px;
+  /* ===== CODE SNIPPET ===== */
+  .code-card {
+    background: rgba(20,20,19,0.92);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 14px;
+    overflow: hidden;
   }
-  .snippet h2 {
-    font-family: var(--serif);
-    font-weight: 500;
-    font-size: 16px;
-    margin: 0 0 10px;
+  .code-header {
+    padding: 10px 16px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: rgba(255,255,255,0.35);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    display: flex;
+    align-items: center;
+    gap: 6px;
   }
+  .code-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+  }
+  .code-dot.r { background: #E5534B; }
+  .code-dot.y { background: #D97757; }
+  .code-dot.g { background: var(--olive); }
   pre {
-    background: var(--gray-800);
-    color: var(--gray-50);
-    border-radius: 12px;
-    padding: 18px 20px;
-    font-family: var(--mono);
-    font-size: 12px;
+    margin: 0;
+    padding: 14px 16px;
+    font-family: var(--font-mono);
+    font-size: 11px;
     line-height: 1.7;
     overflow-x: auto;
-    margin: 0;
+    color: #9B9A94;
   }
-  pre .c { color: var(--gray-500); }
+  pre .c { color: #5E5D58; }
   pre .k { color: var(--clay); }
   pre .v { color: #B8C99D; }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 1100px) {
+    .right-panel { display: none; }
+  }
+  @media (max-width: 640px) {
+    .stage { padding: 32px 24px; }
+    .stage-wrapper { padding: 24px 16px; }
+    .toolbar {
+      left: 16px; right: 16px;
+      transform: none;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    @keyframes toolbarIn {
+      to { opacity: 1; transform: none; }
+    }
+  }
 </style>
 </head>
 <body>
-<div class="wrap">
 
-  <header>
-    <div class="eyebrow">Acme / prototype / micro-interaction</div>
-    <h1>Task completed</h1>
-    <p class="sub">
-      A single click should feel like a tiny win. Circle fills, check draws,
-      label strikes, a small burst, then the row quietly steps back. Click
-      the row to play; click again to reset.
-    </p>
-  </header>
+<div class="canvas-area">
 
-  <div class="bench">
+  <!-- ===== TOP BAR ===== -->
+  <div class="topbar">
+    <div class="topbar-logo">Acme<em>.animate</em></div>
+    <div class="topbar-sep"></div>
+    <div class="topbar-crumb">Prototype / <strong>micro-interaction</strong></div>
+    <div class="topbar-right">
+      <div class="topbar-pill">playground</div>
+    </div>
+  </div>
 
+  <!-- ===== STAGE ===== -->
+  <div class="stage-wrapper">
     <div class="stage">
+      <div class="stage-label">Task completed / preview</div>
+      <div class="stage-title">Task completed</div>
+      <div class="stage-desc">
+        A single click should feel like a tiny win. Circle fills, check draws,
+        label strikes, a small burst, then the row quietly steps back.
+      </div>
+
       <div class="task" id="task">
         <div class="check">
           <svg viewBox="0 0 16 16"><path d="M3 8.5 L6.5 12 L13 4.5"/></svg>
@@ -375,64 +556,83 @@
         <div class="confetti c5"></div>
         <div class="confetti c6"></div>
       </div>
-      <div class="hint">click to toggle</div>
+
+      <div class="stage-hint">click the row to toggle</div>
     </div>
 
-    <aside class="panel">
-      <h2>Easing</h2>
-      <p>Swaps <code>--ease</code> across every transition so you can feel the difference.</p>
-      <button class="ease-btn" data-ease="linear">
-        Linear
-        <code>linear</code>
-      </button>
-      <button class="ease-btn" data-ease="cubic-bezier(0.16, 1, 0.3, 1)">
-        Ease-out
-        <code>cubic-bezier(.16, 1, .3, 1)</code>
-      </button>
-      <button class="ease-btn active" data-ease="cubic-bezier(0.34, 1.56, 0.64, 1)">
-        Spring
-        <code>cubic-bezier(.34, 1.56, .64, 1)</code>
-      </button>
-    </aside>
-
-  </div>
-
-  <section class="timeline">
-    <h2>Keyframes</h2>
-    <div class="track">
-      <div class="key k1"><em>fill</em><span>0ms</span></div>
-      <div class="key k2"><em>check</em><span>80ms</span></div>
-      <div class="key k3"><em>strike</em><span>120ms</span></div>
-      <div class="key k4"><em>confetti</em><span>200ms</span></div>
-      <div class="key k5"><em>collapse</em><span>600ms</span></div>
+    <!-- ===== FLOATING TOOLBAR ===== -->
+    <div class="toolbar">
+      <div class="toolbar-group">
+        <button class="ease-btn" data-ease="linear">
+          Linear
+          <code>linear</code>
+        </button>
+        <button class="ease-btn" data-ease="cubic-bezier(0.16, 1, 0.3, 1)">
+          Ease-out
+          <code>.16, 1, .3, 1</code>
+        </button>
+        <button class="ease-btn active" data-ease="cubic-bezier(0.34, 1.56, 0.64, 1)">
+          Spring
+          <code>.34, 1.56, .64, 1</code>
+        </button>
+      </div>
     </div>
-  </section>
 
-  <section class="snippet">
-    <h2>Copy-paste CSS</h2>
-<pre><span class="c">/* circle: clay flash, settle to olive with spring overshoot */</span>
+    <!-- ===== RIGHT PANEL ===== -->
+    <div class="right-panel">
+
+      <div class="panel-card">
+        <h3>Keyframes</h3>
+        <p>Choreography timeline for the done state.</p>
+        <div class="timeline">
+          <div class="key k1"><em>fill</em><span>0ms</span></div>
+          <div class="key k2"><em>check</em><span>80ms</span></div>
+          <div class="key k3"><em>strike</em><span>120ms</span></div>
+          <div class="key k4"><em>confetti</em><span>200ms</span></div>
+          <div class="key k5"><em>collapse</em><span>600ms</span></div>
+        </div>
+      </div>
+
+      <div class="code-card">
+        <div class="code-header">
+          <div class="code-dot r"></div>
+          <div class="code-dot y"></div>
+          <div class="code-dot g"></div>
+          &nbsp; CSS
+        </div>
+<pre><span class="c">/* circle: clay flash, settle to olive */</span>
 <span class="k">.task.done .check</span> {
-  animation: settle 380ms <span class="v">cubic-bezier(.34,1.56,.64,1)</span> forwards;
+  animation: settle 380ms
+    <span class="v">cubic-bezier(.34,1.56,.64,1)</span> forwards;
 }
 <span class="k">@keyframes settle</span> {
-  0%   { transform: scale(.8);  background: <span class="v">#D97757</span>; }
+  0%   { transform: scale(.8);
+         background: <span class="v">#D97757</span>; }
   55%  { transform: scale(1.18); }
-  100% { transform: scale(1);   background: <span class="v">#788C5D</span>; }
+  100% { transform: scale(1);
+         background: <span class="v">#788C5D</span>; }
 }
 
-<span class="c">/* checkmark draws via stroke-dashoffset, 80ms delay */</span>
-<span class="k">.check path</span>        { stroke-dasharray: 20; stroke-dashoffset: 20;
-                     transition: stroke-dashoffset 220ms var(--ease) 80ms; }
+<span class="c">/* checkmark draws via stroke-dashoffset */</span>
+<span class="k">.check path</span>        { stroke-dasharray: 20;
+  stroke-dashoffset: 20;
+  transition: stroke-dashoffset
+    220ms var(--ease) 80ms; }
 <span class="k">.task.done path</span>    { stroke-dashoffset: 0; }
 
-<span class="c">/* strikethrough grows left → right */</span>
-<span class="k">.label::after</span>      { width: 0; transition: width 240ms var(--ease) 120ms; }
+<span class="c">/* strikethrough grows left to right */</span>
+<span class="k">.label::after</span>      { width: 0;
+  transition: width 240ms var(--ease) 120ms; }
 <span class="k">.task.done .label::after</span> { width: 100%; }
 
-<span class="c">/* row steps back after the celebration */</span>
-<span class="k">.task.done</span>         { max-height: 44px; opacity: .6;
-                     transition-delay: 600ms; }</pre>
-  </section>
+<span class="c">/* row steps back after celebration */</span>
+<span class="k">.task.done</span> { max-height: 44px;
+  opacity: .6;
+  transition-delay: 600ms; }</pre>
+      </div>
+
+    </div>
+  </div>
 
 </div>
 
