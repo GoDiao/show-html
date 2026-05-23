@@ -295,9 +295,43 @@
     display: flex;
     flex-direction: column;
     flex: 1;
+    position: relative;
   }
   @media (max-width: 640px) {
     .card-body { padding: 20px 18px 16px; }
+  }
+
+  .card-icon {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    background: var(--surface);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.45;
+    transition: opacity 200ms ease, background 200ms ease, transform 200ms ease;
+  }
+  .card:hover .card-icon {
+    opacity: 1;
+    background: var(--surface-hover);
+    transform: scale(1.05);
+  }
+  .card-icon svg {
+    width: 16px;
+    height: 16px;
+    stroke: var(--section-accent, var(--accent-terracotta));
+    fill: none;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .card-icon svg .filled {
+    fill: var(--section-accent, var(--accent-terracotta));
+    stroke: none;
   }
 
   .card-num {
@@ -478,6 +512,7 @@
       <a class="card" href="01-exploration-code-approaches.html">
         <div class="card-accent"></div>
         <div class="card-body">
+          <div class="card-icon"><svg viewBox="0 0 16 16"><path d="M1.5 1.5h5v5h-5z"/><path d="M9.5 1.5h5v5h-5z"/><path d="M1.5 9.5h5v5h-5z"/><path d="M9.5 9.5h5v5h-5z"/></svg></div>
           <div class="card-num">No. 01</div>
           <div class="card-title">Three Code Approaches</div>
           <div class="card-desc">Side-by-side comparison of three ways to solve the same problem, with trade-offs called out inline.</div>
@@ -490,6 +525,7 @@
       <a class="card" href="02-exploration-visual-designs.html">
         <div class="card-accent"></div>
         <div class="card-body">
+          <div class="card-icon"><svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="3"/><circle cx="8" cy="8" r="6.5"/></svg></div>
           <div class="card-num">No. 02</div>
           <div class="card-title">Visual Design Directions</div>
           <div class="card-desc">A handful of layout and palette options rendered live so you can react to them, not imagine them.</div>
@@ -517,6 +553,7 @@
       <a class="card" href="03-code-review-pr.html">
         <div class="card-accent"></div>
         <div class="card-body">
+          <div class="card-icon"><svg viewBox="0 0 16 16"><path d="M2 3h12M2 6h8M2 9h10M2 12h6"/></svg></div>
           <div class="card-num">No. 03</div>
           <div class="card-title">Annotated Pull Request</div>
           <div class="card-desc">A diff rendered with margin notes, severity tags and jump links — easier to scan than scrolling a terminal.</div>
@@ -529,6 +566,7 @@
       <a class="card" href="04-code-understanding.html">
         <div class="card-accent"></div>
         <div class="card-body">
+          <div class="card-icon"><svg viewBox="0 0 16 16"><rect x="1" y="1" width="5" height="4" rx="1"/><rect x="10" y="1" width="5" height="4" rx="1"/><rect x="5.5" y="10" width="5" height="4" rx="1"/><path d="M3.5 5v2.5h9V10"/></svg></div>
           <div class="card-num">No. 04</div>
           <div class="card-title">Module Map</div>
           <div class="card-desc">An unfamiliar package drawn as boxes and arrows, with the hot path highlighted and entry points listed.</div>
@@ -556,6 +594,7 @@
       <a class="card" href="05-design-system.html">
         <div class="card-accent"></div>
         <div class="card-body">
+          <div class="card-icon"><svg viewBox="0 0 16 16"><circle cx="4" cy="4" r="2.5"/><circle cx="12" cy="4" r="2.5"/><circle cx="4" cy="12" r="2.5"/><circle cx="12" cy="12" r="2.5"/></svg></div>
           <div class="card-num">No. 05</div>
           <div class="card-title">Living Design System</div>
           <div class="card-desc">Colors, type scale and spacing tokens pulled from a repo and rendered as swatches you can copy from.</div>
@@ -568,6 +607,7 @@
       <a class="card" href="06-component-variants.html">
         <div class="card-accent"></div>
         <div class="card-body">
+          <div class="card-icon"><svg viewBox="0 0 16 16"><rect x="1" y="3" width="6" height="10" rx="1.5"/><rect x="9" y="3" width="6" height="6" rx="1.5"/></svg></div>
           <div class="card-num">No. 06</div>
           <div class="card-title">Component Variants</div>
           <div class="card-desc">Every size, state and intent of one component laid out on a single sheet for review.</div>
@@ -595,6 +635,7 @@
       <a class="card" href="07-prototype-animation.html">
         <div class="card-accent"></div>
         <div class="card-body">
+          <div class="card-icon"><svg viewBox="0 0 16 16"><circle cx="3" cy="8" r="1.5"/><circle cx="8" cy="4" r="1.5"/><circle cx="13" cy="8" r="1.5"/><path d="M4.5 8h3M9.5 8h3"/></svg></div>
           <div class="card-num">No. 07</div>
           <div class="card-title">Animation Sandbox</div>
           <div class="card-desc">The transition in isolation with sliders for duration and easing, so you can tune it before wiring it in.</div>
@@ -607,6 +648,7 @@
       <a class="card" href="08-prototype-interaction.html">
         <div class="card-accent"></div>
         <div class="card-body">
+          <div class="card-icon"><svg viewBox="0 0 16 16"><path d="M2 2h12v12H2z"/><path d="M5 5h6M5 8h4"/></svg></div>
           <div class="card-num">No. 08</div>
           <div class="card-title">Clickable Flow</div>
           <div class="card-desc">Four screens linked together — enough fidelity to feel whether the interaction is right.</div>
@@ -634,6 +676,7 @@
       <a class="card" href="09-slide-deck.html">
         <div class="card-accent"></div>
         <div class="card-body">
+          <div class="card-icon"><svg viewBox="0 0 16 16"><rect x="1" y="3" width="14" height="10" rx="1.5"/><path d="M5 8l2 2 4-4"/></svg></div>
           <div class="card-num">No. 09</div>
           <div class="card-title">Arrow-Key Slide Deck</div>
           <div class="card-desc">A short presentation as one HTML file. Left and right to navigate, no build step.</div>
@@ -646,6 +689,7 @@
       <a class="card" href="10-svg-illustrations.html">
         <div class="card-accent"></div>
         <div class="card-body">
+          <div class="card-icon"><svg viewBox="0 0 16 16"><path d="M2 14l3-8 4 5 2-3 3 6z"/><circle cx="11" cy="4" r="2"/></svg></div>
           <div class="card-num">No. 10</div>
           <div class="card-title">SVG Figure Sheet</div>
           <div class="card-desc">The diagrams for a blog post, drawn inline so they can be tweaked and copied out one by one.</div>
@@ -673,6 +717,7 @@
       <a class="card" href="11-status-report.html">
         <div class="card-accent"></div>
         <div class="card-body">
+          <div class="card-icon"><svg viewBox="0 0 16 16"><path d="M2 14V7h3v7M6 14V4h3v10M10 14V9h3v5"/></svg></div>
           <div class="card-num">No. 11</div>
           <div class="card-title">Weekly Status</div>
           <div class="card-desc">What shipped, what slipped, and a small chart — formatted for a quick skim on Monday morning.</div>
@@ -685,6 +730,7 @@
       <a class="card" href="12-incident-report.html">
         <div class="card-accent"></div>
         <div class="card-body">
+          <div class="card-icon"><svg viewBox="0 0 16 16"><path d="M8 1l7 13H1z"/><path d="M8 6v4M8 12.5v.5"/></svg></div>
           <div class="card-num">No. 12</div>
           <div class="card-title">Incident Timeline</div>
           <div class="card-desc">A post-mortem with a minute-by-minute timeline, log excerpts and the follow-up checklist.</div>
@@ -712,6 +758,7 @@
       <a class="card" href="13-flowchart-diagram.html">
         <div class="card-accent"></div>
         <div class="card-body">
+          <div class="card-icon"><svg viewBox="0 0 16 16"><path d="M3 3h4v4H3z"/><path d="M7 5h4"/><path d="M11 3h3v4h-3z"/><path d="M5 7v4h3"/></svg></div>
           <div class="card-num">No. 13</div>
           <div class="card-title">Annotated Flowchart</div>
           <div class="card-desc">A deploy pipeline drawn as a real flowchart — click any step to see what runs, timings, and failure paths.</div>
@@ -739,6 +786,7 @@
       <a class="card" href="14-research-feature-explainer.html">
         <div class="card-accent"></div>
         <div class="card-body">
+          <div class="card-icon"><svg viewBox="0 0 16 16"><path d="M3 1h7l4 4v9a1 1 0 01-1 1H3a1 1 0 01-1-1V2a1 1 0 011-1z"/><path d="M5 7h6M5 10h4"/></svg></div>
           <div class="card-num">No. 14</div>
           <div class="card-title">How a Feature Works</div>
           <div class="card-desc">TL;DR box, collapsible request-path steps, tabbed config snippets, and an FAQ — the explainer format that actually works.</div>
@@ -751,6 +799,7 @@
       <a class="card" href="15-research-concept-explainer.html">
         <div class="card-accent"></div>
         <div class="card-body">
+          <div class="card-icon"><svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="6.5"/><circle cx="8" cy="8" r="3"/><circle cx="8" cy="8" r="0.5" class="filled"/></svg></div>
           <div class="card-num">No. 15</div>
           <div class="card-title">Concept Explainer</div>
           <div class="card-desc">Consistent hashing taught with a live ring you can add/remove nodes from, a comparison table, and a hover-linked glossary.</div>
@@ -778,6 +827,7 @@
       <a class="card" href="16-implementation-plan.html">
         <div class="card-accent"></div>
         <div class="card-body">
+          <div class="card-icon"><svg viewBox="0 0 16 16"><path d="M2 8h12"/><circle cx="5" cy="8" r="2"/><circle cx="11" cy="8" r="2"/><path d="M5 6V3M11 6V3M5 10v3M11 10v3"/></svg></div>
           <div class="card-num">No. 16</div>
           <div class="card-title">Implementation Plan</div>
           <div class="card-desc">Milestones on a timeline, a data-flow diagram, inline mockups, the risky code, and a risk table — the plan you hand off.</div>
@@ -805,6 +855,7 @@
       <a class="card" href="17-pr-writeup.html">
         <div class="card-accent"></div>
         <div class="card-body">
+          <div class="card-icon"><svg viewBox="0 0 16 16"><path d="M4 1l8 7-8 7z"/></svg></div>
           <div class="card-num">No. 17</div>
           <div class="card-title">PR Writeup for Reviewers</div>
           <div class="card-desc">The author's side: motivation, before/after, a file-by-file tour with the why, and where to focus the review.</div>
@@ -832,6 +883,7 @@
       <a class="card" href="18-editor-triage-board.html">
         <div class="card-accent"></div>
         <div class="card-body">
+          <div class="card-icon"><svg viewBox="0 0 16 16"><rect x="1" y="1" width="4" height="14" rx="1"/><rect x="6" y="4" width="4" height="11" rx="1"/><rect x="11" y="7" width="4" height="8" rx="1"/></svg></div>
           <div class="card-num">No. 18</div>
           <div class="card-title">Ticket Triage Board</div>
           <div class="card-desc">Drag thirty tickets across Now / Next / Later / Cut, then copy the final ordering out as markdown.</div>
@@ -844,6 +896,7 @@
       <a class="card" href="19-editor-feature-flags.html">
         <div class="card-accent"></div>
         <div class="card-body">
+          <div class="card-icon"><svg viewBox="0 0 16 16"><rect x="1" y="4" width="14" height="8" rx="4"/><circle cx="10" cy="8" r="2.5"/></svg></div>
           <div class="card-num">No. 19</div>
           <div class="card-title">Feature Flag Editor</div>
           <div class="card-desc">Toggles grouped by area, dependency warnings when a prerequisite is off, and a copy-diff button for just the changed keys.</div>
@@ -856,6 +909,7 @@
       <a class="card" href="20-editor-prompt-tuner.html">
         <div class="card-accent"></div>
         <div class="card-body">
+          <div class="card-icon"><svg viewBox="0 0 16 16"><path d="M2 3h12v10H2z"/><path d="M2 6h12"/><path d="M5 9h3"/><path d="M5 11h5"/></svg></div>
           <div class="card-num">No. 20</div>
           <div class="card-title">Prompt Tuner</div>
           <div class="card-desc">Editable template on the left with variable slots highlighted; three sample inputs on the right re-render live as you type.</div>
@@ -883,6 +937,7 @@
       <a class="card" href="21-dashboard.html">
         <div class="card-accent"></div>
         <div class="card-body">
+          <div class="card-icon"><svg viewBox="0 0 16 16"><rect x="1" y="1" width="6" height="4" rx="1"/><rect x="9" y="1" width="6" height="4" rx="1"/><rect x="1" y="7" width="6" height="4" rx="1"/><rect x="9" y="7" width="6" height="4" rx="1"/></svg></div>
           <div class="card-num">No. 21</div>
           <div class="card-title">Metrics Dashboard</div>
           <div class="card-desc">KPI cards, bar chart, donut chart, sparklines, and a service health table — one page, zero dependencies.</div>
@@ -895,6 +950,7 @@
       <a class="card" href="22-interactive-table.html">
         <div class="card-accent"></div>
         <div class="card-body">
+          <div class="card-icon"><svg viewBox="0 0 16 16"><rect x="1" y="2" width="14" height="12" rx="1"/><path d="M1 5h14M1 8h14M1 11h14M5 2v12M10 2v12"/></svg></div>
           <div class="card-num">No. 22</div>
           <div class="card-title">Sortable, Filterable Table</div>
           <div class="card-desc">Search box, role filters, clickable column headers for sort — all in vanilla JS with avatar initials and role badges.</div>
@@ -907,6 +963,7 @@
       <a class="card" href="23-system-architecture.html">
         <div class="card-accent"></div>
         <div class="card-body">
+          <div class="card-icon"><svg viewBox="0 0 16 16"><rect x="1" y="1" width="5" height="4" rx="1"/><rect x="10" y="1" width="5" height="4" rx="1"/><rect x="5.5" y="9" width="5" height="4" rx="1"/><path d="M3.5 5v2.5h9V9"/></svg></div>
           <div class="card-num">No. 23</div>
           <div class="card-title">System Architecture</div>
           <div class="card-desc">Layered service topology — clients, gateway, core services, data stores, external dependencies — with SVG connector arrows and a legend.</div>
@@ -919,6 +976,7 @@
       <a class="card" href="24-timeline-gantt.html">
         <div class="card-accent"></div>
         <div class="card-body">
+          <div class="card-icon"><svg viewBox="0 0 16 16"><path d="M1 4h6v2H1z"/><path d="M5 7h8v2H5z"/><path d="M3 10h5v2H3z"/><path d="M2 1v14M14 1v14"/></svg></div>
           <div class="card-num">No. 24</div>
           <div class="card-title">Project Timeline / Gantt</div>
           <div class="card-desc">CSS Grid gantt chart with grouped tasks, progress bars, milestone diamonds, and a today marker — no chart library needed.</div>
