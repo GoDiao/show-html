@@ -7,7 +7,7 @@
 <title>The Unreasonable Effectiveness of HTML — A Curated Gallery</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
   /* ── Design Tokens ────────────────────────── */
   :root {
@@ -47,6 +47,172 @@
     --shadow-hover: 0 8px 30px rgba(26,26,24,0.10), 0 2px 8px rgba(26,26,24,0.06);
 
     --grid-gap: 24px;
+    --card-accent-opacity: 1;
+  }
+
+  /* ── Theme: Dark Exhibition ─────────────── */
+  [data-theme="dark"] {
+    --bg:        #0F0F12;
+    --paper:     #1A1A20;
+    --ink:       #E8E6E1;
+    --ink-mid:   #B0AEA6;
+    --ink-light: #8A8880;
+    --faint:     #5A5955;
+
+    --accent-terracotta: #FF7A5C;
+    --accent-sage:       #7ABF6E;
+    --accent-navy:       #6BA3D6;
+    --accent-amber:      #FFBE42;
+    --accent-plum:       #C07AB8;
+    --accent-teal:       #4CC8C8;
+    --accent-rust:       #E87A4A;
+    --accent-slate:      #8AA0B8;
+    --accent-forest:     #5EBF7A;
+    --accent-wine:       #E85A6E;
+    --accent-copper:     #E8A050;
+    --accent-indigo:     #7A7AE8;
+
+    --rule:      #2A2A30;
+    --rule-light:#222228;
+    --surface:   #222228;
+    --surface-hover: #2A2A32;
+
+    --radius-lg: 12px;
+    --shadow-card: 0 2px 8px rgba(0,0,0,0.3), 0 0 1px rgba(255,255,255,0.05);
+    --shadow-hover: 0 12px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.08);
+  }
+
+  /* ── Theme: Terminal ────────────────────── */
+  [data-theme="terminal"] {
+    --bg:        #0A0E0A;
+    --paper:     #111611;
+    --ink:       #33FF66;
+    --ink-mid:   #22CC55;
+    --ink-light: #1A9940;
+    --faint:     #0F6628;
+
+    --accent-terracotta: #FF9933;
+    --accent-sage:       #33FF66;
+    --accent-navy:       #33CCFF;
+    --accent-amber:      #FFCC00;
+    --accent-plum:       #CC66FF;
+    --accent-teal:       #00FFCC;
+    --accent-rust:       #FF6633;
+    --accent-slate:      #66BBCC;
+    --accent-forest:     #44FF88;
+    --accent-wine:       #FF4466;
+    --accent-copper:     #FFAA44;
+    --accent-indigo:     #6688FF;
+
+    --rule:      #1A331A;
+    --rule-light:#142814;
+    --surface:   #0D140D;
+    --surface-hover: #152015;
+
+    --serif:  'Space Mono', 'Courier New', monospace;
+    --sans:   'Space Mono', 'Courier New', monospace;
+    --mono:   'Space Mono', 'JetBrains Mono', 'Courier New', monospace;
+
+    --radius-sm:  2px;
+    --radius-md:  2px;
+    --radius-lg:  2px;
+    --shadow-card: 0 0 0 1px #1A331A;
+    --shadow-hover: 0 0 12px rgba(51,255,102,0.15), 0 0 0 1px #33FF66;
+  }
+  [data-theme="terminal"] .hero h1 em { text-shadow: 0 0 20px rgba(51,255,102,0.3); }
+  [data-theme="terminal"] .card:hover { transform: none; }
+  [data-theme="terminal"] .card-icon svg { stroke-width: 1; }
+  [data-theme="terminal"] .section-number::after { box-shadow: 0 0 6px currentColor; }
+
+  /* ── Theme: Zen ─────────────────────────── */
+  [data-theme="zen"] {
+    --bg:        #FEFEFE;
+    --paper:     #FFFFFF;
+    --ink:       #2C2C2C;
+    --ink-mid:   #5C5C5C;
+    --ink-light: #8C8C8C;
+    --faint:     #BCBCBC;
+
+    --accent-terracotta: #C88870;
+    --accent-sage:       #8CB880;
+    --accent-navy:       #8898B0;
+    --accent-amber:      #C8A870;
+    --accent-plum:       #A088A0;
+    --accent-teal:       #80B0B0;
+    --accent-rust:       #B89080;
+    --accent-slate:      #909898;
+    --accent-forest:     #88A888;
+    --accent-wine:       #B08888;
+    --accent-copper:     #B89878;
+    --accent-indigo:     #8888B0;
+
+    --rule:      #E8E8E8;
+    --rule-light:#F0F0F0;
+    --surface:   #F6F6F6;
+    --surface-hover: #F0F0F0;
+
+    --serif:  Georgia, 'Noto Serif JP', serif;
+    --sans:   system-ui, -apple-system, 'Segoe UI', sans-serif;
+    --mono:   'IBM Plex Mono', ui-monospace, monospace;
+
+    --radius-sm:  2px;
+    --radius-md:  4px;
+    --radius-lg:  4px;
+    --shadow-card: none;
+    --shadow-hover: none;
+    --card-accent-opacity: 0.3;
+  }
+  [data-theme="zen"] .card:hover { transform: none; }
+  [data-theme="zen"] .card-accent { height: 1px; }
+  [data-theme="zen"] .section-header::before {
+    content: "〇"; position: absolute; left: -28px; top: -2px;
+    font-size: 10px; color: var(--faint); opacity: 0.5;
+  }
+  [data-theme="zen"] .toc a { border-radius: 2px; }
+  [data-theme="zen"] .card { border-width: 0.5px; }
+  [data-theme="zen"] .card:hover { border-color: var(--ink-light); }
+
+  /* ── Theme Switcher ─────────────────────── */
+  .theme-switcher {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    display: flex;
+    gap: 6px;
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    border-radius: 100px;
+    padding: 6px 10px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+    z-index: 100;
+    transition: background 200ms, border-color 200ms;
+  }
+  .theme-btn {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 2px solid var(--rule);
+    cursor: pointer;
+    transition: transform 150ms, border-color 150ms, box-shadow 150ms;
+    position: relative;
+  }
+  .theme-btn:hover { transform: scale(1.15); }
+  .theme-btn.active {
+    border-color: var(--ink);
+    box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--ink);
+  }
+  .theme-btn[data-theme-val="gallery"]   { background: linear-gradient(135deg, #FAF9F5 50%, #C4593A 50%); }
+  .theme-btn[data-theme-val="dark"]      { background: linear-gradient(135deg, #0F0F12 50%, #FF7A5C 50%); }
+  .theme-btn[data-theme-val="terminal"]  { background: linear-gradient(135deg, #0A0E0A 50%, #33FF66 50%); }
+  .theme-btn[data-theme-val="zen"]       { background: linear-gradient(135deg, #FEFEFE 50%, #909898 50%); }
+  .theme-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--faint);
+    display: flex;
+    align-items: center;
+    padding: 0 4px;
+    letter-spacing: 0.04em;
   }
 
   /* ── Reset & Base ─────────────────────────── */
@@ -287,6 +453,7 @@
   .card-accent {
     height: 4px;
     background: var(--section-accent, var(--accent-terracotta));
+    opacity: var(--card-accent-opacity);
     flex-shrink: 0;
   }
 
@@ -1006,5 +1173,38 @@
   </footer>
 
 </div>
+
+<!-- Theme Switcher -->
+<div class="theme-switcher">
+  <span class="theme-label">Theme</span>
+  <button class="theme-btn active" data-theme-val="gallery" title="Gallery"></button>
+  <button class="theme-btn" data-theme-val="dark" title="Dark Exhibition"></button>
+  <button class="theme-btn" data-theme-val="terminal" title="Terminal"></button>
+  <button class="theme-btn" data-theme-val="zen" title="Zen"></button>
+</div>
+
+<script>
+(function() {
+  var root = document.documentElement;
+  var saved = localStorage.getItem('gallery-theme');
+  if (saved) applyTheme(saved);
+
+  document.querySelectorAll('.theme-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      applyTheme(btn.dataset.themeVal);
+    });
+  });
+
+  function applyTheme(name) {
+    if (name === 'gallery') root.removeAttribute('data-theme');
+    else root.setAttribute('data-theme', name);
+    localStorage.setItem('gallery-theme', name);
+    document.querySelectorAll('.theme-btn').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.themeVal === name);
+    });
+  }
+})();
+</script>
+
 </body>
 </html>
