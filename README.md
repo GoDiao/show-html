@@ -2,6 +2,8 @@
 
 A cross-platform agent skill that teaches AI agents to generate self-contained, zero-dependency HTML pages for rich output — code reviews, slide decks, status reports, interactive editors, dashboards, and more.
 
+**Live demo: [godiao.github.io/show-html](https://godiao.github.io/show-html/)**
+
 ## Inspired by
 
 This project is inspired by [ThariqS/html-effectiveness](https://github.com/ThariqS/html-effectiveness) — a gallery of standalone HTML examples demonstrating "the unreasonable effectiveness of HTML" as a flexible agent output format. The first 20 example HTML files in this skill's `assets/` are sourced from that repository under the Apache 2.0 license. Examples 21–24 are original additions.

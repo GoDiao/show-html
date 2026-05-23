@@ -2,6 +2,8 @@
 
 一个跨平台 agent 技能包，教 AI agent 生成自包含、零依赖的 HTML 页面——用于代码审查、演示文稿、状态报告、交互式编辑器、数据可视化等场景。
 
+**在线预览：[godiao.github.io/show-html](https://godiao.github.io/show-html/)**
+
 ## 灵感来源
 
 本项目灵感来自 [ThariqS/html-effectiveness](https://github.com/ThariqS/html-effectiveness)——一个展示"HTML 作为 agent 输出格式的惊人效果"的独立 HTML 示例库。本技能包 `assets/` 中的前 20 个示例文件来源于该仓库（Apache 2.0 许可）。示例 21–24 为原创新增内容。
